@@ -10,7 +10,7 @@ export default function Home() {
 
 
       <Button name={"Giriş Yap"} />
-      <Footer />
+      <Footer bgcolor={"sky-700"}/>
     </div>
   )
 }
