@@ -9,7 +9,7 @@ function classNames(...classes) {
 export default function DropDown() {
   const [curr, setCurr] = useState("Personel");
   const [types, setTypes] = useState({
-    all : ["Yönetim", "Satış", "Muhasebe", "İşçi"]
+    all : ["Yönetim", "Satış", "Muhasebe", "Çalışan"]
   });
 
 

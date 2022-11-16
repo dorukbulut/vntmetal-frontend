@@ -1,5 +1,7 @@
 import Button from "../components/LandingPage/Button"
 import Footer from "../components/base/Footer"
+
+// TODO : Make responsive for phone. 
 export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-sky-700 space-y-20 font-montserrat">

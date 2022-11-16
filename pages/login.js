@@ -1,6 +1,7 @@
 import LoginForm from "../components/LoginPage/Forms/LoginForm";
 import Footer from "../components/base/Footer";
 
+// TODO : Make Responsive 
 export default function Login () {
     
     return(
