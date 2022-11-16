@@ -5,7 +5,7 @@ import Footer from "../components/base/Footer";
 export default function Login () {
     
     return(
-        <div className="flex font-montserrat  h-screen">
+        <div className="flex font-poppins h-screen ">
             <div className="flex flex-col items-center justify-center lg:w-3/5 md:w-full w-full  bg-white mt-10 ">
                 <h1 className="lg:text-3xl md:text-2xl text-md tracking-widest text-sky-700">DÖKÜM YÖNETİM SİSTEMİ</h1>
                 <LoginForm />

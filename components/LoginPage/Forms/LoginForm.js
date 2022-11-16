@@ -2,11 +2,11 @@ import DropDown from "./DropDown";
 export default function LoginForm() {
     
     return (
-        <div className="flex flex-col bg-white space-y-20 lg:p-10 p-2 w-1/2">
+        <div className="flex flex-col bg-white space-y-20 lg:p-10 p-2 w-1/2 ">
             <h1 className="lg:text-2xl md:text-lg text-md text-center tracking-widest text-sky-700 italic">GİRİŞ YAP</h1>
 
             <form className="flex flex-col space-y-10">
-                <div className="flex flex-row items-center space-x-5">
+                <div className="flex flex-row items-center space-x-5 ">
                     <div className="lg:text-sm text-xs font-bold text-gray-700 tracking-wide">Personel Tipi</div>
                     <DropDown />
                 </div>
