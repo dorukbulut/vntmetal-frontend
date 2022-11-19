@@ -1,7 +1,10 @@
 import {useState } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import {useRouter} from "next/router";
+
 export default function Navbar () {
-    const [isOpen, setIsOpen] = useState(true);
+    const router = useRouter();
+    const [isOpen, setIsOpen] = useState(false);
     const [sales, setSales ] = useState(false);
     const [quotation, setQuotation] = useState(false);
     
@@ -16,9 +19,9 @@ export default function Navbar () {
     }
     return (
       <>
-       <div className={isOpen ? "border border-r-2 border-solid absolute w-3/5 md:w-1/3 lg:w-1/5 h-screen bg-gray-100 z-40  p-5 translate-x-0 ease-in-out duration-300" :"fixed z-40 top-0 left-0  h-screen -translate-x-full ease-in-out duration-100 p-5"}>
-          <div className={!isOpen ? "p-10 absolute" : "hidden"}>
-            <svg onClick={toggleNav} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} className="hover:cursor-pointer stroke-gray-500 justify-self-end w-6 h-6">
+       <div className={isOpen ? "absolute bg-white w-3/5 md:w-1/3 lg:w-1/5 h-screen  z-40  p-5 translate-x-0 ease-in-out duration-300" :"fixed z-40 top-0 left-0  h-screen -translate-x-full ease-in-out duration-100 p-5"}>
+          <div className={!isOpen ? "pl-10 absolute " : "hidden"}>
+            <svg onClick={toggleNav} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} className="hover:cursor-pointer stroke-sky-700 justify-self-end w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
           </div>
@@ -26,7 +29,7 @@ export default function Navbar () {
           <div className={isOpen ? "flex flex-col space-y-10 items-start" : "hidden"}>
 
             <div className="grid ease-in-out">
-              <svg onClick={toggleNav}  fill="none" viewBox="0 0 24 24" strokeWidth={1.5} className="hover:cursor-pointer hover:bg-gray-300 stroke-gray-500 justify-self-end w-6 h-6">
+              <svg onClick={toggleNav}  fill="none" viewBox="0 0 24 24" strokeWidth={1.5} className="hover:cursor-pointer hover:bg-gray-300 stroke-sky-700 justify-self-end w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </div>
@@ -36,7 +39,7 @@ export default function Navbar () {
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
               </svg>
 
-              <p className="font-poppins text-xs lg:text-lg md:text-lg text-sky-700 tracking-widest">VNT METAL DYS</p>
+              <p onClick={() => router.push("/admin")} className="hover:cursor-pointer font-poppins text-xs lg:text-lg md:text-lg text-sky-700 tracking-widest">VNT METAL DYS</p>
               <hr/>
             </div>
 
@@ -53,7 +56,7 @@ export default function Navbar () {
 
                 <div className={`flex flex-col space-y-4 tracking-widest font-poppins lg:text-xs text-xs text-sky-600 ${sales? "visible  scale-100 border-solid border-l-2" : "invisible transform scale-0 h-0"} transition duration-300 ease-in-out origin-top`}>
                     
-                      <p className=" hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md">Müşterilerim</p>
+                      <p onClick={() => router.push("/admin/customers")} className=" hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md">Müşterilerim</p>
                       <div className="flex flex-col lg:text-xs text-xs mb-10 ">
                         <div className='flex items-center w-full'>
                           <p className="hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md">Tekliflerim</p>

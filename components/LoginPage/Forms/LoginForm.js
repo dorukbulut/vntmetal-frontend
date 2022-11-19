@@ -1,5 +1,5 @@
 import DropDown from "./DropDown";
-export default function LoginForm() {
+export default function LoginForm({router}) {
     
     return (
         <div className="flex flex-col bg-white space-y-20 lg:p-10 p-2 w-1/2 ">
@@ -23,7 +23,10 @@ export default function LoginForm() {
                                 <input className="w-full text-lg py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500" type="password" />
                             </div>
                             <div className="mt-10">
-                                <button  className="bg-sky-700 text-gray-100 p-4 w-full rounded-full tracking-wide
+                                <button onClick={(e) => {
+                                    e.preventDefault();
+                                    router.push("/admin");
+                                }}  className="bg-sky-700 text-gray-100 p-4 w-full rounded-full tracking-wide
                                 font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-sky-800
                                 shadow-lg">
                                     Giriş Yap
