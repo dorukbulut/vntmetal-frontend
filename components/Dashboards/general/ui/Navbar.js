@@ -19,14 +19,14 @@ export default function Navbar () {
     }
     return (
       <>
-       <div className={isOpen ? "absolute bg-white w-3/5 md:w-1/3 lg:w-1/5 h-screen  z-40  p-5 translate-x-0 ease-in-out duration-300" :"fixed z-40 top-0 left-0  h-screen -translate-x-full ease-in-out duration-100 p-5"}>
+       <div className={isOpen ? "absolute bg-white w-3/5 md:w-1/3 lg:w-1/5 h-screen z-40   p-5 translate-x-0 ease-in-out duration-300" :"fixed z-40 top-0 left-0  h-screen -translate-x-full ease-in-out duration-100 p-5"}>
           <div className={!isOpen ? "pl-10 absolute " : "hidden"}>
             <svg onClick={toggleNav} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} className="hover:cursor-pointer stroke-sky-700 justify-self-end w-6 h-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
           </div>
 
-          <div className={isOpen ? "flex flex-col space-y-10 items-start" : "hidden"}>
+          <div className={isOpen ? "flex flex-col space-y-10 items-start " : "hidden"}>
 
             <div className="grid ease-in-out">
               <svg onClick={toggleNav}  fill="none" viewBox="0 0 24 24" strokeWidth={1.5} className="hover:cursor-pointer hover:bg-gray-300 stroke-sky-700 justify-self-end w-6 h-6">
