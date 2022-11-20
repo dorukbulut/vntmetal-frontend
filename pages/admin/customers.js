@@ -3,7 +3,10 @@ import ProfileBar from "../../components/Dashboards/general/ui/ProfileBar";
 import BreadCrumbs from "../../components/Dashboards/general/ui/BreadCrumbs";
 import Footer from "../../components/base/Footer";
 import CreateCustomer from "../../components/Dashboards/general/forms/CreateCustomer";
-export default function CustomersPage() {
+import axios from "axios";
+
+
+export default function CustomersPage({customers}) {
   return (
     <div className="">
       <Navbar />
@@ -77,7 +80,7 @@ export default function CustomersPage() {
 
         <div className="w-full bg-gray-100">
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            {customers.length !== 0 ? <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="px-6 py-3">
@@ -98,69 +101,63 @@ export default function CustomersPage() {
                 </tr>
               </thead>
               <tbody>
-                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 hover:cursor-pointer dark:hover:bg-gray-600">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                  >
-                    A.H Industries
-                  </th>
-                  <td className="px-6 py-4">285</td>
-                  <td className="px-6 py-4">Michael Alone</td>
-                  <td className="px-6 py-4">Almanya</td>
-                  <td className="px-6 py-4 text-right">
-                    <a
-                      href="#"
-                      className="font-medium text-text-fuchsia-500 dark:text-fuchsia-400-600 dark:text-text-fuchsia-500 dark:text-fuchsia-400-500 hover:underline"
-                    >
-                      Düzenle
-                    </a>
-                  </td>
-                </tr>
-                <tr className="hover:cursor-pointer bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                  >
-                    Microsoft Surface Pro
-                  </th>
-                  <td className="px-6 py-4">286</td>
-                  <td className="px-6 py-4">Laptop PC</td>
-                  <td className="px-6 py-4">$1999</td>
-                  <td className="px-6 py-4 text-right">
-                    <a
-                      href="#"
-                      className="font-medium text-text-fuchsia-500 dark:text-fuchsia-400-600 dark:text-text-fuchsia-500 dark:text-fuchsia-400-500 hover:underline"
-                    >
-                      Düzenle
-                    </a>
-                  </td>
-                </tr>
-                <tr className=" hover:cursor-pointer bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                  >
-                    Magic Mouse 2
-                  </th>
-                  <td className="px-6 py-4">286</td>
-                  <td className="px-6 py-4">Accessories</td>
-                  <td className="px-6 py-4">$99</td>
-                  <td className="px-6 py-4 text-right">
-                    <a
-                      href="#"
-                      className="font-medium text-text-fuchsia-500 dark:text-fuchsia-400-600 dark:text-text-fuchsia-500 dark:text-fuchsia-400-500 hover:underline"
-                    >
-                      Düzenle
-                    </a>
-                  </td>
-                </tr>
+                {customers.map((customer,index) => {
+                     return <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 hover:cursor-pointer dark:hover:bg-gray-600">
+                     <th
+                       scope="row"
+                       className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                     >
+                       {customer.account_title}
+                     </th>
+                     <td className="px-6 py-4">{customer.account_id}</td>
+                     <td className="px-6 py-4">{customer.account_related}</td>
+                     <td className="px-6 py-4">{customer.customer_adress.customer_country}</td>
+                     <td className="px-6 py-4 text-right">
+                       <a
+                         href="#"
+                         className="font-medium text-text-fuchsia-500 dark:text-fuchsia-400-600 dark:text-text-fuchsia-500 dark:text-fuchsia-400-500 hover:underline"
+                       >
+                         Düzenle
+                       </a>
+                     </td>
+                   </tr>
+                })}
               </tbody>
-            </table>
+            </table> : <div className="grid place-items-center p-5">
+                <p className="italic font-poppins tracking-widest text-sm text-sky-700">Müşteri Bulunamadı</p>
+
+              </div>}
+            
           </div>
         </div>
       </div>
       <Footer />
     </div>
   );
+};
+
+
+export async function getServerSideProps(context) {
+ 
+
+  try{
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`)
+      if (res.status === 200) {
+          return {props : {
+              customers : res.data.customers
+          }}
+      }
+  }
+  
+
+  catch(err) {
+      return {
+          redirect : {
+              permanent : false,
+              destination :"/login"
+          }
+      }
+  }
+
 }
+
