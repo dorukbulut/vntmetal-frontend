@@ -5,6 +5,11 @@ import Footer from "../../components/base/Footer";
 import CreateCustomer from "../../components/Dashboards/general/forms/CreateCustomer";
 import axios from "axios";
 
+//TODO : Update page, Update Validation, Update response validation 
+//TODO : Delete Page,delete Response validation, delete sure.
+//TODO : Filters.
+//TODO : Details. 
+
 
 export default function CustomersPage({customers}) {
   return (
