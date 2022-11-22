@@ -4,11 +4,10 @@ import BreadCrumbs from "../../components/Dashboards/general/ui/BreadCrumbs";
 import Footer from "../../components/base/Footer";
 import CreateCustomer from "../../components/Dashboards/general/forms/CreateCustomer";
 import axios from "axios";
+import UpdateCustomer from "../../components/Dashboards/general/forms/UpdateCustomer";
 
-//TODO : Update page, Update Validation, Update response validation 
 //TODO : Delete Page,delete Response validation, delete sure.
 //TODO : Filters.
-//TODO : Details. 
 
 
 export default function CustomersPage({customers}) {
@@ -101,13 +100,13 @@ export default function CustomersPage({customers}) {
                     ÜLKE
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    <span className="sr-only">Edit</span>
+                    <span className="sr-only">Düzenle</span>
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {customers.map((customer,index) => {
-                     return <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 hover:cursor-pointer dark:hover:bg-gray-600">
+                     return <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                      <th
                        scope="row"
                        className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
@@ -118,12 +117,7 @@ export default function CustomersPage({customers}) {
                      <td className="px-6 py-4">{customer.account_related}</td>
                      <td className="px-6 py-4">{customer.customer_adress.customer_country}</td>
                      <td className="px-6 py-4 text-right">
-                       <a
-                         href="#"
-                         className="font-medium text-text-fuchsia-500 dark:text-fuchsia-400-600 dark:text-text-fuchsia-500 dark:text-fuchsia-400-500 hover:underline"
-                       >
-                         Düzenle
-                       </a>
+                       <UpdateCustomer customer={customer}/>
                      </td>
                    </tr>
                 })}
