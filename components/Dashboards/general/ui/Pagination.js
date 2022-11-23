@@ -10,6 +10,8 @@ function usePagination(data, itemsPerPage) {
     return data.slice(begin, end);
   }
 
+  
+
   function next() {
     setCurrentPage(currentPage => Math.min(currentPage + 1, maxPage));
   }
@@ -23,7 +25,7 @@ function usePagination(data, itemsPerPage) {
     setCurrentPage(currentPage => Math.min(pageNumber, maxPage));
   }
 
-  return { next, prev, jump, currentData, currentPage, maxPage };
+  return { next, prev, jump, currentData, currentPage, maxPage};
 }
 
 export default usePagination;

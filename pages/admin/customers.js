@@ -14,21 +14,68 @@ import Pagination from "@mui/material/Pagination";
 export default function CustomersPage({ customers }) {
   const router = useRouter();
   let [page, setPage] = useState(1);
-  const PER_PAGE = 2;
-
-  const count = Math.ceil(customers.length / PER_PAGE);
-  const _DATA = usePagination(customers, PER_PAGE);
-
-  const handleChange = (e, p) => {
-    setPage(p);
-    _DATA.jump(p);
-  };
+  const PER_PAGE = 3;
   const [filters, setFilters] = useState({
     account_id: "",
     account_title: "",
     account_related: "",
     customer_country: "",
   });
+  const count = Math.ceil(customers.length / PER_PAGE);
+  const filterData = (data) => {
+    return data.filter((customer) => {
+      if (filters.account_title === "") return customer;
+      else {
+        if (
+          customer.account_title
+            .toLowerCase()
+            .includes(filters.account_title.toLowerCase())
+        )
+          return customer;
+      }
+    })
+    .filter((customer) => {
+      if (filters.account_id === "") return customer;
+      else {
+        if (
+          `${customer.account_id}`
+            .toLowerCase()
+            .includes(filters.account_id.toLowerCase())
+        )
+          return customer;
+      }
+    })
+
+    .filter((customer) => {
+      if (filters.account_related === "") return customer;
+      else {
+        if (
+          customer.account_related
+            .toLowerCase()
+            .includes(filters.account_related.toLowerCase())
+        )
+          return customer;
+      }
+    })
+    .filter((customer) => {
+      if (filters.customer_country === "") return customer;
+      else {
+        if (
+          customer.customer_adress.customer_country
+            .toLowerCase()
+            .includes(filters.customer_country.toLowerCase())
+        )
+          return customer;
+      }
+    })
+  }
+  const _DATA = usePagination(filterData(customers), PER_PAGE);
+  
+  const handleChange = (e, p) => {
+    setPage(p);
+    _DATA.jump(p);
+  };
+  
 
   const handleFilters = (field, e) => {
     let new_filters = filters;
@@ -133,54 +180,8 @@ export default function CustomersPage({ customers }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {_DATA
-                    .currentData()
-                    .filter((customer) => {
-                      if (filters.account_title === "") return customer;
-                      else {
-                        if (
-                          customer.account_title
-                            .toLowerCase()
-                            .includes(filters.account_title.toLowerCase())
-                        )
-                          return customer;
-                      }
-                    })
-                    .filter((customer) => {
-                      if (filters.account_id === "") return customer;
-                      else {
-                        if (
-                          `${customer.account_id}`
-                            .toLowerCase()
-                            .includes(filters.account_id.toLowerCase())
-                        )
-                          return customer;
-                      }
-                    })
-
-                    .filter((customer) => {
-                      if (filters.account_related === "") return customer;
-                      else {
-                        if (
-                          customer.account_related
-                            .toLowerCase()
-                            .includes(filters.account_related.toLowerCase())
-                        )
-                          return customer;
-                      }
-                    })
-                    .filter((customer) => {
-                      if (filters.customer_country === "") return customer;
-                      else {
-                        if (
-                          customer.customer_adress.customer_country
-                            .toLowerCase()
-                            .includes(filters.customer_country.toLowerCase())
-                        )
-                          return customer;
-                      }
-                    })
-                    .map((customer, index) => {
+                  {
+                    _DATA.currentData().map((customer, index) => {
                       return (
                         <tr
                           key={index}
@@ -218,7 +219,7 @@ export default function CustomersPage({ customers }) {
         </div>
         
       </div>
-      <div className="grid place-items-center">
+      <div className="grid place-items-center mb-10">
         {_DATA.currentData().length !==0 ? <Pagination count={count} page={page} onChange={handleChange} color="primary" /> : <div></div>}
       </div>
       <Footer />
