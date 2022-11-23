@@ -8,6 +8,8 @@ export default function UpdateCustomer({ customer }) {
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
   const [createErr, setCreateErr] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
+  const [isDel, setIsDel] = useState(false);
   const router = useRouter();
   const [fields, setFields] = useState({
     account_id: `${customer.account_id}`,
@@ -75,6 +77,24 @@ export default function UpdateCustomer({ customer }) {
     },
   });
 
+  const handleDelete = async() => {
+    const res = await axios({
+      method : "delete",
+      data : {
+        account_id : fields.account_id
+      },
+
+      url : `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/delete`,
+      withCredentials : true
+    });
+
+    if (res.status === 200) {
+      setIsDelete(false);
+      setIsDel(true);
+    } else{
+      setIsvalid(false);
+    }
+  }
   const handleChange = (field, area, e) => {
     let new_fields = fields;
     new_fields[field][area] = e.target.value;
@@ -287,7 +307,7 @@ export default function UpdateCustomer({ customer }) {
 
           <div
             className={`${
-              !submit && isValid && !createErr
+              !submit && isValid && !createErr && !isDelete && !isDel
                 ? "visible scale-100"
                 : "invisible scale-0 h-0"
             } flex flex-col space-y-10`}
@@ -772,6 +792,13 @@ export default function UpdateCustomer({ customer }) {
               </button>
               <button
                 className="bg-red-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                type="submit"
+                onClick={() => setIsDelete(true)}
+              >
+                Sil
+              </button>
+              <button
+                className="bg-red-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
                 onClick={() => {
                     toggleCreate();
@@ -810,6 +837,50 @@ export default function UpdateCustomer({ customer }) {
             <div className="mt-2 px-7 py-3">
               <p className="text-sm text-gray-500">
                 Müşteri Başarıyla Güncellendi!
+              </p>
+            </div>
+            <div className="items-center px-4 py-3">
+              <button
+                id="ok-btn"
+                onClick={() => {
+                  toggleCreate();
+                  setSubmit(false);
+                  router.reload(window.location.pathname);
+                }}
+                className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
+              >
+                Tamam
+              </button>
+            </div>
+          </div>
+
+          <div
+            className={`${
+               isDel ? "visible scale-100" : "invisible scale-0 h-0"
+            } mt-3 text-center transition duration-500 ease-out`}
+          >
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+              <svg
+                className="h-6 w-6 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 13l4 4L19 7"
+                ></path>
+              </svg>
+            </div>
+            <h3 className="text-lg leading-6 font-medium text-gray-900">
+              Başarılı!
+            </h3>
+            <div className="mt-2 px-7 py-3">
+              <p className="text-sm text-gray-500">
+                Müşteri Başarıyla Silindi!
               </p>
             </div>
             <div className="items-center px-4 py-3">
@@ -929,6 +1000,58 @@ export default function UpdateCustomer({ customer }) {
                 className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >
                 Geri Dön
+              </button>
+            </div>
+          </div>
+
+          <div
+            className={`${
+              isDelete
+                ? "visible scale-100"
+                : "invisible scale-0 h-0"
+            } mt-3 text-center transition duration-500 ease-out`}
+          >
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6 stroke-red-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                />
+              </svg>
+            </div>
+            <h3 className="text-lg leading-6 font-medium text-gray-900">
+              Uyarı !
+            </h3>
+            <div className="mt-2 px-7 py-3">
+              <p className="text-sm text-gray-500">
+                Müşteri Silinecektir!
+              </p>
+            </div>
+            <div className="items-center px-4 py-3 space-y-5">
+              <button
+                id="ok-btn"
+                onClick={() => {
+                  setIsDelete(false);
+                }}
+                className="px-4 py-2 bg-yellow-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-green-300"
+              >
+                Geri Dön
+              </button>
+
+              <button
+                id="ok-btn"
+                onClick={handleDelete}
+                className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-300"
+              >
+                Sil
               </button>
             </div>
           </div>
