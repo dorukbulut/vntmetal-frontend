@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import * as React from "react";
 import axios, { Axios } from "axios";
 import Box from "@mui/material/Box";
@@ -7,9 +7,14 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-
 import { useRouter } from "next/router";
+import Dropdown from "./Dropdown";
+
+
 const steps = ["Hammaddde Hesapla", "Teklif Hazırla", "Oluştur"];
+const testDropdown = [{key: "1", value : "1"}, {key : "102", value : "102"}, {key : "203", value : "203"}]
+
+
 export default function CreateMake() {
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
@@ -60,37 +65,24 @@ export default function CreateMake() {
     setActiveStep(0);
   };
   const router = useRouter();
-  const [fields, setFields] = useState({
-    customer: {
-      account_id: "",
-      account_title: "",
-      account_related: "",
-      account_IN: "",
-      account_tel1: "",
-      account_tel2: "",
-      account_fax: "",
-      account_email: "",
-      account_webSite: "",
-      account_KEP: "",
-    },
-    taxinfo: {
-      tax_info_taxID: "",
-      tax_info_Admin: "",
-      tax_info_AdminID: "",
-    },
 
-    adressinfo: {
-      customer_Address: "",
-      customer_bID: "",
-      customer_bName: "",
-      customer_dID: "",
-      customer_town: "",
-      customer_district: "",
-      customer_city: "",
-      customer_country: "",
-      customer_UAVT: "",
-      customer_postal: "",
+  const [fields, setFields] = useState({
+    calc_raw: {
+      account_id : '',
+      analyze_Name : '',
+      analyze_id : '',
+      analyze_coef : '',
+      LME :  '',
+      euro : '',
+      usd : '',
+      tl : '',
+      raw_tl : '',
+      workmanship : '',
+      kgCost : '',
+      type : '',
+
     },
+    
   });
   const [currErrors, setErrors] = useState({
     customer: {
@@ -368,7 +360,7 @@ export default function CreateMake() {
                 </React.Fragment>
               ) : (
                 <React.Fragment>
-                  <div className="mt-10">
+                  {activeStep == 0 ? <div className="mt-10">
                   <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
                     Yeni Teklif
                   </p>
@@ -377,46 +369,30 @@ export default function CreateMake() {
                     <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
                       <div className="space-y-2 lg:w-1/2">
                         <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
-                          Hammaddde Hesaplama
+                          Hammadde Hesaplama
                         </p>
                         <hr />
                       </div>
 
                       <div className="space-y-5 lg:grid lg:grid-cols-3 lg:items-end lg:gap-3 ">
-                        <div className="flex flex-col ">
+                        <div className="flex flex-col space-y-3 ">
                           <label
                             htmlFor="small-input"
                             className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
                           >
                             Cari Kod *
                           </label>
-                          <input
-                            type="number"
-                            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                            placeholder=""
-                            required
-                            onChange={(e) =>
-                              handleChange("customer", "account_id", e)
-                            }
-                          />
+                          <Dropdown label="Cari Kod" field="calc_raw" area="account_id" items={testDropdown} handleChange={handleChange}/> 
                         </div>
 
-                        <div className="flex flex-col">
+                        <div className="flex flex-col space-y-3">
                           <label
                             htmlFor="small-input"
                             className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
                           >
-                            Cari Ünvan *
+                            Analiz *
                           </label>
-                          <input
-                            type="text"
-                            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                            placeholder=""
-                            required
-                            onChange={(e) =>
-                              handleChange("customer", "account_title", e)
-                            }
-                          />
+                          <Dropdown label="Analiz" field="calc_raw" area="analyze_Name" items={testDropdown} handleChange={handleChange}/> 
                         </div>
 
                         <div className="flex flex-col">
@@ -424,33 +400,16 @@ export default function CreateMake() {
                             htmlFor="small-input"
                             className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
                           >
-                            İlgili Kişi *
-                          </label>
-                          <input
-                            type="text"
-                            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                            placeholder=""
-                            required
-                            onChange={(e) =>
-                              handleChange("customer", "account_related", e)
-                            }
-                          />
-                        </div>
-
-                        <div className="flex flex-col">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            T.C Kimlik Numarası *
+                            LME Copper *
                           </label>
                           <input
                             type="number"
+                            step={"any"}
                             className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                             placeholder=""
                             required
                             onChange={(e) =>
-                              handleChange("customer", "account_IN", e)
+                              handleChange("calc_raw", "LME", e)
                             }
                           />
                         </div>
@@ -460,108 +419,144 @@ export default function CreateMake() {
                             htmlFor="small-input"
                             className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
                           >
-                            Telefon Numarası 1
+                            Dolar Kuru *
                           </label>
                           <input
-                            type="text"
-                            className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                            placeholder=""
-                            onChange={(e) =>
-                              handleChange("customer", "account_tel1", e)
-                            }
-                          />
-                        </div>
-
-                        <div className="flex flex-col">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            Telefon Numarası 2
-                          </label>
-                          <input
-                            type="text"
-                            className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                            placeholder=""
-                            onChange={(e) =>
-                              handleChange("customer", "account_tel2", e)
-                            }
-                          />
-                        </div>
-
-                        <div className="flex flex-col">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            Fax Numarası
-                          </label>
-                          <input
-                            type="text"
-                            className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                            placeholder=""
-                            onChange={(e) =>
-                              handleChange("customer", "account_fax", e)
-                            }
-                          />
-                        </div>
-
-                        <div className="flex flex-col">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            E-Posta Adresi
-                          </label>
-                          <input
-                            type="text"
-                            className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                            placeholder=""
-                            onChange={(e) =>
-                              handleChange("customer", "account_email", e)
-                            }
-                          />
-                        </div>
-                        <div className="flex flex-col">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            Web Sitesi
-                          </label>
-                          <input
-                            type="text"
-                            className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                            placeholder=""
-                            onChange={(e) =>
-                              handleChange("customer", "account_webSite", e)
-                            }
-                          />
-                        </div>
-
-                        <div className="flex flex-col">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            Kep Adresi *
-                          </label>
-                          <input
-                            type=""
+                            type="number"
+                            step={"any"}
                             className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                             placeholder=""
                             required
                             onChange={(e) =>
-                              handleChange("customer", "account_KEP", e)
+                              handleChange("calc_raw", "usd", e)
                             }
                           />
+                        </div>
+
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            Euro Kuru *
+                          </label>
+                          <input
+                            type="number"
+                            step={"any"}
+                            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                            placeholder=""
+                            required
+                            onChange={(e) =>
+                              handleChange("calc_raw", "euro", e)
+                            }
+                          />
+                        </div>
+
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            TL Değeri 
+                          </label>
+                          <input
+                            type="number"
+                            step={"any"}
+                            className="cursor-not-allowed invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      
+                            disabled
+                            
+                           
+                          />
+                        </div>
+
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            Analiz Katsayısı
+                          </label>
+                          <input
+                            type="number"
+                            step={"any"}
+                            className="cursor-not-allowed invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      
+                            disabled
+                            
+                            
+                          />
+                        </div>
+
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            Hammadde Fiyatı
+                          </label>
+                          <input
+                            type="number"
+                            step={"any"}
+                            className="cursor-not-allowed invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      
+                            disabled
+                          
+                          />
+                        </div>
+
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            İşçilik *
+                          </label>
+                          <input
+                            type="number"
+                            step={"any"}
+                            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                            placeholder=""
+                            required
+                            onChange={(e) =>
+                              handleChange("calc_raw", "workmanship", e)
+                            }
+                          />
+                        </div>
+
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            Döküm Kilogram Fiyatı (TL)
+                          </label>
+                          <input
+                            type="number"
+                            step={"any"}
+                            className="cursor-not-allowed invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      
+                            disabled
+                            
+                            
+                          />
+                        </div>
+                        <div className="flex flex-col space-y-3">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            Ürün Tipi *
+                          </label>
+                          <Dropdown label="Tip" field="calc_raw" area="type" items={testDropdown} handleChange={handleChange}/> 
                         </div>
                       </div>
                     </div>
 
                     
                   </form>
-                  </div>
+                  </div> : ""}
+                  
                   
                   <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
                     <Button
