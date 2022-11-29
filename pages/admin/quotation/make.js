@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import usePagination from "../../../components/Dashboards/general/ui/Pagination";
 import Pagination from "@mui/material/Pagination";
 
-export default function quotationMake() {
+export default function quotationMake({analyzes, customers}) {
   
   return (
     <div className="">
@@ -23,7 +23,7 @@ export default function quotationMake() {
           Teklif Hazırlama
         </h2>
         <div className="relative flex overflow-x-auto shadow-md sm:rounded-lg p-5 space-x-5 items-center">
-          <CreateMake />
+          <CreateMake analyzes={analyzes} customers={customers}/>
           <CreateAnalyze />
           <p className="text-sky-700 italic font-poppins tracking-widest">
             Filtrele
@@ -132,3 +132,29 @@ export default function quotationMake() {
   );
 }
 
+
+export async function getServerSideProps(context) {
+  try {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND}/api/analyze/getAll`
+    );
+    const res2 = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`
+    );
+    if (res.status === 200 && res2.status === 200) {
+      return {
+        props: {
+          analyzes: res.data.analyzes,
+          customers : res2.data.customers
+        },
+      };
+    }
+  } catch (err) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/login",
+      },
+    };
+  }
+}

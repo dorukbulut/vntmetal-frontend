@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useEffect } from "react";
 import * as React from "react";
 import axios, { Axios } from "axios";
 import Box from "@mui/material/Box";
@@ -12,16 +12,53 @@ import Dropdown from "./Dropdown";
 
 
 const steps = ["Hammaddde Hesapla", "Teklif Hazırla", "Oluştur"];
-const testDropdown = [{key: "1", value : "1"}, {key : "102", value : "102"}, {key : "203", value : "203"}]
+const TYPE = [{key: "Düz Burç", value : "0"}, {key : "Plaka", value : "1"}, {key : "Flanşlı Burç", value : "2"}]
 
 
-export default function CreateMake() {
+export default function CreateMake({analyzes, customers}) {
+
+  const ANALYZE = analyzes.map(analyse => {
+    return {
+      key : analyse.analyze_Name,
+      value : analyse.analyze_coef
+    }
+  })
+
+  const CUSTOMER = customers.map(customer => {
+    return {
+      key : customer.account_id,
+      value : customer.account_id
+    }
+  })
+
+ 
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
   const [createErr, setCreateErr] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
+  const [canSkip, setCanSkip] = useState(false);
+  const router = useRouter();
+
+  const [fields, setFields] = useState({
+    calc_raw: {
+      account_id : '',
+      analyze_Name : '',
+      LME :  '',
+      euro : '',
+      usd : '',
+      workmanship : '',
+      type : '',
+
+    },
+    
+  });
+  
+  const [coef, setCoef] = useState(0);
+  const [tl, setTL] = useState(0);
+  const [raw_tl, setRawTl] = useState(0);
+  const [kgCost, setCost] = useState(0);
 
   const isStepOptional = (step) => {
     return step === -1;
@@ -46,222 +83,68 @@ export default function CreateMake() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
+  
 
   const handleReset = () => {
     setActiveStep(0);
   };
-  const router = useRouter();
+  
+  
+  
+  const handleValidation = () => {
+    let check_fields = fields;
+    let isValid = true;
 
-  const [fields, setFields] = useState({
-    calc_raw: {
-      account_id : '',
-      analyze_Name : '',
-      analyze_id : '',
-      analyze_coef : '',
-      LME :  '',
-      euro : '',
-      usd : '',
-      tl : '',
-      raw_tl : '',
-      workmanship : '',
-      kgCost : '',
-      type : '',
+    // account_id
+    if (check_fields["calc_raw"]["account_id"] === "") {
+      isValid = false;
+    }
 
-    },
-    
-  });
-  const [currErrors, setErrors] = useState({
-    customer: {
-      account_id: "",
-      account_title: "",
-      account_related: "",
-      account_IN: "",
-      account_tel1: "",
-      account_tel2: "",
-      account_fax: "",
-      account_email: "",
-      account_webSite: "",
-      account_KEP: "",
-    },
-    taxinfo: {
-      tax_info_taxID: "",
-      tax_info_Admin: "",
-      tax_info_AdminID: "",
-    },
+    // analyze_Name
+    if (check_fields["calc_raw"]["analyze_Name"] === "") {
+      isValid = false;
+    }
 
-    adressinfo: {
-      customer_Address: "",
-      customer_bID: "",
-      customer_bName: "",
-      customer_dID: "",
-      customer_town: "",
-      customer_district: "",
-      customer_city: "",
-      customer_country: "",
-      customer_UAVT: "",
-      customer_postal: "",
-    },
-  });
+    // LME
+    if (check_fields["calc_raw"]["LME"] === "") {
+      isValid = false;
+    } 
+
+    // euro
+    if (check_fields["calc_raw"]["euro"] === "") {
+      isValid = false;
+    } 
+
+    // usd
+    if (check_fields["calc_raw"]["usd"] === "") {
+      isValid = false;
+    } 
+
+    // workmanship
+    if (check_fields["calc_raw"]["workmanship"] === "") {
+      isValid = false;
+    } 
+
+    // type
+    if (check_fields["calc_raw"]["type"] === "") {
+      isValid = false;
+    } 
+    return isValid;
+  };
 
   const handleChange = (field, area, e) => {
     let new_fields = fields;
     new_fields[field][area] = e.target.value;
     setFields(new_fields);
+
+    setCanSkip(handleValidation());
+    setCoef(fields.calc_raw.analyze_Name)
+    setTL(fields.calc_raw.usd * fields.calc_raw.LME)
+    setRawTl(fields.calc_raw.usd * fields.calc_raw.LME *fields.calc_raw.analyze_Name/1000)
+    setCost((fields.calc_raw.usd * fields.calc_raw.LME *fields.calc_raw.analyze_Name/1000) + parseFloat(fields.calc_raw.workmanship));
   };
 
-  const handleValidation = () => {
-    let check_fields = fields;
-    let errors = currErrors;
-    let isValid = true;
-
-    // account_id
-    if (check_fields["customer"]["account_id"] === "") {
-      isValid = false;
-      errors["customer"]["account_id"] = "Cari kod boş bırakılamaz !";
-    } else {
-      errors["customer"]["account_id"] = "";
-    }
-
-    //account_title
-    if (check_fields["customer"]["account_title"] === "") {
-      isValid = false;
-      errors["customer"]["account_title"] = "Cari Ünvan boş bırakalamaz !";
-    } else {
-      errors["customer"]["account_title"] = "";
-    }
-
-    //account_related
-    if (check_fields["customer"]["account_related"] === "") {
-      isValid = false;
-      errors["customer"]["account_related"] = "İlgili Kişi boş bırakalamaz !";
-    } else {
-      errors["customer"]["account_related"] = "";
-    }
-
-    //account_IN
-    if (check_fields["customer"]["account_IN"] === "") {
-      isValid = false;
-      errors["customer"]["account_IN"] =
-        "T.C. Kimlik Numarası  boş bırakalamaz !";
-    } else {
-      errors["customer"]["account_IN"] = "";
-    }
-
-    //account_KEP
-    if (check_fields["customer"]["account_KEP"] === "") {
-      isValid = false;
-      errors["customer"]["account_KEP"] = "KEP adresi  boş bırakalamaz !";
-    } else {
-      errors["customer"]["account_KEP"] = "";
-    }
-
-    //tax_info_taxID
-    if (check_fields["taxinfo"]["tax_info_taxID"] === "") {
-      isValid = false;
-      errors["taxinfo"]["tax_info_taxID"] = "Vergi Numarası boş bırakalamaz !";
-    } else {
-      errors["taxinfo"]["tax_info_taxID"] = "";
-    }
-
-    //tax_info_AdminID
-    if (check_fields["taxinfo"]["tax_info_AdminID"] === "") {
-      isValid = false;
-      errors["taxinfo"]["tax_info_AdminID"] =
-        "Vergi Dairesi No boş bırakalamaz !";
-    } else {
-      errors["taxinfo"]["tax_info_AdminID"] = "";
-    }
-
-    //customer_bID
-    if (check_fields["adressinfo"]["customer_bID"] === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_bID"] = "Bina No boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_bID"] = "";
-    }
-
-    //customer_bName
-    if (check_fields["adressinfo"]["customer_bName"] === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_bName"] = "Bina Adı boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_bName"] = "";
-    }
-
-    //customer_dID
-    if (check_fields["adressinfo"]["customer_dID"] === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_dID"] = "Kapı Numarası boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_dID"] = "";
-    }
-
-    //customer_town
-    if (check_fields["adressinfo"]["customer_town"] === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_town"] = "Kasaba  boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_town"] = "";
-    }
-
-    //customer_district
-    if (check_fields["adressinfo"]["customer_district"] === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_district"] = "Semt  boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_district"] = "";
-    }
-
-    //customer_city
-    if (check_fields["adressinfo"]["customer_city"] === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_city"] = "Şehir boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_city"] = "";
-    }
-
-    //customer_country
-    if (check_fields["adressinfo"]["customer_country"] === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_country"] = "Ülke  boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_country"] = "";
-    }
-
-    //customer_UAVT
-    if (check_fields["adressinfo"]["customer_UAVT"] === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_UAVT"] = "Adres No  boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_UAVT"] = "";
-    }
-
-    //customer_postal
-    if (check_fields["adressinfo"]["customer_postal"] === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_postal"] = "Posta Kodu boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_postal"] = "";
-    }
-
-    setErrors(errors);
-
-    return isValid;
-  };
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -326,7 +209,7 @@ export default function CreateMake() {
               !submit && isValid && !createErr
                 ? "visible scale-100"
                 : "invisible scale-0 h-0"
-            } flex flex-col space-y-10`}
+            } flex flex-col space-y-20`}
           >
             <Box sx={{ width: "100%" }}>
               <Stepper activeStep={activeStep}>
@@ -382,7 +265,7 @@ export default function CreateMake() {
                           >
                             Cari Kod *
                           </label>
-                          <Dropdown label="Cari Kod" field="calc_raw" area="account_id" items={testDropdown} handleChange={handleChange}/> 
+                          <Dropdown label="Cari Kod" field="calc_raw" area="account_id" items={CUSTOMER} handleChange={handleChange}/> 
                         </div>
 
                         <div className="flex flex-col space-y-3">
@@ -392,7 +275,7 @@ export default function CreateMake() {
                           >
                             Analiz *
                           </label>
-                          <Dropdown label="Analiz" field="calc_raw" area="analyze_Name" items={testDropdown} handleChange={handleChange}/> 
+                          <Dropdown label="Analiz" field="calc_raw" area="analyze_Name" items={ANALYZE} handleChange={handleChange}/> 
                         </div>
 
                         <div className="flex flex-col">
@@ -451,60 +334,15 @@ export default function CreateMake() {
                             }
                           />
                         </div>
-
-                        <div className="flex flex-col">
+                        <div className="flex flex-col space-y-3">
                           <label
                             htmlFor="small-input"
                             className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
                           >
-                            TL Değeri 
+                            Ürün Tipi *
                           </label>
-                          <input
-                            type="number"
-                            step={"any"}
-                            className="cursor-not-allowed invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      
-                            disabled
-                            
-                           
-                          />
+                          <Dropdown label="Tip" field="calc_raw" area="type" items={TYPE} handleChange={handleChange}/> 
                         </div>
-
-                        <div className="flex flex-col">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            Analiz Katsayısı
-                          </label>
-                          <input
-                            type="number"
-                            step={"any"}
-                            className="cursor-not-allowed invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      
-                            disabled
-                            
-                            
-                          />
-                        </div>
-
-                        <div className="flex flex-col">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            Hammadde Fiyatı
-                          </label>
-                          <input
-                            type="number"
-                            step={"any"}
-                            className="cursor-not-allowed invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      
-                            disabled
-                          
-                          />
-                        </div>
-
                         <div className="flex flex-col">
                           <label
                             htmlFor="small-input"
@@ -524,6 +362,20 @@ export default function CreateMake() {
                           />
                         </div>
 
+                        
+
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            Hammadde Fiyatı
+                          </label>
+                          <p className="font-poppins">{raw_tl} ₺</p>
+                        </div>
+
+                       
+
                         <div className="flex flex-col">
                           <label
                             htmlFor="small-input"
@@ -531,25 +383,31 @@ export default function CreateMake() {
                           >
                             Döküm Kilogram Fiyatı (TL)
                           </label>
-                          <input
-                            type="number"
-                            step={"any"}
-                            className="cursor-not-allowed invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      
-                            disabled
-                            
-                            
-                          />
+                          <p className="font-poppins text-red-700">{kgCost} ₺</p>
                         </div>
-                        <div className="flex flex-col space-y-3">
+                        <div className="flex flex-col">
                           <label
                             htmlFor="small-input"
                             className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
                           >
-                            Ürün Tipi *
+                            TL Değeri 
                           </label>
-                          <Dropdown label="Tip" field="calc_raw" area="type" items={testDropdown} handleChange={handleChange}/> 
+                          <p className="font-poppins">{tl} ₺</p>
                         </div>
+
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            Analiz Katsayısı
+                          </label>
+                          <p className="font-poppins">{coef}</p>
+
+                          
+                          
+                        </div>
+                        
                       </div>
                     </div>
 
@@ -568,19 +426,11 @@ export default function CreateMake() {
                       Geri
                     </Button>
                     <Box sx={{ flex: "1 1 auto" }} />
-                    {isStepOptional(activeStep) && (
-                      <Button
-                        color="inherit"
-                        onClick={handleSkip}
-                        sx={{ mr: 1 }}
-                      >
-                        Skip
-                      </Button>
-                    )}
-
-                    <Button onClick={handleNext}>
+                    
+                    
+                    <Button disabled={!canSkip} onClick={handleNext}>
                       {activeStep === steps.length - 1 ? "Oluştur" : "ileri"}
-                    </Button>
+                    </Button >
                   </Box>
                 </React.Fragment>
               )}
@@ -627,112 +477,6 @@ export default function CreateMake() {
                 className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >
                 Tamam
-              </button>
-            </div>
-          </div>
-
-          <div
-            className={`${
-              !submit && !isValid
-                ? "visible scale-100"
-                : "invisible scale-0 h-0"
-            } mt-3 text-center transition duration-500 ease-out`}
-          >
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6 stroke-red-600"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                />
-              </svg>
-            </div>
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
-              Eksik Bilgi girdiniz !
-            </h3>
-            <div className="mt-2 px-7 py-3">
-              <p className="text-sm text-gray-500">
-                Lütfen formu kontrol edin!
-              </p>
-
-              <div className="text-justify font-poppins italic w-full space-y-1">
-                {!submit && !isValid
-                  ? Object.entries(currErrors).map((heading) => {
-                      return Object.entries(heading[1]).map((err, index) => {
-                        if (err[1] !== 0) {
-                          return (
-                            <p key={index} className="text-sm text-red-600">
-                              {err[1]}
-                            </p>
-                          );
-                        }
-                      });
-                    })
-                  : ""}
-              </div>
-            </div>
-            <div className="items-center px-4 py-3">
-              <button
-                id="ok-btn"
-                onClick={() => {
-                  setSubmit(false);
-                  setIsvalid(true);
-                }}
-                className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-300"
-              >
-                Geri Dön
-              </button>
-            </div>
-          </div>
-
-          <div
-            className={`${
-              !submit && createErr
-                ? "visible scale-100"
-                : "invisible scale-0 h-0"
-            } mt-3 text-center transition duration-500 ease-out`}
-          >
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6 stroke-red-600"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                />
-              </svg>
-            </div>
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
-              Böyle bir müşteri zaten mecvut !
-            </h3>
-            <div className="mt-2 px-7 py-3">
-              <p className="text-sm text-gray-500">
-                Lütfen formu kontrol edin!
-              </p>
-            </div>
-            <div className="items-center px-4 py-3">
-              <button
-                id="ok-btn"
-                onClick={() => {
-                  setSubmit(false);
-                  setCreateErr(false);
-                }}
-                className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-300"
-              >
-                Geri Dön
               </button>
             </div>
           </div>
