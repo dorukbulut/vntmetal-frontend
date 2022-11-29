@@ -7,69 +7,18 @@ export default function CreateAnalyze() {
   const [isValid, setIsvalid] = useState(true);
   const [createErr, setCreateErr] = useState(false);
   const router = useRouter();
-  const [fields, setFields] = useState({
-    customer: {
-      account_id: "",
-      account_title: "",
-      account_related: "",
-      account_IN: "",
-      account_tel1: "",
-      account_tel2: "",
-      account_fax: "",
-      account_email: "",
-      account_webSite: "",
-      account_KEP: "",
-    },
-    taxinfo: {
-      tax_info_taxID: "",
-      tax_info_Admin: "",
-      tax_info_AdminID: "",
-    },
 
-    adressinfo: {
-      customer_Address: "",
-      customer_bID: "",
-      customer_bName: "",
-      customer_dID: "",
-      customer_town: "",
-      customer_district: "",
-      customer_city: "",
-      customer_country: "",
-      customer_UAVT: "",
-      customer_postal: "",
-    },
+  const [fields, setFields] = useState({
+    analyze: {
+      analyze_Name :"",
+      analyze_coef : "",
+     },
   });
   const [currErrors, setErrors] = useState({
-    customer: {
-      account_id: "",
-      account_title: "",
-      account_related: "",
-      account_IN: "",
-      account_tel1: "",
-      account_tel2: "",
-      account_fax: "",
-      account_email: "",
-      account_webSite: "",
-      account_KEP: "",
-    },
-    taxinfo: {
-      tax_info_taxID: "",
-      tax_info_Admin: "",
-      tax_info_AdminID: "",
-    },
-
-    adressinfo: {
-      customer_Address: "",
-      customer_bID: "",
-      customer_bName: "",
-      customer_dID: "",
-      customer_town: "",
-      customer_district: "",
-      customer_city: "",
-      customer_country: "",
-      customer_UAVT: "",
-      customer_postal: "",
-    },
+    analyze: {
+      analyze_Name :"",
+      analyze_coef : "",
+     },
   });
 
   const handleChange = (field, area, e) => {
@@ -83,135 +32,23 @@ export default function CreateAnalyze() {
     let errors = currErrors;
     let isValid = true;
 
-    // account_id
-    if (check_fields["customer"]["account_id"] === "") {
+    // analyze_Name
+    if (check_fields["analyze"]["analyze_Name"] === "") {
       isValid = false;
-      errors["customer"]["account_id"] = "Cari kod boş bırakılamaz !";
+      errors["analyze"]["analyze_Name"] = "Analiz İsmi boş bırakılamaz !";
     } else {
-      errors["customer"]["account_id"] = "";
+      errors["analyze"]["analyze_Name"] = "";
     }
 
-    //account_title
-    if (check_fields["customer"]["account_title"]  === "") {
+    //analyze_coef
+    if (check_fields["analyze"]["analyze_coef"]  === "") {
       isValid = false;
-      errors["customer"]["account_title"] = "Cari Ünvan boş bırakalamaz !";
+      errors["analyze"]["analyze_coef"] = "Analiz Katsayısı boş bırakalamaz !";
     } else {
-      errors["customer"]["account_title"] = "";
+      errors["analyze"]["analyze_coef"] = "";
     }
 
-    //account_related
-    if (check_fields["customer"]["account_related"]  === "") {
-      isValid = false;
-      errors["customer"]["account_related"] = "İlgili Kişi boş bırakalamaz !";
-    } else {
-      errors["customer"]["account_related"] = "";
-    }
-
-    //account_IN
-    if (check_fields["customer"]["account_IN"]  === "") {
-      isValid = false;
-      errors["customer"]["account_IN"] =
-        "T.C. Kimlik Numarası  boş bırakalamaz !";
-    } else {
-      errors["customer"]["account_IN"] = "";
-    }
-
-    //account_KEP
-    if (check_fields["customer"]["account_KEP"] === "") {
-      isValid = false;
-      errors["customer"]["account_KEP"] = "KEP adresi  boş bırakalamaz !";
-    } else {
-      errors["customer"]["account_KEP"] = "";
-    }
-
-    //tax_info_taxID
-    if (check_fields["taxinfo"]["tax_info_taxID"]  === "") {
-      isValid = false;
-      errors["taxinfo"]["tax_info_taxID"] = "Vergi Numarası boş bırakalamaz !";
-    } else {
-      errors["taxinfo"]["tax_info_taxID"] = "";
-    }
-
-    //tax_info_AdminID
-    if (check_fields["taxinfo"]["tax_info_AdminID"]  === "") {
-      isValid = false;
-      errors["taxinfo"]["tax_info_AdminID"] =
-        "Vergi Dairesi No boş bırakalamaz !";
-    } else {
-      errors["taxinfo"]["tax_info_AdminID"] = "";
-    }
-
-    //customer_bID
-    if (check_fields["adressinfo"]["customer_bID"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_bID"] = "Bina No boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_bID"] = "";
-    }
-
-    //customer_bName
-    if (check_fields["adressinfo"]["customer_bName"] === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_bName"] = "Bina Adı boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_bName"] = "";
-    }
-
-    //customer_dID
-    if (check_fields["adressinfo"]["customer_dID"] === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_dID"] = "Kapı Numarası boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_dID"] = "";
-    }
-
-    //customer_town
-    if (check_fields["adressinfo"]["customer_town"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_town"] = "Kasaba  boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_town"] = "";
-    }
-
-    //customer_district
-    if (check_fields["adressinfo"]["customer_district"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_district"] = "Semt  boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_district"] = "";
-    }
-
-    //customer_city
-    if (check_fields["adressinfo"]["customer_city"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_city"] = "Şehir boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_city"] = "";
-    }
-
-    //customer_country
-    if (check_fields["adressinfo"]["customer_country"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_country"] = "Ülke  boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_country"] = "";
-    }
-
-    //customer_UAVT
-    if (check_fields["adressinfo"]["customer_UAVT"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_UAVT"] = "Adres No  boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_UAVT"] = "";
-    }
-
-    //customer_postal
-    if (check_fields["adressinfo"]["customer_postal"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_postal"] = "Posta Kodu boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_postal"] = "";
-    }
+    
 
     setErrors(errors);
 
@@ -226,7 +63,7 @@ export default function CreateAnalyze() {
         const res = await axios({ 
           method : "post",
           data: fields , 
-          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/create`,
+          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/analyze/create`,
           withCredentials : true});
           if(res.status === 200) {
             setSubmit(true);
@@ -312,7 +149,7 @@ export default function CreateAnalyze() {
                       placeholder=""
                       required
                       onChange={(e) =>
-                        handleChange("customer", "account_id", e)
+                        handleChange("analyze", "analyze_Name", e)
                       }
                     />
                   </div>
@@ -331,7 +168,7 @@ export default function CreateAnalyze() {
                       placeholder=""
                       required
                       onChange={(e) =>
-                        handleChange("customer", "account_title", e)
+                        handleChange("analyze", "analyze_coef", e)
                       }
                     />
                   </div>
@@ -391,7 +228,7 @@ export default function CreateAnalyze() {
             </h3>
             <div className="mt-2 px-7 py-3">
               <p className="text-sm text-gray-500">
-                Müşteri Başarıyla Kaydedildi!
+                Analiz Başarıyla Kaydedildi!
               </p>
             </div>
             <div className="items-center px-4 py-3">
@@ -474,7 +311,7 @@ export default function CreateAnalyze() {
 
             </div>
             <h3 className="text-lg leading-6 font-medium text-gray-900">
-              Böyle bir müşteri zaten mecvut !
+              Böyle bir analiz zaten mecvut !
             </h3>
             <div className="mt-2 px-7 py-3">
               <p className="text-sm text-gray-500">

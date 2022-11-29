@@ -1,11 +1,64 @@
 import { useState } from "react";
+import * as React from "react";
 import axios, { Axios } from "axios";
-import {useRouter} from "next/router";
+import Box from "@mui/material/Box";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+
+import { useRouter } from "next/router";
+const steps = ["Hammaddde Hesapla", "Teklif Hazırla", "Oluştur"];
 export default function CreateMake() {
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
   const [createErr, setCreateErr] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+  const [skipped, setSkipped] = useState(new Set());
+
+  const isStepOptional = (step) => {
+    return step === -1;
+  };
+
+  const isStepSkipped = (step) => {
+    return skipped.has(step);
+  };
+
+  const handleNext = () => {
+    let newSkipped = skipped;
+    if (isStepSkipped(activeStep)) {
+      newSkipped = new Set(newSkipped.values());
+      newSkipped.delete(activeStep);
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped(newSkipped);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleSkip = () => {
+    if (!isStepOptional(activeStep)) {
+      // You probably want to guard against something like this,
+      // it should never occur unless someone's actively trying to break something.
+      throw new Error("You can't skip a step that isn't optional.");
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped((prevSkipped) => {
+      const newSkipped = new Set(prevSkipped.values());
+      newSkipped.add(activeStep);
+      return newSkipped;
+    });
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
+  };
   const router = useRouter();
   const [fields, setFields] = useState({
     customer: {
@@ -92,7 +145,7 @@ export default function CreateMake() {
     }
 
     //account_title
-    if (check_fields["customer"]["account_title"]  === "") {
+    if (check_fields["customer"]["account_title"] === "") {
       isValid = false;
       errors["customer"]["account_title"] = "Cari Ünvan boş bırakalamaz !";
     } else {
@@ -100,7 +153,7 @@ export default function CreateMake() {
     }
 
     //account_related
-    if (check_fields["customer"]["account_related"]  === "") {
+    if (check_fields["customer"]["account_related"] === "") {
       isValid = false;
       errors["customer"]["account_related"] = "İlgili Kişi boş bırakalamaz !";
     } else {
@@ -108,7 +161,7 @@ export default function CreateMake() {
     }
 
     //account_IN
-    if (check_fields["customer"]["account_IN"]  === "") {
+    if (check_fields["customer"]["account_IN"] === "") {
       isValid = false;
       errors["customer"]["account_IN"] =
         "T.C. Kimlik Numarası  boş bırakalamaz !";
@@ -125,7 +178,7 @@ export default function CreateMake() {
     }
 
     //tax_info_taxID
-    if (check_fields["taxinfo"]["tax_info_taxID"]  === "") {
+    if (check_fields["taxinfo"]["tax_info_taxID"] === "") {
       isValid = false;
       errors["taxinfo"]["tax_info_taxID"] = "Vergi Numarası boş bırakalamaz !";
     } else {
@@ -133,7 +186,7 @@ export default function CreateMake() {
     }
 
     //tax_info_AdminID
-    if (check_fields["taxinfo"]["tax_info_AdminID"]  === "") {
+    if (check_fields["taxinfo"]["tax_info_AdminID"] === "") {
       isValid = false;
       errors["taxinfo"]["tax_info_AdminID"] =
         "Vergi Dairesi No boş bırakalamaz !";
@@ -142,7 +195,7 @@ export default function CreateMake() {
     }
 
     //customer_bID
-    if (check_fields["adressinfo"]["customer_bID"]  === "") {
+    if (check_fields["adressinfo"]["customer_bID"] === "") {
       isValid = false;
       errors["adressinfo"]["customer_bID"] = "Bina No boş bırakalamaz !";
     } else {
@@ -166,7 +219,7 @@ export default function CreateMake() {
     }
 
     //customer_town
-    if (check_fields["adressinfo"]["customer_town"]  === "") {
+    if (check_fields["adressinfo"]["customer_town"] === "") {
       isValid = false;
       errors["adressinfo"]["customer_town"] = "Kasaba  boş bırakalamaz !";
     } else {
@@ -174,7 +227,7 @@ export default function CreateMake() {
     }
 
     //customer_district
-    if (check_fields["adressinfo"]["customer_district"]  === "") {
+    if (check_fields["adressinfo"]["customer_district"] === "") {
       isValid = false;
       errors["adressinfo"]["customer_district"] = "Semt  boş bırakalamaz !";
     } else {
@@ -182,7 +235,7 @@ export default function CreateMake() {
     }
 
     //customer_city
-    if (check_fields["adressinfo"]["customer_city"]  === "") {
+    if (check_fields["adressinfo"]["customer_city"] === "") {
       isValid = false;
       errors["adressinfo"]["customer_city"] = "Şehir boş bırakalamaz !";
     } else {
@@ -190,7 +243,7 @@ export default function CreateMake() {
     }
 
     //customer_country
-    if (check_fields["adressinfo"]["customer_country"]  === "") {
+    if (check_fields["adressinfo"]["customer_country"] === "") {
       isValid = false;
       errors["adressinfo"]["customer_country"] = "Ülke  boş bırakalamaz !";
     } else {
@@ -198,7 +251,7 @@ export default function CreateMake() {
     }
 
     //customer_UAVT
-    if (check_fields["adressinfo"]["customer_UAVT"]  === "") {
+    if (check_fields["adressinfo"]["customer_UAVT"] === "") {
       isValid = false;
       errors["adressinfo"]["customer_UAVT"] = "Adres No  boş bırakalamaz !";
     } else {
@@ -206,7 +259,7 @@ export default function CreateMake() {
     }
 
     //customer_postal
-    if (check_fields["adressinfo"]["customer_postal"]  === "") {
+    if (check_fields["adressinfo"]["customer_postal"] === "") {
       isValid = false;
       errors["adressinfo"]["customer_postal"] = "Posta Kodu boş bırakalamaz !";
     } else {
@@ -220,27 +273,23 @@ export default function CreateMake() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (handleValidation()) {
-      try{
-        const res = await axios({ 
-          method : "post",
-          data: fields , 
-          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/create`,
-          withCredentials : true});
-          if(res.status === 200) {
-            setSubmit(true);
-            setIsvalid(true);
-          } 
-      }
-      catch(err) {
+      try {
+        const res = await axios({
+          method: "post",
+          data: fields,
+          url: `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/create`,
+          withCredentials: true,
+        });
+        if (res.status === 200) {
+          setSubmit(true);
+          setIsvalid(true);
+        }
+      } catch (err) {
         setSubmit(false);
         setCreateErr(true);
       }
-      
-
-      
-      
     } else {
       setIsvalid(false);
     }
@@ -282,472 +331,265 @@ export default function CreateMake() {
 
           <div
             className={`${
-              !submit && isValid && !createErr ? "visible scale-100" : "invisible scale-0 h-0"
+              !submit && isValid && !createErr
+                ? "visible scale-100"
+                : "invisible scale-0 h-0"
             } flex flex-col space-y-10`}
           >
-            <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
-              Yeni Müşteri
-            </p>
-            <form className="grid grid-cols-1 space-y-5 lg:grid-cols-3 ">
-              {/*Customer info*/}
-              <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
-                <div className="space-y-2 lg:w-1/2">
-                  <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
-                    Cari Hesap Bilgileri
+            <Box sx={{ width: "100%" }}>
+              <Stepper activeStep={activeStep}>
+                {steps.map((label, index) => {
+                  const stepProps = {};
+                  const labelProps = {};
+                  if (isStepOptional(index)) {
+                    labelProps.optional = (
+                      <Typography variant="caption">Optional</Typography>
+                    );
+                  }
+                  if (isStepSkipped(index)) {
+                    stepProps.completed = false;
+                  }
+                  return (
+                    <Step key={label} {...stepProps}>
+                      <StepLabel {...labelProps}>{label}</StepLabel>
+                    </Step>
+                  );
+                })}
+              </Stepper>
+              {activeStep === steps.length ? (
+                <React.Fragment>
+                  <Typography sx={{ mt: 2, mb: 1 }}>
+                    All steps completed - you&apos;re finished
+                  </Typography>
+                  <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                    <Box sx={{ flex: "1 1 auto" }} />
+                    <Button onClick={handleReset}>Reset</Button>
+                  </Box>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  <div className="mt-10">
+                  <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
+                    Yeni Teklif
                   </p>
-                  <hr />
-                </div>
+                  <form className="grid grid-cols-1 space-y-5 lg:grid lg:place-items-center ">
+                    {/*Customer info*/}
+                    <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
+                      <div className="space-y-2 lg:w-1/2">
+                        <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
+                          Hammaddde Hesaplama
+                        </p>
+                        <hr />
+                      </div>
 
-                <div className="space-y-5 lg:grid lg:grid-cols-3 lg:items-end lg:gap-3 ">
-                  <div className="flex flex-col ">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Cari Kod *
-                    </label>
-                    <input
-                      type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      required
-                      onChange={(e) =>
-                        handleChange("customer", "account_id", e)
-                      }
-                    />
-                  </div>
+                      <div className="space-y-5 lg:grid lg:grid-cols-3 lg:items-end lg:gap-3 ">
+                        <div className="flex flex-col ">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            Cari Kod *
+                          </label>
+                          <input
+                            type="number"
+                            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                            placeholder=""
+                            required
+                            onChange={(e) =>
+                              handleChange("customer", "account_id", e)
+                            }
+                          />
+                        </div>
 
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Cari Ünvan *
-                    </label>
-                    <input
-                      type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      required
-                      onChange={(e) =>
-                        handleChange("customer", "account_title", e)
-                      }
-                    />
-                  </div>
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            Cari Ünvan *
+                          </label>
+                          <input
+                            type="text"
+                            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                            placeholder=""
+                            required
+                            onChange={(e) =>
+                              handleChange("customer", "account_title", e)
+                            }
+                          />
+                        </div>
 
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      İlgili Kişi *
-                    </label>
-                    <input
-                      type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      required
-                      onChange={(e) =>
-                        handleChange("customer", "account_related", e)
-                      }
-                    />
-                  </div>
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            İlgili Kişi *
+                          </label>
+                          <input
+                            type="text"
+                            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                            placeholder=""
+                            required
+                            onChange={(e) =>
+                              handleChange("customer", "account_related", e)
+                            }
+                          />
+                        </div>
 
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      T.C Kimlik Numarası *
-                    </label>
-                    <input
-                      type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      required
-                      onChange={(e) =>
-                        handleChange("customer", "account_IN", e)
-                      }
-                    />
-                  </div>
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            T.C Kimlik Numarası *
+                          </label>
+                          <input
+                            type="number"
+                            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                            placeholder=""
+                            required
+                            onChange={(e) =>
+                              handleChange("customer", "account_IN", e)
+                            }
+                          />
+                        </div>
 
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Telefon Numarası 1
-                    </label>
-                    <input
-                      type="text"
-                      className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      onChange={(e) =>
-                        handleChange("customer", "account_tel1", e)
-                      }
-                    />
-                  </div>
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            Telefon Numarası 1
+                          </label>
+                          <input
+                            type="text"
+                            className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                            placeholder=""
+                            onChange={(e) =>
+                              handleChange("customer", "account_tel1", e)
+                            }
+                          />
+                        </div>
 
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Telefon Numarası 2
-                    </label>
-                    <input
-                      type="text"
-                      className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      onChange={(e) =>
-                        handleChange("customer", "account_tel2", e)
-                      }
-                    />
-                  </div>
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            Telefon Numarası 2
+                          </label>
+                          <input
+                            type="text"
+                            className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                            placeholder=""
+                            onChange={(e) =>
+                              handleChange("customer", "account_tel2", e)
+                            }
+                          />
+                        </div>
 
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Fax Numarası
-                    </label>
-                    <input
-                      type="text"
-                      className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      onChange={(e) =>
-                        handleChange("customer", "account_fax", e)
-                      }
-                    />
-                  </div>
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            Fax Numarası
+                          </label>
+                          <input
+                            type="text"
+                            className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                            placeholder=""
+                            onChange={(e) =>
+                              handleChange("customer", "account_fax", e)
+                            }
+                          />
+                        </div>
 
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      E-Posta Adresi
-                    </label>
-                    <input
-                      type="text"
-                      className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      onChange={(e) =>
-                        handleChange("customer", "account_email", e)
-                      }
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Web Sitesi
-                    </label>
-                    <input
-                      type="text"
-                      className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      onChange={(e) =>
-                        handleChange("customer", "account_webSite", e)
-                      }
-                    />
-                  </div>
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            E-Posta Adresi
+                          </label>
+                          <input
+                            type="text"
+                            className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                            placeholder=""
+                            onChange={(e) =>
+                              handleChange("customer", "account_email", e)
+                            }
+                          />
+                        </div>
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            Web Sitesi
+                          </label>
+                          <input
+                            type="text"
+                            className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                            placeholder=""
+                            onChange={(e) =>
+                              handleChange("customer", "account_webSite", e)
+                            }
+                          />
+                        </div>
 
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Kep Adresi *
-                    </label>
-                    <input
-                      type=""
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      required
-                      onChange={(e) =>
-                        handleChange("customer", "account_KEP", e)
-                      }
-                    />
-                  </div>
-                </div>
-              </div>
+                        <div className="flex flex-col">
+                          <label
+                            htmlFor="small-input"
+                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                          >
+                            Kep Adresi *
+                          </label>
+                          <input
+                            type=""
+                            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                            placeholder=""
+                            required
+                            onChange={(e) =>
+                              handleChange("customer", "account_KEP", e)
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
 
-              {/*Tax Info*/}
-              <div className="m-0 space-y-7 lg:flex lg:flex-col lg:items-center">
-                <div className="space-y-2 lg:w-1/2">
-                  <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
-                    Vergi Dairesi Bilgileri
-                  </p>
-                  <hr />
-                </div>
-
-                <div className="space-y-5 lg:grid lg:place-items-center">
-                  <div className="flex flex-col ">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Vergi Numarası *
-                    </label>
-                    <input
-                      type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      required
-                      onChange={(e) =>
-                        handleChange("taxinfo", "tax_info_taxID", e)
-                      }
-                    />
+                    
+                  </form>
                   </div>
-
-                  <div className="flex flex-col ">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                  
+                  <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                    <Button
+                      color="inherit"
+                      disabled={activeStep === 0}
+                      onClick={handleBack}
+                      sx={{ mr: 1 }}
                     >
-                      Vergi Dairesi *
-                    </label>
-                    <input
-                      type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      required
-                      onChange={(e) =>
-                        handleChange("taxinfo", "tax_info_Admin", e)
-                      }
-                    />
-                  </div>
+                      Geri
+                    </Button>
+                    <Box sx={{ flex: "1 1 auto" }} />
+                    {isStepOptional(activeStep) && (
+                      <Button
+                        color="inherit"
+                        onClick={handleSkip}
+                        sx={{ mr: 1 }}
+                      >
+                        Skip
+                      </Button>
+                    )}
 
-                  <div className="flex flex-col ">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Vergi Dairesi No *
-                    </label>
-                    <input
-                      type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      required
-                      onChange={(e) =>
-                        handleChange("taxinfo", "tax_info_AdminID", e)
-                      }
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/*Address Info*/}
-              <div className=" m-0 lg:flex  space-y-5 lg:flex-col lg:items-center">
-                <div className="space-y-2 lg:w-1/2">
-                  <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
-                    Adres Bilgileri
-                  </p>
-                  <hr />
-                </div>
-
-                <div className="space-y-2 lg:grid lg:grid-cols-3 lg:items-end lg:gap-3 ">
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Adres
-                    </label>
-                    <input
-                      type="text"
-                      className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      onChange={(e) =>
-                        handleChange("adressinfo", "customer_Address", e)
-                      }
-                    />
-                  </div>
-
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Bina Numarası *
-                    </label>
-                    <input
-                      type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      required
-                      onChange={(e) =>
-                        handleChange("adressinfo", "customer_bID", e)
-                      }
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Bina ismi *
-                    </label>
-                    <input
-                      type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      required
-                      onChange={(e) =>
-                        handleChange("adressinfo", "customer_bName", e)
-                      }
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Kapı Numarası *
-                    </label>
-                    <input
-                      type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      required
-                      onChange={(e) =>
-                        handleChange("adressinfo", "customer_dID", e)
-                      }
-                    />
-                  </div>
-
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Kasaba *
-                    </label>
-                    <input
-                      type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      required
-                      onChange={(e) =>
-                        handleChange("adressinfo", "customer_town", e)
-                      }
-                    />
-                  </div>
-
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Semt *
-                    </label>
-                    <input
-                      type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      required
-                      onChange={(e) =>
-                        handleChange("adressinfo", "customer_district", e)
-                      }
-                    />
-                  </div>
-
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Şehir *
-                    </label>
-                    <input
-                      type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      required
-                      onChange={(e) =>
-                        handleChange("adressinfo", "customer_city", e)
-                      }
-                    />
-                  </div>
-
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Ülke *
-                    </label>
-                    <input
-                      type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      required
-                      onChange={(e) =>
-                        handleChange("adressinfo", "customer_country", e)
-                      }
-                    />
-                  </div>
-
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Adres No *
-                    </label>
-                    <input
-                      type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      required
-                      onChange={(e) =>
-                        handleChange("adressinfo", "customer_UAVT", e)
-                      }
-                    />
-                  </div>
-
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Posta Kodu *
-                    </label>
-                    <input
-                      type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      required
-                      onChange={(e) =>
-                        handleChange("adressinfo", "customer_postal", e)
-                      }
-                    />
-                  </div>
-                </div>
-              </div>
-            </form>
-
-            {/*Buttons*/}
-            <div className="flex justify-end space-x-3">
-              <button
-                className="bg-green-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                type="submit"
-                onClick={handleSubmit}
-              >
-                Oluştur
-              </button>
-              <button
-                className="bg-red-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                type="button"
-                onClick={toggleCreate}
-              >
-                İptal
-              </button>
-            </div>
+                    <Button onClick={handleNext}>
+                      {activeStep === steps.length - 1 ? "Oluştur" : "ileri"}
+                    </Button>
+                  </Box>
+                </React.Fragment>
+              )}
+            </Box>
           </div>
 
           <div
@@ -786,7 +628,6 @@ export default function CreateMake() {
                   toggleCreate();
                   setSubmit(false);
                   router.reload(window.location.pathname);
-                  
                 }}
                 className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >
@@ -803,11 +644,20 @@ export default function CreateMake() {
             } mt-3 text-center transition duration-500 ease-out`}
           >
             <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-             
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 stroke-red-600">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-</svg>
-
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6 stroke-red-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                />
+              </svg>
             </div>
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               Eksik Bilgi girdiniz !
@@ -818,16 +668,20 @@ export default function CreateMake() {
               </p>
 
               <div className="text-justify font-poppins italic w-full space-y-1">
-              {!submit && !isValid ? Object.entries(currErrors).map(heading => {
-                return Object.entries(heading[1]).map((err, index) => {
-                  if(err[1] !==0) {
-                    return <p key={index} className="text-sm text-red-600">{err[1]}</p>
-                  }
-                })
-              }) : ""}
+                {!submit && !isValid
+                  ? Object.entries(currErrors).map((heading) => {
+                      return Object.entries(heading[1]).map((err, index) => {
+                        if (err[1] !== 0) {
+                          return (
+                            <p key={index} className="text-sm text-red-600">
+                              {err[1]}
+                            </p>
+                          );
+                        }
+                      });
+                    })
+                  : ""}
               </div>
-              
-              
             </div>
             <div className="items-center px-4 py-3">
               <button
@@ -835,7 +689,6 @@ export default function CreateMake() {
                 onClick={() => {
                   setSubmit(false);
                   setIsvalid(true);
-                  
                 }}
                 className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >
@@ -852,11 +705,20 @@ export default function CreateMake() {
             } mt-3 text-center transition duration-500 ease-out`}
           >
             <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-             
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 stroke-red-600">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-</svg>
-
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6 stroke-red-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                />
+              </svg>
             </div>
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               Böyle bir müşteri zaten mecvut !
@@ -864,7 +726,7 @@ export default function CreateMake() {
             <div className="mt-2 px-7 py-3">
               <p className="text-sm text-gray-500">
                 Lütfen formu kontrol edin!
-              </p>  
+              </p>
             </div>
             <div className="items-center px-4 py-3">
               <button
@@ -872,7 +734,6 @@ export default function CreateMake() {
                 onClick={() => {
                   setSubmit(false);
                   setCreateErr(false);
-                  
                 }}
                 className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >
