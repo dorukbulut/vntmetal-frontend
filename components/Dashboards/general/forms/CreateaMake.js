@@ -11,7 +11,16 @@ import { useRouter } from "next/router";
 import Dropdown from "./Dropdown";
 
 
-const steps = ["Hammaddde Hesapla", "Teklif Hazırla", "Oluştur"];
+//TODO-1 Guide user to select between material calculate vs anlaşmalı olarak devam et.
+//TODO-2 Roadmap Material Hesaplama :
+  //TODO-2-1 Hammadde hesaplama güncelle
+  //TODO-2-2 5 Ana Ürün oluşturma seçenekleri ekle.
+  //TODO-2-3 5 Güncelleme ve silme özellikleri  
+
+//TODO-3 Roadmap Teklif :
+  //TODO-3-1 5 Ana Ürün oluşturma seçenekleri ekle.
+  //TODO-3-2 5 Güncelleme ve silme özellikleri
+const steps = ["Teklif Tipi Seç", "Teklifi Hazırla", "Teklifi Oluştur"];
 const TYPE = [{key: "Düz Burç", value : "0"}, {key : "Plaka", value : "1"}, {key : "Flanşlı Burç", value : "2"}]
 
 

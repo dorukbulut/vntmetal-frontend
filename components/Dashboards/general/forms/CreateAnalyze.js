@@ -11,13 +11,15 @@ export default function CreateAnalyze() {
   const [fields, setFields] = useState({
     analyze: {
       analyze_Name :"",
-      analyze_coef : "",
+      analyze_coefCopper : "",
+      analyze_coefTin : "",
      },
   });
   const [currErrors, setErrors] = useState({
     analyze: {
       analyze_Name :"",
-      analyze_coef : "",
+      analyze_coefCopper : "",
+      analyze_coefTin : "",
      },
   });
 
@@ -40,12 +42,20 @@ export default function CreateAnalyze() {
       errors["analyze"]["analyze_Name"] = "";
     }
 
-    //analyze_coef
-    if (check_fields["analyze"]["analyze_coef"]  === "") {
+    //analyze_coefCopper
+    if (check_fields["analyze"]["analyze_coefCopper"]  === "") {
       isValid = false;
-      errors["analyze"]["analyze_coef"] = "Analiz Katsayısı boş bırakalamaz !";
+      errors["analyze"]["analyze_coefCopper"] = "Analiz Bakır Katsayısı boş bırakalamaz !";
     } else {
-      errors["analyze"]["analyze_coef"] = "";
+      errors["analyze"]["analyze_coefCopper"] = "";
+    }
+
+    //analyze_coefTin
+    if (check_fields["analyze"]["analyze_coefTin"]  === "") {
+      isValid = false;
+      errors["analyze"]["analyze_coefTin"] = "Analiz Kalay Katsayısı boş bırakalamaz !";
+    } else {
+      errors["analyze"]["analyze_coefTin"] = "";
     }
 
     
@@ -159,7 +169,7 @@ export default function CreateAnalyze() {
                       htmlFor="small-input"
                       className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
                     >
-                      Analiz Katsayısı *
+                      Analiz Katsayısı Bakır *
                     </label>
                     <input
                       type="number"
@@ -168,7 +178,26 @@ export default function CreateAnalyze() {
                       placeholder=""
                       required
                       onChange={(e) =>
-                        handleChange("analyze", "analyze_coef", e)
+                        handleChange("analyze", "analyze_coefCopper", e)
+                      }
+                    />
+                  </div>
+
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                    >
+                      Analiz Katsayısı Kalay *
+                    </label>
+                    <input
+                      type="number"
+                      step={"any"}
+                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      placeholder=""
+                      required
+                      onChange={(e) =>
+                        handleChange("analyze", "analyze_coefTin", e)
                       }
                     />
                   </div>
