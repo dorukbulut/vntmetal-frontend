@@ -9,65 +9,39 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
 import Dropdown from "./Dropdown";
-
+import RawCalc from "./RawCalc";
 
 //TODO-1 Guide user to select between material calculate vs anlaşmalı olarak devam et.
 //TODO-2 Roadmap Material Hesaplama :
-  //TODO-2-1 Hammadde hesaplama güncelle
-  //TODO-2-2 5 Ana Ürün oluşturma seçenekleri ekle.
-  //TODO-2-3 5 Güncelleme ve silme özellikleri  
+//TODO-2-1 Hammadde hesaplama güncelle
+//TODO-2-2 5 Ana Ürün oluşturma seçenekleri ekle.
+//TODO-2-3 5 Güncelleme ve silme özellikleri
 
 //TODO-3 Roadmap Teklif :
-  //TODO-3-1 5 Ana Ürün oluşturma seçenekleri ekle.
-  //TODO-3-2 5 Güncelleme ve silme özellikleri
-const steps = ["Teklif Tipi Seç", "Teklifi Hazırla", "Teklifi Oluştur"];
-const TYPE = [{key: "Düz Burç", value : "0"}, {key : "Plaka", value : "1"}, {key : "Flanşlı Burç", value : "2"}]
+//TODO-3-1 5 Ana Ürün oluşturma seçenekleri ekle.
+//TODO-3-2 5 Güncelleme ve silme özellikleri
+const steps = ["Teklif Tipi Seç", "Teklifi Hazırla", "Teklifi Oluştur", "Teklifi Kaydet"];
 
+const QUOTYPE = [
+  {key : "Anlaşmalı Teklif Hazırlama", value : "0"},
+  {key : "Hammade Üzerinden Teklif Hazırlama", value: "1"}
+]
 
-export default function CreateMake({analyzes, customers}) {
+export default function CreateMake({ analyzes, customers }) {
 
-  const ANALYZE = analyzes.map(analyse => {
-    return {
-      key : analyse.analyze_Name,
-      value : analyse.analyze_coef
-    }
-  })
-
-  const CUSTOMER = customers.map(customer => {
-    return {
-      key : customer.account_id,
-      value : customer.account_id
-    }
-  })
-
- 
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
   const [createErr, setCreateErr] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
-  const [canSkip, setCanSkip] = useState(false);
   const router = useRouter();
 
   const [fields, setFields] = useState({
-    calc_raw: {
-      account_id : '',
-      analyze_Name : '',
-      LME :  '',
-      euro : '',
-      usd : '',
-      workmanship : '',
-      type : '',
-
-    },
-    
-  });
-  
-  const [coef, setCoef] = useState(0);
-  const [tl, setTL] = useState(0);
-  const [raw_tl, setRawTl] = useState(0);
-  const [kgCost, setCost] = useState(0);
+    quo_type  :  {
+      quo_type_name : ""
+    }
+  })
 
   const isStepOptional = (step) => {
     return step === -1;
@@ -92,14 +66,10 @@ export default function CreateMake({analyzes, customers}) {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  
-
   const handleReset = () => {
     setActiveStep(0);
   };
-  
-  
-  
+
   const handleValidation = () => {
     let check_fields = fields;
     let isValid = true;
@@ -117,43 +87,37 @@ export default function CreateMake({analyzes, customers}) {
     // LME
     if (check_fields["calc_raw"]["LME"] === "") {
       isValid = false;
-    } 
+    }
 
     // euro
     if (check_fields["calc_raw"]["euro"] === "") {
       isValid = false;
-    } 
+    }
 
     // usd
     if (check_fields["calc_raw"]["usd"] === "") {
       isValid = false;
-    } 
+    }
 
     // workmanship
     if (check_fields["calc_raw"]["workmanship"] === "") {
       isValid = false;
-    } 
+    }
 
     // type
     if (check_fields["calc_raw"]["type"] === "") {
       isValid = false;
-    } 
+    }
     return isValid;
   };
 
   const handleChange = (field, area, e) => {
-    let new_fields = fields;
-    new_fields[field][area] = e.target.value;
-    setFields(new_fields);
+    const new_fields = fields
+    new_fields[field][area] = e.target.value
 
-    setCanSkip(handleValidation());
-    setCoef(fields.calc_raw.analyze_Name)
-    setTL(fields.calc_raw.usd * fields.calc_raw.LME)
-    setRawTl(fields.calc_raw.usd * fields.calc_raw.LME *fields.calc_raw.analyze_Name/1000)
-    setCost((fields.calc_raw.usd * fields.calc_raw.LME *fields.calc_raw.analyze_Name/1000) + parseFloat(fields.calc_raw.workmanship));
+    setFields(new_fields)
+    console.log(fields);
   };
-
- 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -252,179 +216,48 @@ export default function CreateMake({analyzes, customers}) {
                 </React.Fragment>
               ) : (
                 <React.Fragment>
-                  {activeStep == 0 ? <div className="mt-10">
-                  <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
-                    Yeni Teklif
-                  </p>
-                  <form className="grid grid-cols-1 space-y-5 lg:grid lg:place-items-center ">
-                    {/*Customer info*/}
-                    <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
-                      <div className="space-y-2 lg:w-1/2">
-                        <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
-                          Hammadde Hesaplama
-                        </p>
-                        <hr />
+                  {activeStep == 0 ? (
+                    <form className="grid grid-cols-1 space-y-5 lg:grid lg:place-items-center ">
+                      {/*Customer info*/}
+                      <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
+                        <div className="space-y-2 lg:w-full">
+                          <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
+                            Teklif Tipi Seç
+                          </p>
+                          <hr />
+                        </div>
+
+                        <div className="space-y-5 lg:grid  lg:w-full lg:items-end lg:gap-3 ">
+                          <div className="lg:w-96 space-y-5">
+                            <label
+                              htmlFor="small-input"
+                              className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                            >
+                              Teklif Tipi *
+                            </label>
+                            <Dropdown
+                              label="Teklif Tipi Seç"
+                              field="quo_type"
+                              area="quo_type_name"
+                              items={QUOTYPE}
+                              handleChange={handleChange}
+                            />
+                          </div>
+                        </div>
                       </div>
+                    </form>
+                  ) : (
+                    ""
+                  )}
 
-                      <div className="space-y-5 lg:grid lg:grid-cols-3 lg:items-end lg:gap-3 ">
-                        <div className="flex flex-col space-y-3 ">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            Cari Kod *
-                          </label>
-                          <Dropdown label="Cari Kod" field="calc_raw" area="account_id" items={CUSTOMER} handleChange={handleChange}/> 
-                        </div>
+                  {
+                    activeStep == 1 ? (
+                      fields.quo_type.quo_type_name == 0 ? (<p>
+                        this is anlaşmalı
+                      </p>) : (<RawCalc analyzes={analyzes} customers={customers}></RawCalc>)
+                    ) : ("")
+                  }
 
-                        <div className="flex flex-col space-y-3">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            Analiz *
-                          </label>
-                          <Dropdown label="Analiz" field="calc_raw" area="analyze_Name" items={ANALYZE} handleChange={handleChange}/> 
-                        </div>
-
-                        <div className="flex flex-col">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            LME Copper *
-                          </label>
-                          <input
-                            type="number"
-                            step={"any"}
-                            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                            placeholder=""
-                            required
-                            onChange={(e) =>
-                              handleChange("calc_raw", "LME", e)
-                            }
-                          />
-                        </div>
-
-                        <div className="flex flex-col">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            Dolar Kuru *
-                          </label>
-                          <input
-                            type="number"
-                            step={"any"}
-                            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                            placeholder=""
-                            required
-                            onChange={(e) =>
-                              handleChange("calc_raw", "usd", e)
-                            }
-                          />
-                        </div>
-
-                        <div className="flex flex-col">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            Euro Kuru *
-                          </label>
-                          <input
-                            type="number"
-                            step={"any"}
-                            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                            placeholder=""
-                            required
-                            onChange={(e) =>
-                              handleChange("calc_raw", "euro", e)
-                            }
-                          />
-                        </div>
-                        <div className="flex flex-col space-y-3">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            Ürün Tipi *
-                          </label>
-                          <Dropdown label="Tip" field="calc_raw" area="type" items={TYPE} handleChange={handleChange}/> 
-                        </div>
-                        <div className="flex flex-col">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            İşçilik *
-                          </label>
-                          <input
-                            type="number"
-                            step={"any"}
-                            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                            placeholder=""
-                            required
-                            onChange={(e) =>
-                              handleChange("calc_raw", "workmanship", e)
-                            }
-                          />
-                        </div>
-
-                        
-
-                        <div className="flex flex-col">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            Hammadde Fiyatı
-                          </label>
-                          <p className="font-poppins">{raw_tl} ₺</p>
-                        </div>
-
-                       
-
-                        <div className="flex flex-col">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            Döküm Kilogram Fiyatı (TL)
-                          </label>
-                          <p className="font-poppins text-red-700">{kgCost} ₺</p>
-                        </div>
-                        <div className="flex flex-col">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            TL Değeri 
-                          </label>
-                          <p className="font-poppins">{tl} ₺</p>
-                        </div>
-
-                        <div className="flex flex-col">
-                          <label
-                            htmlFor="small-input"
-                            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                          >
-                            Analiz Katsayısı
-                          </label>
-                          <p className="font-poppins">{coef}</p>
-
-                          
-                          
-                        </div>
-                        
-                      </div>
-                    </div>
-
-                    
-                  </form>
-                  </div> : ""}
-                  
-                  
                   <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
                     <Button
                       color="inherit"
@@ -435,11 +268,10 @@ export default function CreateMake({analyzes, customers}) {
                       Geri
                     </Button>
                     <Box sx={{ flex: "1 1 auto" }} />
-                    
-                    
-                    <Button disabled={!canSkip} onClick={handleNext}>
+
+                    <Button disabled={false} onClick={handleNext}>
                       {activeStep === steps.length - 1 ? "Oluştur" : "ileri"}
-                    </Button >
+                    </Button>
                   </Box>
                 </React.Fragment>
               )}
