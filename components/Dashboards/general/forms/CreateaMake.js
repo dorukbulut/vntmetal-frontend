@@ -77,11 +77,52 @@ export default function CreateMake({ analyzes, customers }) {
     quotation_item : {
       unit_frequence : '',
       model_price : '',
-      treatment_price  : '',
-      test_price : '',
-      alternativeSale_price : '',
-      treatment_firm : '',
       model_firm : '',
+      treatment_price : '',
+      treatment_firm : '',
+      test_price : '',
+      benefit : '',
+      alterPrice : '',
+      calc_weigth : '',
+    },
+    straigth_bush : {
+      bigger_diameter : '',
+      inner_diameter : '',
+      lenght : '',
+
+    },
+    plate_strip : {
+      width : '',
+      lenght : '',
+      thickness : '',
+
+    },
+    bracket_bush : {
+      bigger_diameter : '',
+      inner_diameter : '',
+      body_diameter : '',
+      bush_length : '',
+      bracket_length : '',
+    },
+    middlebracket_bush : {
+      bracket_q1 : '',
+      bracket_q2 : '',
+      bracket_q3 : '',
+      bracket_q4 : '',
+      bracket_l1 : '',
+      bracket_l2 : '',
+      bracket_l3 : '',
+      bracket_full : '',
+
+    },
+    doublebracket_bush : {
+      bigger_diameter : '',
+      body_diameter : '',
+      inner_diameter : '',
+      bracket_l1 : '',
+      bracket_l2 : '',
+      bracket_l3 : '',
+      bracket_full : '',
     },
     calc_raw: {
       account_id : '',
@@ -103,6 +144,11 @@ export default function CreateMake({ analyzes, customers }) {
   const [canSkipStep1, setCanSkip1] = useState(false);
   const [canSkipStep2, setCanSkip2] = useState(false);
   const [type , setType] = useState('');
+
+  const [moldingPrice, setMolding] = useState(0);
+  const [modelUnitPrice, setModelUnitPrice]  = useState(0);
+  const [cost, setCost] = useState(0);
+  const [salePrice,setPrice] = useState([]);
 
   const isStepOptional = (step) => {
     return step === -1;
@@ -202,6 +248,7 @@ export default function CreateMake({ analyzes, customers }) {
     setTinPrice(((fields.calc_raw.TIN * fields.calc_raw.usd)/1000 * parseFloat(coef.split(",")[1]) /100).toFixed(3))
     setUnitPrice(((((fields.calc_raw.LME * fields.calc_raw.usd * parseFloat(coef.split(",")[0]) /1000) + (fields.calc_raw.TIN * fields.calc_raw.usd)/1000 * parseFloat(coef.split(",")[1]) /100) ) + parseFloat(fields.calc_raw.workmanship)).toFixed(3))
     setType(fields.calc_raw.type);
+    setModelUnitPrice(parseFloat(fields["quotation_item"]["model_price"]) / parseInt(fields["quotation_item"]["unit_frequence"]))
     setCanSkip1(handleValidation1());
     setCanSkip2(handleValidation0());  
   };
@@ -563,7 +610,7 @@ export default function CreateMake({ analyzes, customers }) {
                   }
 
                   {
-                    activeStep == 2 ? <QuotationItem kgPrice={kgPrice} name={type}> {TYPE_COMPS[type]} </QuotationItem> : ""
+                    activeStep == 2 ? <QuotationItem fields={fields} calcs={{modelUnitPrice, modelUnitPrice, cost, salePrice}} handleChange={handleChange} kgPrice={kgPrice} name={type}> {TYPE_COMPS[type]} </QuotationItem> : ""
                   }
 
                   <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>

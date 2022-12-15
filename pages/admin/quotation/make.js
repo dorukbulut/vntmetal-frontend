@@ -11,8 +11,8 @@ import { useRouter } from "next/router";
 import usePagination from "../../../components/Dashboards/general/ui/Pagination";
 import Pagination from "@mui/material/Pagination";
 
-export default function quotationMake({analyzes, customers}) {
-  
+export default function quotationMake({analyzes, customers, items}) {
+  console.log(items);
   return (
     <div className="">
       <Navbar />
@@ -88,18 +88,18 @@ export default function quotationMake({analyzes, customers}) {
 
         <div className="w-full bg-gray-100">
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            {[].length !== 0 ? (
+            {items.length !== 0 ? (
               <table className="w-full text-sm text-left text-gray-500 ">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                     <th scope="col" className="px-6 py-3">
-                      CARİ ÜNVAN
+                      ÜRÜN TİPİ 
                     </th>
                     <th scope="col" className="px-6 py-3">
                       CARİ KOD
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      İLGİLİ KİŞİ
+                      SATIŞ FİYATI    
                     </th>
                     <th scope="col" className="px-6 py-3">
                       ÜLKE
@@ -112,6 +112,31 @@ export default function quotationMake({analyzes, customers}) {
                 <tbody>
                  
                 </tbody>
+                {
+                   items.map((item, index) =>  {
+                    <tr
+                          key={index}
+                          className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                        >
+                          <th
+                            scope="row"
+                            className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                          >
+                            {}
+                          </th>
+                          <td className="px-6 py-4"></td>
+                          <td className="px-6 py-4">
+                            {}
+                          </td>
+                          <td className="px-6 py-4">
+                            {}
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            
+                          </td>
+                        </tr>
+                   })
+                }
               </table>
             ) : (
               <div className="grid place-items-center p-5">
@@ -141,11 +166,16 @@ export async function getServerSideProps(context) {
     const res2 = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`
     );
-    if (res.status === 200 && res2.status === 200) {
+    const res3 = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/all`
+    )
+    
+    if (res.status === 200 && res2.status === 200 && res3.status === 200) {
       return {
         props: {
           analyzes: res.data.analyzes,
-          customers : res2.data.customers
+          customers : res2.data.customers,
+          items: res3.data
         },
       };
     }

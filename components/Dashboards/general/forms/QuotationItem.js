@@ -1,30 +1,15 @@
 import Dropdown from "./Dropdown";
-import { useState } from "react";
-export default function QuotationItem({ name, children,kgPrice, usd, euro}) {
+import React, {useState} from "react";
+export default function QuotationItem({ name, children,kgPrice, usd, euro, handleChange, calcs, fields}) {
     
-  const [fields, setFields] = useState({
-    unit_frequence : '',
-    model_price : '',
-    model_firm : '',
-    treament_price : '',
-    treamtment_firm : '',
-    test_price : '',
-    benefit : '',
-    alterPrice : ''
-
-  })
-  const [moldingPrice, setMolding] = useState(0);
-  const [modelUnitPrice, setModelUnitPrice]  = useState(0);
-  const  [cost, setCost] = useState(0);
-  const [salePrice,setPrice] = useState([]);
-
-  const handleChange = (field,e) => {
-    const new_fields = fields
-    new_fields[field] = e.target.value
-    setFields(new_fields);
-
-    setModelUnitPrice(parseFloat(fields.model_price) / parseInt(fields.unit_frequence));
-  };
+  const childrenWithProps = React.Children.map(children, child => {
+    // Checking isValidElement is the safe way and avoids a
+    // typescript error too.
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, { handleChange, fields });
+    }
+    return child;
+  });
   return (
     <div className="mt-10 lg:grid lg:place-items-center">
       <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
@@ -32,7 +17,7 @@ export default function QuotationItem({ name, children,kgPrice, usd, euro}) {
       </p>
       <form className="grid grid-cols-1 space-y-5 lg:grid lg:grid-cols-2  ">
         
-        {children}
+        {childrenWithProps}
         <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
           <div className="space-y-2 lg:w-1/2">
             <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
@@ -54,7 +39,8 @@ export default function QuotationItem({ name, children,kgPrice, usd, euro}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                onChange={(e) => handleChange("unit_frequence", e)}
+                defaultValue={fields["quotation_item"]["unit_frequence"]}
+                onChange={(e) => handleChange("quotation_item","unit_frequence", e)}
               />
             </div>
 
@@ -91,7 +77,8 @@ export default function QuotationItem({ name, children,kgPrice, usd, euro}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                onChange={(e) => handleChange("model_price", e)}
+                defaultValue={fields["quotation_item"]["model_price"]}
+                onChange={(e) => handleChange("quotation_item","model_price", e)}
               />
             </div>
 
@@ -102,7 +89,7 @@ export default function QuotationItem({ name, children,kgPrice, usd, euro}) {
               >
                 Model Adet Fiyatı (₺)
               </label>
-              <p className="font-poppins">{modelUnitPrice} ₺</p>
+              <p className="font-poppins">{calcs.modelUnitPrice} ₺</p>
             </div>
 
             <div className="flex flex-col">
@@ -118,6 +105,8 @@ export default function QuotationItem({ name, children,kgPrice, usd, euro}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
+                defaultValue={fields["quotation_item"]["model_firm"]}
+                onChange={(e) => handleChange("quotation_item","model_firm", e)}
               />
             </div>
 
@@ -134,6 +123,8 @@ export default function QuotationItem({ name, children,kgPrice, usd, euro}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
+                defaultValue={fields["quotation_item"]["treatment_price"]}
+                onChange={(e) => handleChange("quotation_item","treatment_price", e)}
               />
             </div>
 
@@ -150,6 +141,9 @@ export default function QuotationItem({ name, children,kgPrice, usd, euro}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
+                defaultValue={fields["quotation_item"]["treatment_firm"]}
+                onChange={(e) => handleChange("quotation_item","treatment_firm", e)}
+                
               />
             </div>
 
@@ -166,6 +160,8 @@ export default function QuotationItem({ name, children,kgPrice, usd, euro}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
+                defaultValue={fields["quotation_item"]["test_price"]}
+                onChange={(e) => handleChange("quotation_item","test_price", e)}
               />
             </div>
 
@@ -194,6 +190,8 @@ export default function QuotationItem({ name, children,kgPrice, usd, euro}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
+                defaultValue={fields["quotation_item"]["benefit"]}
+                onChange={(e) => handleChange("quotation_item","benefit", e)}
               />
             </div>
 
@@ -227,6 +225,8 @@ export default function QuotationItem({ name, children,kgPrice, usd, euro}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
+                defaultValue={fields["quotation_item"]["alterPrice"]}
+                onChange={(e) => handleChange("quotation_item","alterPrice", e)}
               />
             </div>
           </div>

@@ -1,4 +1,4 @@
-export default function BracketBush () {
+export default function BracketBush ({handleChange, fields}) {
     return (
         <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center ">
             <div className="space-y-2 lg:w-1/2">
@@ -21,6 +21,8 @@ export default function BracketBush () {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
+                defaultValue={fields["bracket_bush"]["bigger_diameter"]}
+                onChange={(e) => handleChange("bracket_bush", "bigger_diameter",e)}
               />
             </div>
 
@@ -36,7 +38,9 @@ export default function BracketBush () {
                 step={"any"}
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
+                defaultValue={fields["bracket_bush"]["body_diameter"]}
                 required
+                onChange={(e) => handleChange("bracket_bush", "body_diameter",e)}
               />
             </div>
 
@@ -53,6 +57,8 @@ export default function BracketBush () {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
+                defaultValue={fields["bracket_bush"]["bush_length"]}
+                onChange={(e) => handleChange("bracket_bush", "bush_length",e)}
               />
             </div>
             <div className="flex flex-col">
@@ -68,6 +74,8 @@ export default function BracketBush () {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
+                defaultValue={fields["bracket_bush"]["bracket_length"]}
+                onChange={(e) => handleChange("bracket_bush", "bracket_length",e)}
               />
             </div>
             <div className="flex flex-col">
@@ -83,6 +91,8 @@ export default function BracketBush () {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
+                defaultValue={fields["bracket_bush"]["inner_diameter"]}
+                onChange={(e) => handleChange("bracket_bush", "inner_diameter",e)}
               />
             </div>
 
