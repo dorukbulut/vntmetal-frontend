@@ -9,7 +9,12 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
 import Dropdown from "./Dropdown";
-
+import QuotationItem from "./QuotationItem";
+import StrBush from "./StrBush";
+import PlateStrip from "./PlateStrip";
+import BracketBush from "./BracketBush"
+import DoubleBracketBush from "./DoubleBracketBush";
+import MiddleBracketBush from "./MiddleBracketBush";
 //TODO : Listleme Özellikleri
 
 //TODO-2 Roadmap Material Hesaplama :
@@ -34,6 +39,14 @@ const TYPE = [
   { key: "Ortadan Flanşlı Burç", value: "Ortadan Flanşlı Burç" },
   { key: "Çift Flanşlı Burç", value: "Çift Flanşlı Burç" },
 ];
+
+const TYPE_COMPS = {
+  "Düz Burç" : <StrBush />,
+  "Plaka" : <PlateStrip />,
+  "Flanşlı Burç" : <BracketBush />,
+  "Çift Flanşlı Burç": <DoubleBracketBush />,
+  "Ortadan Flanşlı Burç" : <MiddleBracketBush />
+}
 
 export default function CreateMake({ analyzes, customers }) {
   const ANALYZE = analyzes.map((analyse) => {
@@ -61,7 +74,15 @@ export default function CreateMake({ analyzes, customers }) {
     quo_type  :  {
       quo_type_name : ""
     },
-
+    quotation_item : {
+      unit_frequence : '',
+      model_price : '',
+      treatment_price  : '',
+      test_price : '',
+      alternativeSale_price : '',
+      treatment_firm : '',
+      model_firm : '',
+    },
     calc_raw: {
       account_id : '',
       analyze_Name : '',
@@ -78,9 +99,10 @@ export default function CreateMake({ analyzes, customers }) {
   const [coef, setCoef] = useState("");
   const [rawCopperPrice, setCopperPrice ] = useState(0);
   const [rawTinPrice, setTinPrice ] = useState(0);
-  const [unitPrice, setUnitPrice ] = useState(0);  
+  const [kgPrice, setUnitPrice ] = useState(0);  
   const [canSkipStep1, setCanSkip1] = useState(false);
-  const [canSkipStep2, setCanSkip2] = useState(false);  
+  const [canSkipStep2, setCanSkip2] = useState(false);
+  const [type , setType] = useState('');
 
   const isStepOptional = (step) => {
     return step === -1;
@@ -179,6 +201,7 @@ export default function CreateMake({ analyzes, customers }) {
     setCopperPrice((fields.calc_raw.LME * fields.calc_raw.usd * parseFloat(coef.split(",")[0]) /1000).toFixed(3))
     setTinPrice(((fields.calc_raw.TIN * fields.calc_raw.usd)/1000 * parseFloat(coef.split(",")[1]) /100).toFixed(3))
     setUnitPrice(((((fields.calc_raw.LME * fields.calc_raw.usd * parseFloat(coef.split(",")[0]) /1000) + (fields.calc_raw.TIN * fields.calc_raw.usd)/1000 * parseFloat(coef.split(",")[1]) /100) ) + parseFloat(fields.calc_raw.workmanship)).toFixed(3))
+    setType(fields.calc_raw.type);
     setCanSkip1(handleValidation1());
     setCanSkip2(handleValidation0());  
   };
@@ -530,13 +553,17 @@ export default function CreateMake({ analyzes, customers }) {
               >
                 Döküm Kilogram Fiyatı (₺)
               </label>
-              <p className="font-poppins text-red-700">{unitPrice} ₺</p>
+              <p className="font-poppins text-red-700">{kgPrice} ₺</p>
             </div>
           </div>
         </div>
       </form>
     </div>)
                     ) : ("")
+                  }
+
+                  {
+                    activeStep == 2 ? <QuotationItem kgPrice={kgPrice} name={type}> {TYPE_COMPS[type]} </QuotationItem> : ""
                   }
 
                   <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>

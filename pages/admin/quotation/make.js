@@ -58,7 +58,7 @@ export default function quotationMake({analyzes, customers}) {
 
             <div className="flex flex-col space-y-3">
               <p className="text-xs font-poppins font-medium italic text-sky-700">
-                Teklif Sıra No
+                İlgili Kişi
               </p>
               <div className="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease-soft">
                 <input
