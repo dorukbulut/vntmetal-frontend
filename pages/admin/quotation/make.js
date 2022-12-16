@@ -12,7 +12,6 @@ import usePagination from "../../../components/Dashboards/general/ui/Pagination"
 import Pagination from "@mui/material/Pagination";
 
 export default function quotationMake({analyzes, customers, items}) {
-  console.log(items);
   return (
     <div className="">
       <Navbar />

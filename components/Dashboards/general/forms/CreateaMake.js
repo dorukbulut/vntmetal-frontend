@@ -78,12 +78,12 @@ export default function CreateMake({ analyzes, customers }) {
       price : 0,
     },
     quotation_item : {
-      unit_frequence : 0,
-      model_price : 0,
+      unit_frequence : '',
+      model_price : '',
       model_firm : '',
-      treatment_price : 0,
+      treatment_price : '',
       treatment_firm : '',
-      test_price : 0,
+      test_price : '',
       benefit : '',
       alterPrice : '',
     },
@@ -240,27 +240,25 @@ export default function CreateMake({ analyzes, customers }) {
 
     return isValid;
   }
-
   const handleChange = (field, area, e) => {
     const new_fields = fields
     new_fields[field][area] = e.target.value
-    setFields(new_fields)
-    console.log(fields);
+    setFields(new_fields);
     setCoef(fields.calc_raw.analyze_Name);
     setCopperPrice((fields.calc_raw.LME * fields.calc_raw.usd * parseFloat(coef.split(",")[0]) /1000).toFixed(3))
     setTinPrice(((fields.calc_raw.TIN * fields.calc_raw.usd)/1000 * parseFloat(coef.split(",")[1]) /100).toFixed(3))
     setUnitPrice(((((fields.calc_raw.LME * fields.calc_raw.usd * parseFloat(coef.split(",")[0]) /1000) + (fields.calc_raw.TIN * fields.calc_raw.usd)/1000 * parseFloat(coef.split(",")[1]) /100) ) + parseFloat(fields.calc_raw.workmanship)).toFixed(3))
     setType(fields.calc_raw.type);
-    setModelUnitPrice(parseFloat(fields["quotation_item"]["model_price"]) / parseInt(fields["quotation_item"]["unit_frequence"]))
     setMolding(parseFloat(calcW) * parseFloat(kgPrice));
-    setCost((moldingPrice + modelUnitPrice + parseFloat(fields["quotation_item"]["treatment_price"]) + parseFloat(fields["quotation_item"]["test_price"])).toFixed(3))
+    setModelUnitPrice(parseFloat(fields["quotation_item"]["model_price"]) / parseInt(fields["quotation_item"]["unit_frequence"]));
+    setCost((parseFloat(moldingPrice) + parseFloat(modelUnitPrice ? modelUnitPrice : 0) + parseFloat(fields["quotation_item"]["treatment_price"] !== '' ?fields["quotation_item"]["treatment_price"] :0 ) + parseFloat(fields["quotation_item"]["test_price"] !== '' ? fields["quotation_item"]["test_price"] :0 )))
     let sale = (parseFloat(cost) +  parseFloat(cost) * parseFloat(fields["quotation_item"]["benefit"]) / 100).toFixed(3)
     setPrice([{value : parseFloat(sale).toFixed(3), key : `${parseFloat(sale).toFixed(3)} ₺ `}, 
-    {value : (sale * parseFloat(fields["calc_raw"]["usd"])).toFixed(3), key : `${(sale * parseFloat(fields["calc_raw"]["usd"])).toFixed(3)} $ `},
-    {value : (sale * parseFloat(fields["calc_raw"]["euro"])).toFixed(3), key : `${(sale * parseFloat(fields["calc_raw"]["euro"])).toFixed(3)} € `},
+    {value : (sale * parseFloat(fields["calc_raw"]["usd"])).toFixed(3), key : `${(sale / parseFloat(fields["calc_raw"]["usd"])).toFixed(3)} $ `},
+    {value : (sale * parseFloat(fields["calc_raw"]["euro"])).toFixed(3), key : `${(sale / parseFloat(fields["calc_raw"]["euro"])).toFixed(3)} € `},
     {value : parseFloat(fields["quotation_item"]["alterPrice"]).toFixed(3), key : `${(parseFloat(fields["quotation_item"]["alterPrice"])).toFixed(3)} ₺ `},
-    {value : (parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(fields["calc_raw"]["usd"])).toFixed(3), key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(fields["calc_raw"]["usd"])).toFixed(3)} $ `},
-    {value : (parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(fields["calc_raw"]["euro"])).toFixed(3), key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(fields["calc_raw"]["euro"])).toFixed(3)} € `},
+    {value : (parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(fields["calc_raw"]["usd"])).toFixed(3), key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(fields["calc_raw"]["usd"])).toFixed(3)} $ `},
+    {value : (parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(fields["calc_raw"]["euro"])).toFixed(3), key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(fields["calc_raw"]["euro"])).toFixed(3)} € `},
   ])
     setCanSkip1(handleValidation1());
     setCanSkip2(handleValidation0());  
@@ -317,7 +315,8 @@ export default function CreateMake({ analyzes, customers }) {
             strokeWidth={1.5}
             stroke="currentColor"
             className="w-6 h-6 relative top-0 left-0 hover:cursor-pointer"
-            onClick={toggleCreate}
+            onClick={() => {toggleCreate() 
+              router.reload(window.location.pathname);}}
           >
             <path
               strokeLinecap="round"
@@ -625,7 +624,7 @@ export default function CreateMake({ analyzes, customers }) {
                   }
 
                   {
-                    activeStep == 2 ? <QuotationItem fields={fields} calcs={{modelUnitPrice, moldingPrice, cost, salePrice, calcW, setCalcW}} handleChange={handleChange} kgPrice={kgPrice} name={type}> {TYPE_COMPS[type]} </QuotationItem> : ""
+                    activeStep == 2 ? <QuotationItem fields={fields} calcs={{modelUnitPrice, moldingPrice, cost, salePrice, calcW, setCalcW, setModelUnitPrice}} handleChange={handleChange} kgPrice={kgPrice} name={type}> {TYPE_COMPS[type]} </QuotationItem> : ""
                   }
 
                   <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
@@ -646,6 +645,17 @@ export default function CreateMake({ analyzes, customers }) {
 
                     {
                       activeStep === 1 ?  <Button disabled={!canSkipStep2} onClick={handleNext}>
+                      {activeStep === steps.length - 1 ? "Oluştur" : "ileri"}
+                    </Button> : ''
+                    }
+                    {
+                      activeStep === 2 ?  <Button disabled={false} onClick={handleNext}>
+                      {activeStep === steps.length - 1 ? "Oluştur" : "ileri"}
+                    </Button> : ''
+                    }
+
+{
+                      activeStep === 3 ?  <Button disabled={false} onClick={handleNext}>
                       {activeStep === steps.length - 1 ? "Oluştur" : "ileri"}
                     </Button> : ''
                     }
