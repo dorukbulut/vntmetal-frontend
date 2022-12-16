@@ -38,6 +38,7 @@ export default function QuotationItem({ name, children,kgPrice, usd, euro, handl
                 step={"any"}
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
+                min={1}
                 required
                 defaultValue={fields["quotation_item"]["unit_frequence"]}
                 onChange={(e) => handleChange("quotation_item","unit_frequence", e)}
@@ -61,7 +62,7 @@ export default function QuotationItem({ name, children,kgPrice, usd, euro, handl
               >
                 Döküm Fiyatı (₺)
               </label>
-              <p className="font-poppins">{} ₺</p>
+              <p className="font-poppins">{calcs.moldingPrice} ₺</p>
             </div>
 
             <div className="flex flex-col">
@@ -172,7 +173,7 @@ export default function QuotationItem({ name, children,kgPrice, usd, euro, handl
               >
                 Maliyet (₺)
               </label>
-              <p className="font-poppins text-red-700">{} ₺</p>
+              <p className="font-poppins text-red-700">{calcs.cost} ₺</p>
             </div>
 
             <div className="flex flex-col">
@@ -202,14 +203,14 @@ export default function QuotationItem({ name, children,kgPrice, usd, euro, handl
               >
                 Satış Fiyatı *
               </label>
-              {/* <Dropdown
-                label="Tip"
-                field="calc_raw"
-                area="type"
-                items={[{key : "hello" , value: "world !"}]}
+              <Dropdown
+                label="Satış Fiyatı"
+                field="final"
+                area="price"
+                items={calcs.salePrice}
                 fields={fields}
                 handleChange={handleChange}
-              /> */}
+              />
             </div>
 
             <div className="flex flex-col">

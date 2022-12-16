@@ -74,13 +74,16 @@ export default function CreateMake({ analyzes, customers }) {
     quo_type  :  {
       quo_type_name : ""
     },
+    final : {
+      price : 0,
+    },
     quotation_item : {
-      unit_frequence : '',
-      model_price : '',
+      unit_frequence : 0,
+      model_price : 0,
       model_firm : '',
-      treatment_price : '',
+      treatment_price : 0,
       treatment_firm : '',
-      test_price : '',
+      test_price : 0,
       benefit : '',
       alterPrice : '',
     },
@@ -249,6 +252,16 @@ export default function CreateMake({ analyzes, customers }) {
     setUnitPrice(((((fields.calc_raw.LME * fields.calc_raw.usd * parseFloat(coef.split(",")[0]) /1000) + (fields.calc_raw.TIN * fields.calc_raw.usd)/1000 * parseFloat(coef.split(",")[1]) /100) ) + parseFloat(fields.calc_raw.workmanship)).toFixed(3))
     setType(fields.calc_raw.type);
     setModelUnitPrice(parseFloat(fields["quotation_item"]["model_price"]) / parseInt(fields["quotation_item"]["unit_frequence"]))
+    setMolding(parseFloat(calcW) * parseFloat(kgPrice));
+    setCost((moldingPrice + modelUnitPrice + parseFloat(fields["quotation_item"]["treatment_price"]) + parseFloat(fields["quotation_item"]["test_price"])).toFixed(3))
+    let sale = (parseFloat(cost) +  parseFloat(cost) * parseFloat(fields["quotation_item"]["benefit"]) / 100).toFixed(3)
+    setPrice([{value : parseFloat(sale).toFixed(3), key : `${parseFloat(sale).toFixed(3)} ₺ `}, 
+    {value : (sale * parseFloat(fields["calc_raw"]["usd"])).toFixed(3), key : `${(sale * parseFloat(fields["calc_raw"]["usd"])).toFixed(3)} $ `},
+    {value : (sale * parseFloat(fields["calc_raw"]["euro"])).toFixed(3), key : `${(sale * parseFloat(fields["calc_raw"]["euro"])).toFixed(3)} € `},
+    {value : parseFloat(fields["quotation_item"]["alterPrice"]).toFixed(3), key : `${(parseFloat(fields["quotation_item"]["alterPrice"])).toFixed(3)} ₺ `},
+    {value : (parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(fields["calc_raw"]["usd"])).toFixed(3), key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(fields["calc_raw"]["usd"])).toFixed(3)} $ `},
+    {value : (parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(fields["calc_raw"]["euro"])).toFixed(3), key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(fields["calc_raw"]["euro"])).toFixed(3)} € `},
+  ])
     setCanSkip1(handleValidation1());
     setCanSkip2(handleValidation0());  
   };
@@ -612,7 +625,7 @@ export default function CreateMake({ analyzes, customers }) {
                   }
 
                   {
-                    activeStep == 2 ? <QuotationItem fields={fields} calcs={{modelUnitPrice, modelUnitPrice, cost, salePrice, calcW, setCalcW}} handleChange={handleChange} kgPrice={kgPrice} name={type}> {TYPE_COMPS[type]} </QuotationItem> : ""
+                    activeStep == 2 ? <QuotationItem fields={fields} calcs={{modelUnitPrice, moldingPrice, cost, salePrice, calcW, setCalcW}} handleChange={handleChange} kgPrice={kgPrice} name={type}> {TYPE_COMPS[type]} </QuotationItem> : ""
                   }
 
                   <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
