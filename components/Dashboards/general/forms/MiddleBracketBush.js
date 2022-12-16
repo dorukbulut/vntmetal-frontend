@@ -1,4 +1,8 @@
-export default function MiddleBracketBush ({handleChange, fields}) {
+export default function MiddleBracketBush ({handleChange, fields, calcs}) {
+    const calcaWeigth  = (A8, B8, C8, D8, E8, F8, G8, H8) => {
+      return ((A8/2)*(A8/2)*3.14*8.6*E8-(B8/2)*(B8/2)*3.14*8.6*E8)/1000000+((A8/2)*(A8/2)*3.14*8.6*G8-(C8/2)*(C8/2)*3.14*8.6*G8)/1000000+((A8/2)*(A8/2)*3.14*8.6*F8-(D8/2)*(D8/2)*3.14*8.6*F8)/1000000
+    }
+    
     return (
         <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center ">
             <div className="space-y-2 lg:w-1/2">
@@ -22,7 +26,19 @@ export default function MiddleBracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["middlebracket_bush"]["bracket_q1"]}
-                onChange={(e) => handleChange("middlebracket_bush", "bracket_q1",e)}
+                onChange={(e) => {
+                  handleChange("middlebracket_bush", "bracket_q1",e);
+                  calcs.setCalcW(calcaWeigth(fields["middlebracket_bush"]["bracket_q1"],
+                              fields["middlebracket_bush"]["bracket_q3"],
+                              fields["middlebracket_bush"]["bracket_q2"],
+                              fields["middlebracket_bush"]["bracket_q4"],
+                              fields["middlebracket_bush"]["bracket_l1"],
+                              fields["middlebracket_bush"]["bracket_l2"],
+                              fields["middlebracket_bush"]["bracket_l3"],
+                              fields["middlebracket_bush"]["bracket_full"]
+
+                              ));
+                }}
               />
             </div>
 
@@ -40,7 +56,19 @@ export default function MiddleBracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["middlebracket_bush"]["bracket_q2"]}
-                onChange={(e) => handleChange("middlebracket_bush", "bracket_q2",e)}
+                onChange={(e) => {
+                  handleChange("middlebracket_bush", "bracket_q2",e);
+                  calcs.setCalcW(calcaWeigth(fields["middlebracket_bush"]["bracket_q1"],
+                              fields["middlebracket_bush"]["bracket_q3"],
+                              fields["middlebracket_bush"]["bracket_q2"],
+                              fields["middlebracket_bush"]["bracket_q4"],
+                              fields["middlebracket_bush"]["bracket_l1"],
+                              fields["middlebracket_bush"]["bracket_l2"],
+                              fields["middlebracket_bush"]["bracket_l3"],
+                              fields["middlebracket_bush"]["bracket_full"]
+
+                              ));
+                }}
               />
             </div>
             <div className="flex flex-col">
@@ -57,7 +85,19 @@ export default function MiddleBracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["middlebracket_bush"]["bracket_q3"]}
-                onChange={(e) => handleChange("middlebracket_bush", "bracket_q3",e)}
+                onChange={(e) => {
+                  handleChange("middlebracket_bush", "bracket_q3",e);
+                  calcs.setCalcW(calcaWeigth(fields["middlebracket_bush"]["bracket_q1"],
+                              fields["middlebracket_bush"]["bracket_q3"],
+                              fields["middlebracket_bush"]["bracket_q2"],
+                              fields["middlebracket_bush"]["bracket_q4"],
+                              fields["middlebracket_bush"]["bracket_l1"],
+                              fields["middlebracket_bush"]["bracket_l2"],
+                              fields["middlebracket_bush"]["bracket_l3"],
+                              fields["middlebracket_bush"]["bracket_full"]
+
+                              ));
+                }}
               />
             </div>
             
@@ -75,7 +115,19 @@ export default function MiddleBracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["middlebracket_bush"]["bracket_q4"]}
-                onChange={(e) => handleChange("middlebracket_bush", "bracket_q4",e)}
+                onChange={(e) => {
+                  handleChange("middlebracket_bush", "bracket_q4",e);
+                  calcs.setCalcW(calcaWeigth(fields["middlebracket_bush"]["bracket_q1"],
+                              fields["middlebracket_bush"]["bracket_q3"],
+                              fields["middlebracket_bush"]["bracket_q2"],
+                              fields["middlebracket_bush"]["bracket_q4"],
+                              fields["middlebracket_bush"]["bracket_l1"],
+                              fields["middlebracket_bush"]["bracket_l2"],
+                              fields["middlebracket_bush"]["bracket_l3"],
+                              fields["middlebracket_bush"]["bracket_full"]
+
+                              ));
+                }}
               />
             </div>
             <div className="flex flex-col">
@@ -92,7 +144,19 @@ export default function MiddleBracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["middlebracket_bush"]["bracket_l1"]}
-                onChange={(e) => handleChange("middlebracket_bush", "bracket_l1",e)}
+                onChange={(e) => {
+                  handleChange("middlebracket_bush", "bracket_l1",e);
+                  calcs.setCalcW(calcaWeigth(fields["middlebracket_bush"]["bracket_q1"],
+                              fields["middlebracket_bush"]["bracket_q3"],
+                              fields["middlebracket_bush"]["bracket_q2"],
+                              fields["middlebracket_bush"]["bracket_q4"],
+                              fields["middlebracket_bush"]["bracket_l1"],
+                              fields["middlebracket_bush"]["bracket_l2"],
+                              fields["middlebracket_bush"]["bracket_l3"],
+                              fields["middlebracket_bush"]["bracket_full"]
+
+                              ));
+                }}
               />
             </div>
             <div className="flex flex-col">
@@ -109,7 +173,19 @@ export default function MiddleBracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["middlebracket_bush"]["bracket_l2"]}
-                onChange={(e) => handleChange("middlebracket_bush", "bracket_l2",e)}
+                onChange={(e) => {
+                  handleChange("middlebracket_bush", "bracket_l2",e);
+                  calcs.setCalcW(calcaWeigth(fields["middlebracket_bush"]["bracket_q1"],
+                              fields["middlebracket_bush"]["bracket_q3"],
+                              fields["middlebracket_bush"]["bracket_q2"],
+                              fields["middlebracket_bush"]["bracket_q4"],
+                              fields["middlebracket_bush"]["bracket_l1"],
+                              fields["middlebracket_bush"]["bracket_l2"],
+                              fields["middlebracket_bush"]["bracket_l3"],
+                              fields["middlebracket_bush"]["bracket_full"]
+
+                              ));
+                }}
               />
             </div>
 
@@ -127,7 +203,19 @@ export default function MiddleBracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["middlebracket_bush"]["bracket_l3"]}
-                onChange={(e) => handleChange("middlebracket_bush", "bracket_l3",e)}
+                onChange={(e) => {
+                  handleChange("middlebracket_bush", "bracket_l3",e);
+                  calcs.setCalcW(calcaWeigth(fields["middlebracket_bush"]["bracket_q1"],
+                              fields["middlebracket_bush"]["bracket_q3"],
+                              fields["middlebracket_bush"]["bracket_q2"],
+                              fields["middlebracket_bush"]["bracket_q4"],
+                              fields["middlebracket_bush"]["bracket_l1"],
+                              fields["middlebracket_bush"]["bracket_l2"],
+                              fields["middlebracket_bush"]["bracket_l3"],
+                              fields["middlebracket_bush"]["bracket_full"]
+
+                              ));
+                }}
               />
             </div>
             <div className="flex flex-col">
@@ -144,7 +232,19 @@ export default function MiddleBracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["middlebracket_bush"]["bracket_full"]}
-                onChange={(e) => handleChange("middlebracket_bush", "bracket_full",e)}
+                onChange={(e) => {
+                  handleChange("middlebracket_bush", "bracket_full",e);
+                  calcs.setCalcW(calcaWeigth(fields["middlebracket_bush"]["bracket_q1"],
+                              fields["middlebracket_bush"]["bracket_q3"],
+                              fields["middlebracket_bush"]["bracket_q2"],
+                              fields["middlebracket_bush"]["bracket_q4"],
+                              fields["middlebracket_bush"]["bracket_l1"],
+                              fields["middlebracket_bush"]["bracket_l2"],
+                              fields["middlebracket_bush"]["bracket_l3"],
+                              fields["middlebracket_bush"]["bracket_full"]
+
+                              ));
+                }}
               />
             </div>
             <div className="flex flex-col">
@@ -154,7 +254,7 @@ export default function MiddleBracketBush ({handleChange, fields}) {
               >
                 Hesaplanan Ağırlık
               </label>
-              <p className="font-poppins text-red-700">{} ₺</p>
+              <p className="font-poppins text-red-700">{calcs.calcW}</p>
             </div>
             </div>
 

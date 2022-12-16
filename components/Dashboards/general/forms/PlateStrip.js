@@ -1,4 +1,7 @@
-export default function PlateStrip ({handleChange, fields}) {
+export default function PlateStrip ({handleChange, fields, calcs}) {
+    const calcWeigth = (A8, B8, C8) => {
+      return A8*B8*C8*8.6/1000000
+    }
     return (
         <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center ">
             <div className="space-y-2 lg:w-1/2">
@@ -22,7 +25,11 @@ export default function PlateStrip ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["plate_strip"]["width"]}
-                onChange={(e) => handleChange("plate_strip", "width",e)}
+                onChange={(e) => {
+                  handleChange("plate_strip", "width",e);
+                  calcs.setCalcW(calcWeigth(fields["plate_strip"]["width"],fields["plate_strip"]["length"],fields["plate_strip"]["thickness"] ));
+                }
+                }
               />
             </div>
 
@@ -40,7 +47,10 @@ export default function PlateStrip ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["plate_strip"]["length"]}
-                onChange={(e) => handleChange("plate_strip", "length",e)}
+                onChange={(e) => {
+                  handleChange("plate_strip", "length",e);
+                  calcs.setCalcW(calcWeigth(fields["plate_strip"]["width"],fields["plate_strip"]["length"],fields["plate_strip"]["thickness"] ))
+              }}
               />
             </div>
 
@@ -58,7 +68,10 @@ export default function PlateStrip ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["plate_strip"]["thickness"]}
-                onChange={(e) => handleChange("plate_strip", "thickness",e)}
+                onChange={(e) => {
+                  handleChange("plate_strip", "thickness",e);
+                  calcs.setCalcW(calcWeigth(fields["plate_strip"]["width"],fields["plate_strip"]["length"],fields["plate_strip"]["thickness"] ))
+              }}
               />
             </div>
 
@@ -69,7 +82,7 @@ export default function PlateStrip ({handleChange, fields}) {
               >
                 Hesaplanan Ağırlık
               </label>
-              <p className="font-poppins text-red-700">{} ₺</p>
+              <p className="font-poppins text-red-700">{calcs.calcW}</p>
             </div>
             </div>
             

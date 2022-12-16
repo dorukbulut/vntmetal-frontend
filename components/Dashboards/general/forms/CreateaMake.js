@@ -83,7 +83,6 @@ export default function CreateMake({ analyzes, customers }) {
       test_price : '',
       benefit : '',
       alterPrice : '',
-      calc_weigth : '',
     },
     straigth_bush : {
       bigger_diameter : '',
@@ -149,6 +148,7 @@ export default function CreateMake({ analyzes, customers }) {
   const [modelUnitPrice, setModelUnitPrice]  = useState(0);
   const [cost, setCost] = useState(0);
   const [salePrice,setPrice] = useState([]);
+  const [calcW, setCalcW] = useState(0);
 
   const isStepOptional = (step) => {
     return step === -1;
@@ -252,6 +252,8 @@ export default function CreateMake({ analyzes, customers }) {
     setCanSkip1(handleValidation1());
     setCanSkip2(handleValidation0());  
   };
+
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -610,7 +612,7 @@ export default function CreateMake({ analyzes, customers }) {
                   }
 
                   {
-                    activeStep == 2 ? <QuotationItem fields={fields} calcs={{modelUnitPrice, modelUnitPrice, cost, salePrice}} handleChange={handleChange} kgPrice={kgPrice} name={type}> {TYPE_COMPS[type]} </QuotationItem> : ""
+                    activeStep == 2 ? <QuotationItem fields={fields} calcs={{modelUnitPrice, modelUnitPrice, cost, salePrice, calcW, setCalcW}} handleChange={handleChange} kgPrice={kgPrice} name={type}> {TYPE_COMPS[type]} </QuotationItem> : ""
                   }
 
                   <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>

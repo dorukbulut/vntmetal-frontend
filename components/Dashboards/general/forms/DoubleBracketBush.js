@@ -1,4 +1,8 @@
-export default function DoubleBracketBush ({handleChange, fields}) {
+export default function DoubleBracketBush ({handleChange, fields, calcs}) {
+    const calcWeigth = (A8, B8, C8, D8, E8, F8, G8) => {
+      return ((A8/2)*(A8/2)*3.14*8.6*D8-(C8/2)*(C8/2)*3.14*8.6*D8)/1000000+((B8/2)*(B8/2)*3.14*8.6*F8-(C8/2)*(C8/2)*3.14*8.6*F8)/1000000+((A8/2)*(A8/2)*3.14*8.6*E8-(C8/2)*(C8/2)*3.14*8.6*E8)/1000000
+    }
+    
     return (
         <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center ">
             <div className="space-y-2 lg:w-1/2">
@@ -22,7 +26,16 @@ export default function DoubleBracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["doublebracket_bush"]["bigger_diameter"]}
-                onChange={(e) => handleChange("doublebracket_bush", "bigger_diameter",e)}
+                onChange={(e) => {
+                  handleChange("doublebracket_bush", "bigger_diameter",e);
+                  calcs.setCalcW(calcWeigth(fields["doublebracket_bush"]["bigger_diameter"],
+                              fields["doublebracket_bush"]["body_diameter"],
+                              fields["doublebracket_bush"]["inner_diameter"],
+                              fields["doublebracket_bush"]["bracket_l1"],
+                              fields["doublebracket_bush"]["bracket_l2"],
+                              fields["doublebracket_bush"]["bracket_l3"]
+                              ));
+                }}
               />
             </div>
 
@@ -40,7 +53,16 @@ export default function DoubleBracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["doublebracket_bush"]["body_diameter"]}
-                onChange={(e) => handleChange("doublebracket_bush", "body_diameter",e)}
+                onChange={(e) => {
+                  handleChange("doublebracket_bush", "body_diameter",e);
+                  calcs.setCalcW(calcWeigth(fields["doublebracket_bush"]["bigger_diameter"],
+                              fields["doublebracket_bush"]["body_diameter"],
+                              fields["doublebracket_bush"]["inner_diameter"],
+                              fields["doublebracket_bush"]["bracket_l1"],
+                              fields["doublebracket_bush"]["bracket_l2"],
+                              fields["doublebracket_bush"]["bracket_l3"]
+                              ));
+                }}
               />
             </div>
             <div className="flex flex-col">
@@ -57,7 +79,16 @@ export default function DoubleBracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["doublebracket_bush"]["inner_diameter"]}
-                onChange={(e) => handleChange("doublebracket_bush", "inner_diameter",e)}
+                onChange={(e) => {
+                  handleChange("doublebracket_bush", "inner_diameter",e);
+                  calcs.setCalcW(calcWeigth(fields["doublebracket_bush"]["bigger_diameter"],
+                              fields["doublebracket_bush"]["body_diameter"],
+                              fields["doublebracket_bush"]["inner_diameter"],
+                              fields["doublebracket_bush"]["bracket_l1"],
+                              fields["doublebracket_bush"]["bracket_l2"],
+                              fields["doublebracket_bush"]["bracket_l3"]
+                              ));
+                }}
               />
             </div>
             
@@ -75,7 +106,16 @@ export default function DoubleBracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["doublebracket_bush"]["bracket_l1"]}
-                onChange={(e) => handleChange("doublebracket_bush", "bracket_l1",e)}
+                onChange={(e) => {
+                  handleChange("doublebracket_bush", "bracket_l1",e);
+                  calcs.setCalcW(calcWeigth(fields["doublebracket_bush"]["bigger_diameter"],
+                              fields["doublebracket_bush"]["body_diameter"],
+                              fields["doublebracket_bush"]["inner_diameter"],
+                              fields["doublebracket_bush"]["bracket_l1"],
+                              fields["doublebracket_bush"]["bracket_l2"],
+                              fields["doublebracket_bush"]["bracket_l3"]
+                              ));
+                }}
               />
             </div>
             <div className="flex flex-col">
@@ -92,7 +132,16 @@ export default function DoubleBracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["doublebracket_bush"]["bracket_l2"]}
-                onChange={(e) => handleChange("doublebracket_bush", "bracket_l2",e)}
+                onChange={(e) => {
+                  handleChange("doublebracket_bush", "bracket_l2",e);
+                  calcs.setCalcW(calcWeigth(fields["doublebracket_bush"]["bigger_diameter"],
+                              fields["doublebracket_bush"]["body_diameter"],
+                              fields["doublebracket_bush"]["inner_diameter"],
+                              fields["doublebracket_bush"]["bracket_l1"],
+                              fields["doublebracket_bush"]["bracket_l2"],
+                              fields["doublebracket_bush"]["bracket_l3"]
+                              ));
+                }}
               />
             </div>
 
@@ -110,7 +159,16 @@ export default function DoubleBracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["doublebracket_bush"]["bracket_l3"]}
-                onChange={(e) => handleChange("doublebracket_bush", "bracket_l3",e)}
+                onChange={(e) => {
+                  handleChange("doublebracket_bush", "bracket_l3",e);
+                  calcs.setCalcW(calcWeigth(fields["doublebracket_bush"]["bigger_diameter"],
+                              fields["doublebracket_bush"]["body_diameter"],
+                              fields["doublebracket_bush"]["inner_diameter"],
+                              fields["doublebracket_bush"]["bracket_l1"],
+                              fields["doublebracket_bush"]["bracket_l2"],
+                              fields["doublebracket_bush"]["bracket_l3"]
+                              ));
+                }}
               />
             </div>
             <div className="flex flex-col">
@@ -127,7 +185,9 @@ export default function DoubleBracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["doublebracket_bush"]["bracket_full"]}
-                onChange={(e) => handleChange("doublebracket_bush", "bracket_full",e)}
+                onChange={(e) => {
+                  handleChange("doublebracket_bush", "bracket_full",e)
+                }}
               />
             </div>
             <div className="flex flex-col">
@@ -137,7 +197,7 @@ export default function DoubleBracketBush ({handleChange, fields}) {
               >
                 Hesaplanan Ağırlık
               </label>
-              <p className="font-poppins text-red-700">{} ₺</p>
+              <p className="font-poppins text-red-700">{calcs.calcW}</p>
             </div>
             </div>
 

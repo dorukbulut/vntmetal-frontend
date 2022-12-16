@@ -1,5 +1,8 @@
 
-export default function StrBush ({handleChange, fields}) {
+export default function StrBush ({handleChange, fields, calcs}) {
+    const calculateWeight = (A8, B8, C8) => {
+      return ((A8/2)*(A8/2)*3.14*C8*8.6-(B8/2)*(B8/2)*3.14*C8*8.6)/1000000
+    }
     return (
         <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center ">
             <div className="space-y-2 lg:w-1/2">
@@ -23,7 +26,10 @@ export default function StrBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["straigth_bush"]["bigger_diameter"]}
-                onChange={(e) => handleChange("straigth_bush", "bigger_diameter",e)}
+                onChange={(e) => {
+                  handleChange("straigth_bush", "bigger_diameter",e);
+                  calcs.setCalcW(calculateWeight(fields["straigth_bush"]["bigger_diameter"],fields["straigth_bush"]["inner_diameter"],fields["straigth_bush"]["length"] ))
+                } }
               />
             </div>
 
@@ -41,7 +47,10 @@ export default function StrBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["straigth_bush"]["inner_diameter"]}
-                onChange={(e) => handleChange("straigth_bush", "inner_diameter",e)}
+                onChange={(e) => {
+                  handleChange("straigth_bush", "inner_diameter",e);
+                  calcs.setCalcW(calculateWeight(fields["straigth_bush"]["bigger_diameter"],fields["straigth_bush"]["inner_diameter"],fields["straigth_bush"]["length"] ))
+                }}
               />
             </div>
 
@@ -59,7 +68,10 @@ export default function StrBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["straigth_bush"]["length"]}
-                onChange={(e) => handleChange("straigth_bush", "length",e)}
+                onChange={(e) => {
+                  handleChange("straigth_bush", "length",e);
+                  calcs.setCalcW(calculateWeight(fields["straigth_bush"]["bigger_diameter"],fields["straigth_bush"]["inner_diameter"],fields["straigth_bush"]["length"] ));
+              }}
               />
             </div>
 
@@ -70,7 +82,7 @@ export default function StrBush ({handleChange, fields}) {
               >
                 Hesaplanan Ağırlık
               </label>
-              <p className="font-poppins text-red-700">{} ₺</p>
+              <p className="font-poppins text-red-700">{calcs.calcW}</p>
             </div>
             </div>
             

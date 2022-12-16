@@ -1,4 +1,8 @@
-export default function BracketBush ({handleChange, fields}) {
+export default function BracketBush ({handleChange, fields, calcs}) {
+    const calcWeigth = (A8, B8, C8, D8, E8) => {
+      return ((A8/2)*(A8/2)*3.14*D8*8.6-(B8/2)*(B8/2)*3.14*D8*8.6)/1000000+((B8/2)*(B8/2)*3.14*E8*8.6-(C8/2)*(C8/2)*3.14*E8*8.6)/1000000
+    }
+    
     return (
         <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center ">
             <div className="space-y-2 lg:w-1/2">
@@ -22,7 +26,11 @@ export default function BracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["bracket_bush"]["bigger_diameter"]}
-                onChange={(e) => handleChange("bracket_bush", "bigger_diameter",e)}
+                onChange={(e) => {
+                  handleChange("bracket_bush", "bigger_diameter",e);
+                  calcs.setCalcW(calcWeigth(fields["bracket_bush"]["bigger_diameter"],fields["bracket_bush"]["body_diameter"],
+    fields["bracket_bush"]["inner_diameter"],fields["bracket_bush"]["bush_length"], fields["bracket_bush"]["bracket_length"]));
+                }}
               />
             </div>
 
@@ -40,7 +48,11 @@ export default function BracketBush ({handleChange, fields}) {
                 placeholder=""
                 defaultValue={fields["bracket_bush"]["body_diameter"]}
                 required
-                onChange={(e) => handleChange("bracket_bush", "body_diameter",e)}
+                onChange={(e) => {
+                  handleChange("bracket_bush", "body_diameter",e)
+                  calcs.setCalcW(calcWeigth(fields["bracket_bush"]["bigger_diameter"],fields["bracket_bush"]["body_diameter"],
+    fields["bracket_bush"]["inner_diameter"],fields["bracket_bush"]["bush_length"], fields["bracket_bush"]["bracket_length"]))
+                }}
               />
             </div>
 
@@ -58,7 +70,11 @@ export default function BracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["bracket_bush"]["bush_length"]}
-                onChange={(e) => handleChange("bracket_bush", "bush_length",e)}
+                onChange={(e) => {
+                  handleChange("bracket_bush", "bush_length",e);
+                  calcs.setCalcW(calcWeigth(fields["bracket_bush"]["bigger_diameter"],fields["bracket_bush"]["body_diameter"],
+    fields["bracket_bush"]["inner_diameter"],fields["bracket_bush"]["bush_length"], fields["bracket_bush"]["bracket_length"]))
+                }}
               />
             </div>
             <div className="flex flex-col">
@@ -75,7 +91,11 @@ export default function BracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["bracket_bush"]["bracket_length"]}
-                onChange={(e) => handleChange("bracket_bush", "bracket_length",e)}
+                onChange={(e) => {
+                  handleChange("bracket_bush", "bracket_length",e);
+                  calcs.setCalcW(calcWeigth(fields["bracket_bush"]["bigger_diameter"],fields["bracket_bush"]["body_diameter"],
+    fields["bracket_bush"]["inner_diameter"],fields["bracket_bush"]["bush_length"], fields["bracket_bush"]["bracket_length"]))
+              }}
               />
             </div>
             <div className="flex flex-col">
@@ -92,7 +112,11 @@ export default function BracketBush ({handleChange, fields}) {
                 placeholder=""
                 required
                 defaultValue={fields["bracket_bush"]["inner_diameter"]}
-                onChange={(e) => handleChange("bracket_bush", "inner_diameter",e)}
+                onChange={(e) => {
+                  handleChange("bracket_bush", "inner_diameter",e)
+                  calcs.setCalcW(calcWeigth(fields["bracket_bush"]["bigger_diameter"],fields["bracket_bush"]["body_diameter"],
+    fields["bracket_bush"]["inner_diameter"],fields["bracket_bush"]["bush_length"], fields["bracket_bush"]["bracket_length"]))
+                }}
               />
             </div>
 
@@ -103,7 +127,7 @@ export default function BracketBush ({handleChange, fields}) {
               >
                 Hesaplanan Ağırlık
               </label>
-              <p className="font-poppins text-red-700">{} ₺</p>
+              <p className="font-poppins text-red-700">{calcs.calcW}</p>
             </div>
             </div>
 

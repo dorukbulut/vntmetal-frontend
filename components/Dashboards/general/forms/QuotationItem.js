@@ -6,7 +6,7 @@ export default function QuotationItem({ name, children,kgPrice, usd, euro, handl
     // Checking isValidElement is the safe way and avoids a
     // typescript error too.
     if (React.isValidElement(child)) {
-      return React.cloneElement(child, { handleChange, fields });
+      return React.cloneElement(child, { handleChange, fields, calcs });
     }
     return child;
   });
