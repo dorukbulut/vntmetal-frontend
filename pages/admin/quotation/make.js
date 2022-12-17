@@ -12,6 +12,7 @@ import usePagination from "../../../components/Dashboards/general/ui/Pagination"
 import Pagination from "@mui/material/Pagination";
 
 export default function quotationMake({analyzes, customers, items}) {
+  console.log(items);
   return (
     <div className="">
       <Navbar />
@@ -85,14 +86,14 @@ export default function quotationMake({analyzes, customers, items}) {
           </div>
         </div>
 
-        <div className="w-full bg-gray-100">
-          <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div className="w-full bg-gray-100 ">
+          <div className="relative overflow-x-auto shadow-md  sm:rounded-lg">
             {items.length !== 0 ? (
               <table className="w-full text-sm text-left text-gray-500 ">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                     <th scope="col" className="px-6 py-3">
-                      ÜRÜN TİPİ 
+                      ÜRÜN TİPİ
                     </th>
                     <th scope="col" className="px-6 py-3">
                       CARİ KOD
@@ -101,7 +102,7 @@ export default function quotationMake({analyzes, customers, items}) {
                       SATIŞ FİYATI    
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      ÜLKE
+                      ADET
                     </th>
                     <th scope="col" className="px-6 py-3">
                       <span className="sr-only">Düzenle</span>
@@ -109,11 +110,9 @@ export default function quotationMake({analyzes, customers, items}) {
                   </tr>
                 </thead>
                 <tbody>
-                 
-                </tbody>
                 {
                    items.map((item, index) =>  {
-                    <tr
+                    return (<tr
                           key={index}
                           className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                         >
@@ -121,21 +120,28 @@ export default function quotationMake({analyzes, customers, items}) {
                             scope="row"
                             className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                           >
-                            {}
+                            {item.straigth_bush ? "Düz Burç" : ""}
+                            {item.plate_strip ? "Plaka" : ""}
+                            {item.bracket_bush ? "Flanşlı Burç" : ""}
+                            {item.middlebracket_bush ? "Ortadan Flanşlı Burç" : ""}
+                            {item.doublebracket_bush ? "Çift Flanşlı Burç" : ""}
+                    
                           </th>
-                          <td className="px-6 py-4"></td>
+                          <td className="px-6 py-4">{item.Customer_ID}</td>
                           <td className="px-6 py-4">
-                            {}
+                            {item.unit_price}
                           </td>
                           <td className="px-6 py-4">
-                            {}
+                            {item.unit_frequence}
                           </td>
                           <td className="px-6 py-4 text-right">
-                            
+                            <a>Düzenle</a>
                           </td>
-                        </tr>
+                        </tr>)
                    })
                 }
+                </tbody>
+                
               </table>
             ) : (
               <div className="grid place-items-center p-5">
