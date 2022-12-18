@@ -59,6 +59,7 @@ export default function CreateMake({ analyzes, customers }) {
   const [createErr, setCreateErr] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
+  
   const router = useRouter();
 
   const [fields, setFields] = useState({
@@ -414,6 +415,30 @@ export default function CreateMake({ analyzes, customers }) {
     return isValid;
   };
 
+  const handleValidationInput = () => {
+    let check_fields = fields;
+    let isValid = true;
+    
+    // account_id
+    if (check_fields["calc_raw"]["account_id"] === "") {
+      isValid = false;
+    }
+
+    // account_id
+    if (check_fields["calc_raw"]["analyze_Name"] === "") {
+      isValid = false;
+    }
+
+    if (check_fields["calc_raw"]["type"] === "") {
+      isValid = false;
+    }
+
+    if(kgPrice  === '' || kgPrice === 0) {
+      isValid = false
+    }
+    return isValid;
+  }
+
   const handleValidation1 = () => {
     let check_fields = fields;
     let isValid = true;
@@ -428,6 +453,7 @@ export default function CreateMake({ analyzes, customers }) {
     const new_fields = fields
     new_fields[field][area] = e.target.value
     setFields(new_fields);
+    console.log(fields)
     const an = analyzes.find(analyze => fields.calc_raw.analyze_Name === analyze.analyze_id)
     if (an) {
       setCoef(`${an.analyze_coefCopper},${an.analyze_coefTin}`); 
@@ -435,7 +461,10 @@ export default function CreateMake({ analyzes, customers }) {
     
     setCopperPrice((fields.calc_raw.LME * fields.calc_raw.usd * parseFloat(coef.split(",")[0]) /1000).toFixed(3))
     setTinPrice(((fields.calc_raw.TIN * fields.calc_raw.usd)/1000 * parseFloat(coef.split(",")[1]) /100).toFixed(3))
-    setUnitPrice(((((fields.calc_raw.LME * fields.calc_raw.usd * parseFloat(coef.split(",")[0]) /1000) + (fields.calc_raw.TIN * fields.calc_raw.usd)/1000 * parseFloat(coef.split(",")[1]) /100) ) + parseFloat(fields.calc_raw.workmanship)).toFixed(3))
+    if (fields.quo_type.quo_type_name === "1") {
+      setUnitPrice(((((fields.calc_raw.LME * fields.calc_raw.usd * parseFloat(coef.split(",")[0]) /1000) + (fields.calc_raw.TIN * fields.calc_raw.usd)/1000 * parseFloat(coef.split(",")[1]) /100) ) + parseFloat(fields.calc_raw.workmanship)).toFixed(3))
+    }
+   
     setType(fields.calc_raw.type);
     setMolding(parseFloat(calcW) * parseFloat(kgPrice));
     setModelUnitPrice(parseFloat(fields["quotation_item"]["model_price"]) / parseInt(fields["quotation_item"]["unit_frequence"]));
@@ -449,7 +478,13 @@ export default function CreateMake({ analyzes, customers }) {
     {value : (parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(fields["calc_raw"]["euro"])).toFixed(3), key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(fields["calc_raw"]["euro"])).toFixed(3)} € `},
   ])
     setCanSkip1(handleValidation1());
-    setCanSkip2(handleValidation0());
+    if(fields.quo_type.quo_type_name === "0") {
+      
+      
+    }else {
+      setCanSkip2(handleValidation0());
+    }
+    
     const all_type_val = (TYPE_VALIDATE["Düz Burç"]() || TYPE_VALIDATE["Flanşlı Burç"]() || TYPE_VALIDATE["Ortadan Flanşlı Burç"]() || TYPE_VALIDATE["Plaka"]() || TYPE_VALIDATE["Çift Flanşlı Burç"]())
     setCanSkip3(all_type_val  && handleValidateQuotationItems());
       
@@ -473,6 +508,10 @@ export default function CreateMake({ analyzes, customers }) {
             "alternativeSale_price" : fields.quotation_item.alterPrice,
             "treatment_firm" : fields.quotation_item.treatment_firm,
             "euro" : fields.calc_raw.euro,
+            "lmeCopper" : fields.calc_raw.LME !== '' ? fields.calc_raw.LME : 0  ,
+            "lmeTin": fields.calc_raw.TIN !== '' ? fields.calc_raw.TIN : 0 ,
+            "type" : fields.quo_type.quo_type_name,
+            "kgPrice" : kgPrice,
             "usd" : fields.calc_raw.usd,
     }
     switch (fields.calc_raw.type) {
@@ -691,9 +730,131 @@ export default function CreateMake({ analyzes, customers }) {
 
                   {
                     activeStep == 1 ? (
-                      fields.quo_type.quo_type_name == 0 ? (<p>
-                        this is anlaşmalı
-                      </p>) : (<div className="mt-10">
+                      fields.quo_type.quo_type_name == 0 ? (<div className="mt-10">
+                      <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
+                        Yeni Teklif
+                      </p>
+                      <form className="grid grid-cols-1 space-y-5 lg:grid lg:place-items-center ">
+                        {/*Customer info*/}
+                        <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
+                          <div className="space-y-2 lg:w-1/2">
+                            <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
+                              Anlaşmalı Fiyat Girişi
+                            </p>
+                            <hr />
+                          </div>
+                
+                          <div className="space-y-5 lg:grid lg:grid-cols-3 lg:items-end lg:gap-3 ">
+                            <div className="flex flex-col space-y-3 ">
+                              <label
+                                htmlFor="small-input"
+                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                              >
+                                Cari Kod *
+                              </label>
+                              <Dropdown
+                                label="Cari Kod"
+                                field="calc_raw"
+                                area="account_id"
+                                items={CUSTOMER}
+                                fields={fields}
+                                handleChange={handleChange}
+                              />
+                            </div>
+                            <div className="flex flex-col space-y-3">
+              <label
+                htmlFor="small-input"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+              >
+                Analiz *
+              </label>
+              <Dropdown
+                label="Analiz"
+                field="calc_raw"
+                area="analyze_Name"
+                setAnalyzeID0={setAnalyzeID}
+                fields={fields}
+                items={ANALYZE}
+                handleChange={handleChange}
+              />
+            </div>
+                            <div className="flex flex-col space-y-3">
+                              <label
+                                htmlFor="small-input"
+                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                              >
+                                Ürün Tipi *
+                              </label>
+                              <Dropdown
+                                label="Tip"
+                                field="calc_raw"
+                                area="type"
+                                items={TYPE}
+                                fields={fields}
+                                handleChange={handleChange}
+                              />
+                            </div>
+                            <div className="flex flex-col">
+              <label
+                htmlFor="small-input"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+              >
+                Dolar Kuru *
+              </label>
+              <input
+                type="number"
+                step={"any"}
+                defaultValue={fields["calc_raw"]["usd"]}
+                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                placeholder=""
+                required
+                onChange={(e) => handleChange("calc_raw", "usd", e)}
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label
+                htmlFor="small-input"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+              >
+                Euro Kuru *
+              </label>
+              <input
+                type="number"
+                step={"any"}
+                defaultValue={fields["calc_raw"]["euro"]}
+                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                placeholder=""
+                required
+                onChange={(e) => handleChange("calc_raw", "euro", e)}
+              />
+            </div>
+
+                            <div className="flex flex-col">
+              <label
+                htmlFor="small-input"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+              >
+                Döküm Kilogram Fiyatı*
+              </label>
+              <input
+                type="number"
+                step={"any"}
+                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                placeholder=""
+                required
+                onChange={(e) => {
+                  setUnitPrice(parseFloat(e.target.value));
+                  setCanSkip2(handleValidationInput());
+                }
+                 
+                }
+              />
+            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>) : (<div className="mt-10">
       <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
         Yeni Teklif
       </p>

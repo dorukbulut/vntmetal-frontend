@@ -12,8 +12,8 @@ import usePagination from "../../../components/Dashboards/general/ui/Pagination"
 import Pagination from "@mui/material/Pagination";
 import UpdateMake from "../../../components/Dashboards/general/forms/UpdateMake";
 
-export default function quotationMake({analyzes, customers, items}) {
-  console.log(items);
+export default function quotationMake({}) {
+  
   return (
     <div className="">
       <Navbar />
@@ -21,11 +21,10 @@ export default function quotationMake({analyzes, customers, items}) {
       <BreadCrumbs />
       <div className="flex flex-col p-10 lg:p-20 space-y-10">
         <h2 className=" font-medium lg:text-lg text-sm text-sky-700 tracking-widest font-poppins">
-          Teklif Hazırlama
+          Teklif Formu Hazırlama
         </h2>
         <div className="relative flex overflow-x-auto shadow-md sm:rounded-lg p-5 space-x-5 items-center">
-          <CreateMake analyzes={analyzes} customers={customers}/>
-          <CreateAnalyze />
+          
           <p className="text-sky-700 italic font-poppins tracking-widest">
             Filtrele
           </p>
@@ -75,7 +74,7 @@ export default function quotationMake({analyzes, customers, items}) {
 
         <div className="w-full bg-gray-100 ">
           <div className="relative overflow-x-auto shadow-md  sm:rounded-lg">
-            {items.length !== 0 ? (
+            {[].length !== 0 ? (
               <table className="w-full text-sm text-left text-gray-500 ">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
@@ -98,8 +97,8 @@ export default function quotationMake({analyzes, customers, items}) {
                 </thead>
                 <tbody>
                 {
-                   items.map((item, index) =>  {
-                    return (<tr
+                   [].map((item, index) =>  {
+                    (<tr
                           key={index}
                           className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                         >
@@ -133,7 +132,7 @@ export default function quotationMake({analyzes, customers, items}) {
             ) : (
               <div className="grid place-items-center p-5">
                 <p className="italic font-poppins tracking-widest text-sm text-sky-700">
-                  Teklif Bulunamadı
+                  Form Bulunamadı
                 </p>
               </div>
             )}
@@ -150,33 +149,33 @@ export default function quotationMake({analyzes, customers, items}) {
 }
 
 
-export async function getServerSideProps(context) {
-  try {
-    const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/analyze/getAll`
-    );
-    const res2 = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`
-    );
-    const res3 = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/all`
-    )
+// export async function getServerSideProps(context) {
+//   try {
+//     const res = await axios.get(
+//       `${process.env.NEXT_PUBLIC_BACKEND}/api/analyze/getAll`
+//     );
+//     const res2 = await axios.get(
+//       `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`
+//     );
+//     const res3 = await axios.get(
+//       `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/all`
+//     )
     
-    if (res.status === 200 && res2.status === 200 && res3.status === 200) {
-      return {
-        props: {
-          analyzes: res.data.analyzes,
-          customers : res2.data.customers,
-          items: res3.data
-        },
-      };
-    }
-  } catch (err) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/login",
-      },
-    };
-  }
-}
+//     if (res.status === 200 && res2.status === 200 && res3.status === 200) {
+//       return {
+//         props: {
+//           analyzes: res.data.analyzes,
+//           customers : res2.data.customers,
+//           items: res3.data
+//         },
+//       };
+//     }
+//   } catch (err) {
+//     return {
+//       redirect: {
+//         permanent: false,
+//         destination: "/login",
+//       },
+//     };
+//   }
+// }

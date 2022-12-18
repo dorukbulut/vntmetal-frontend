@@ -64,10 +64,10 @@ export default function Navbar () {
                         </div>
                         <div className={`flex flex-col w-full justify-self-end items-end space-y-2 ${quotation? "visible  scale-100 " : "invisible transform scale-0 h-0"} transition duration-300 ease-in-out origin-top`}>
                           <p onClick={() => router.push("/admin/quotation/make")} className='pl-10 hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md'>Teklif Hazırlama</p>
-                          <p className='pl-10 hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md'>Teklif Formlarım</p>
+                          <p onClick={() => router.push("/admin/quotation/form")} className='pl-10 hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md'>Teklif Formlarım</p>
                         </div>
                       </div>
-                      <p className='hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md'>Satış Formlarım</p>
+                      <p className='hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md'>Sipariş Formlarım</p>
                       <p className='hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md'>Iş Emirlerim</p>
                     
                     

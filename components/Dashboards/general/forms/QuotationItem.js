@@ -15,7 +15,7 @@ export default function QuotationItem({ name, children,kgPrice, usd, euro, handl
       <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
         Yeni {name}
       </p>
-      <form className="grid grid-cols-1 space-y-5 lg:grid lg:grid-cols-2  ">
+      <div className="grid grid-cols-1 space-y-5 lg:grid lg:grid-cols-2 space-x-10 ">
         
         {childrenWithProps}
         <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
@@ -39,7 +39,6 @@ export default function QuotationItem({ name, children,kgPrice, usd, euro, handl
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                defaultValue={fields["quotation_item"]["unit_frequence"]}
                 onChange={(e) => {
                   handleChange("quotation_item","unit_frequence", e);
                   
@@ -239,7 +238,7 @@ export default function QuotationItem({ name, children,kgPrice, usd, euro, handl
           
         </div>
         
-      </form>
+      </div>
     </div>
   );
 }
