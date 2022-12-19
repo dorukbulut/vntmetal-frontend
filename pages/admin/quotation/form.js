@@ -2,17 +2,15 @@ import Navbar from "../../../components/Dashboards/general/ui/Navbar";
 import ProfileBar from "../../../components/Dashboards/general/ui/ProfileBar";
 import BreadCrumbs from "../../../components/Dashboards/general/ui/BreadCrumbs";
 import Footer from "../../../components/base/Footer";
-import CreateMake from "../../../components/Dashboards/general/forms/CreateaMake";
-import CreateAnalyze from "../../../components/Dashboards/general/forms/CreateAnalyze";
 import axios from "axios";
-import UpdateCustomer from "../../../components/Dashboards/general/forms/UpdateCustomer";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import usePagination from "../../../components/Dashboards/general/ui/Pagination";
 import Pagination from "@mui/material/Pagination";
-import UpdateMake from "../../../components/Dashboards/general/forms/UpdateMake";
+import CreateQuotationForm from "../../../components/Dashboards/general/forms/CreateQuotationForm";
 
-export default function quotationMake({}) {
+
+export default function quotationMake({customers}) {
   
   return (
     <div className="">
@@ -24,14 +22,14 @@ export default function quotationMake({}) {
           Teklif Formu Hazırlama
         </h2>
         <div className="relative flex overflow-x-auto shadow-md sm:rounded-lg p-5 space-x-5 items-center">
-          
+          <CreateQuotationForm customers={customers}/>
           <p className="text-sky-700 italic font-poppins tracking-widest">
             Filtrele
           </p>
           <div className="flex space-x-20">
             <div className="flex flex-col space-y-3">
               <p className="text-xs font-poppins font-medium italic text-sky-700">
-                Ürün
+                Form Referans Numarası
               </p>
               <div className="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease-soft">
                 <input
@@ -45,6 +43,20 @@ export default function quotationMake({}) {
             <div className="flex flex-col space-y-3">
               <p className="text-xs font-poppins font-medium italic text-sky-700">
                 Cari Kod
+              </p>
+              <div className="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease-soft">
+                <input
+                  type="text"
+                  className="pl-9 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                  placeholder="Cari Kod Ara..."
+                  onChange={(e) => handleFilters("account_id", e)}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col space-y-3">
+              <p className="text-xs font-poppins font-medium italic text-sky-700">
+                Müşteri Referans Numarası
               </p>
               <div className="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease-soft">
                 <input
@@ -149,33 +161,27 @@ export default function quotationMake({}) {
 }
 
 
-// export async function getServerSideProps(context) {
-//   try {
-//     const res = await axios.get(
-//       `${process.env.NEXT_PUBLIC_BACKEND}/api/analyze/getAll`
-//     );
-//     const res2 = await axios.get(
-//       `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`
-//     );
-//     const res3 = await axios.get(
-//       `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/all`
-//     )
-    
-//     if (res.status === 200 && res2.status === 200 && res3.status === 200) {
-//       return {
-//         props: {
-//           analyzes: res.data.analyzes,
-//           customers : res2.data.customers,
-//           items: res3.data
-//         },
-//       };
-//     }
-//   } catch (err) {
-//     return {
-//       redirect: {
-//         permanent: false,
-//         destination: "/login",
-//       },
-//     };
-//   }
-// }
+export async function getServerSideProps(context) {
+  try {
+   
+    const res2 = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`
+    );
+    if (res2.status === 200 ) {
+      return {
+        props: {
+          
+          customers : res2.data.customers,
+          
+        },
+      };
+    }
+  } catch (err) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/login",
+      },
+    };
+  }
+}
