@@ -3,6 +3,7 @@ import axios, { Axios } from "axios";
 import {useRouter} from "next/router";
 import Dropdown from "./Dropdown";
 import SetItem from "./SetQuotationItem";
+import { useStepContext } from "@mui/material";
 
 
 export default function CreateQuotationForm({customers}) {
@@ -16,12 +17,25 @@ export default function CreateQuotationForm({customers}) {
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
   const [createErr, setCreateErr] = useState(false);
+  const [fields, setFields] = useState({
+    options : {
+      Customer_ID : '',
+      customerInquiryNum : '',
+    }
+  }); 
   const router = useRouter();
 
   
 
   const handleChange = (field, area, e) => {
-    
+    setFields(prev => {
+      return {
+        ...prev,
+        [field] : {
+          [area] : e.target.value 
+        }
+      }
+    })
   };
 
   const handleValidation = () => {
@@ -116,10 +130,10 @@ export default function CreateQuotationForm({customers}) {
                               </label>
                               <Dropdown
                                 label="Cari Kod"
-                                field="test"
-                                area="test"
+                                field="options"
+                                area="Customer_ID"
                                 items={CUSTOMER}
-                                fields={{test : { test : ''}}}
+                                fields={fields}
                                 handleChange={handleChange}
                               />
                             </div>
@@ -137,7 +151,7 @@ export default function CreateQuotationForm({customers}) {
                       placeholder=""
                       required
                       onChange={(e) =>
-                        handleChange("customer", "account_title", e)
+                        handleChange("options", "customerInquiryNum", e)
                       }
                     />
                   </div>
@@ -158,7 +172,7 @@ export default function CreateQuotationForm({customers}) {
                 </div>
 
                 <div className="space-y-5 lg:grid lg:place-items-center">
-                  <SetItem customerid={1}/>
+                  <SetItem fields={fields}/>
                 </div>
               </div>
 
