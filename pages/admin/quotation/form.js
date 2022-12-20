@@ -10,8 +10,22 @@ import Pagination from "@mui/material/Pagination";
 import CreateQuotationForm from "../../../components/Dashboards/general/forms/CreateQuotationForm";
 
 
-export default function quotationMake({customers}) {
-  
+export default function quotationMake({customers, forms}) {
+  const generate = (e) => {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/generate`, {method : "POST", headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({id : e.target.id}),}).then((response) => {
+      response.blob().then((blob) => {
+        console.log(blob)
+        let url = window.URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = "QuotationForm.docx";
+        a.click();
+      });
+    });
+  } 
   return (
     <div className="">
       <Navbar />
@@ -86,31 +100,35 @@ export default function quotationMake({customers}) {
 
         <div className="w-full bg-gray-100 ">
           <div className="relative overflow-x-auto shadow-md  sm:rounded-lg">
-            {[].length !== 0 ? (
+            {forms.length !== 0 ? (
               <table className="w-full text-sm text-left text-gray-500 ">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
                     <th scope="col" className="px-6 py-3">
-                      ÜRÜN TİPİ
+                    Form Referans Numarası
                     </th>
                     <th scope="col" className="px-6 py-3">
                       CARİ KOD
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      SATIŞ FİYATI    
+                    Müşteri Referans Numarası  
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      ADET
+                      Tarih
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      İndir
                     </th>
                     <th scope="col" className="px-6 py-3">
                       <span className="sr-only">Düzenle</span>
                     </th>
+                   
                   </tr>
                 </thead>
                 <tbody>
                 {
-                   [].map((item, index) =>  {
-                    (<tr
+                   forms.map((item, index) =>  {
+                    return (<tr
                           key={index}
                           className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                         >
@@ -118,23 +136,24 @@ export default function quotationMake({customers}) {
                             scope="row"
                             className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                           >
-                            {item.straight_bush ? "Düz Burç" : ""}
-                            {item.plate_strip ? "Plaka" : ""}
-                            {item.bracket_bush ? "Flanşlı Burç" : ""}
-                            {item.middlebracket_bush ? "Ortadan Flanşlı Burç" : ""}
-                            {item.doublebracket_bush ? "Çift Flanşlı Burç" : ""}
+                            {item.reference}
                     
                           </th>
                           <td className="px-6 py-4">{item.Customer_ID}</td>
                           <td className="px-6 py-4">
-                            {item.unit_price}
+                            {item.customerInquiryNum}
                           </td>
                           <td className="px-6 py-4">
-                            {item.unit_frequence}
+                            {}
                           </td>
                           <td className="px-6 py-4 text-right">
-                          <UpdateMake analyzes={analyzes} customers={customers} item={item}/>
+                           <button id={item.quotation_ID} onClick={generate} className="hover:underline">İndir</button>
                           </td>
+                          <td className="px-6 py-4 text-right">
+                            <a>Düzenle</a>
+                          </td>
+
+                          
                         </tr>)
                    })
                 }
@@ -167,11 +186,17 @@ export async function getServerSideProps(context) {
     const res2 = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`
     );
-    if (res2.status === 200 ) {
+    const r3 = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/all`
+    )
+    console.log(r3)
+    if (res2.status === 200 && r3.status === 200 ) {
       return {
         props: {
           
           customers : res2.data.customers,
+          forms : r3.data
+          
           
         },
       };

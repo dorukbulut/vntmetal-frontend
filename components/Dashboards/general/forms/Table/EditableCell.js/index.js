@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 const EditableCell = ({
   value: initialValue,
   row: { index },
@@ -7,9 +7,12 @@ const EditableCell = ({
 }) => {
   // We need to keep and update the state of the cell normally
   const [value, setValue] = React.useState(initialValue)
-  const onChange =  e => {
-    setValue(e.target.value);
+  useEffect(() => {
     updateMyData(index, id, value);
+  }, [value])
+  
+  const onChange =   e => {
+    setValue(e.target.value);
   }
   
   

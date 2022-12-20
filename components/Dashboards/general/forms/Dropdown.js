@@ -16,6 +16,7 @@ const DropDown = ({label,items, handleChange, field, area, fields}) =>  {
           label={label}
           onChange={(e) => {
             setSelected(e.target.value);
+            
             handleChange(field, area, e);
             
           }}

@@ -3,7 +3,7 @@ import Table from "./Table"
 import EditableCell from "./Table/EditableCell.js"
 import Checkbox from '@mui/material/Checkbox';
 import axios from "axios"
-function SetItem({fields, setFields}) {
+function SetItem({fields,setAll}) {
 const [rowdata, setRowData] = useState([]);
 const [skipPageReset, setSkipPageReset] = useState(false);
 
@@ -46,10 +46,15 @@ const [skipPageReset, setSkipPageReset] = useState(false);
     
 
     }
-  , [fields])
+  , [fields.options.Customer_ID])
   
+  useEffect(() => {
+    setAll(rowdata.map(data => {
+      if (data.checked) return data
+    })) 
+  },[rowdata]);
 
-  const updateMyData = (rowIndex, columnId, value) => {
+  const updateMyData = async (rowIndex, columnId, value) => {
     // We also turn on the flag to not reset the page
     setRowData((old) =>
         old.map((row, index) => {
@@ -62,6 +67,7 @@ const [skipPageReset, setSkipPageReset] = useState(false);
         return row;
       })
     );
+
     
   };
 
@@ -159,14 +165,14 @@ const [skipPageReset, setSkipPageReset] = useState(false);
         }) => {
           
 
-  const onClick = (e) => {
-    updateMyData(index, id, e.target.checked);
-    console.log(rowdata);
+  const onClick = async (e) => {
+    await updateMyData(index, id, e.target.checked);
+   
   };
           return (
             <Checkbox
             checked={initialValue}
-            onClick={onClick}
+            onChange={onClick}
             />
             
           )

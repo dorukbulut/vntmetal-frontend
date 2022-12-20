@@ -87,33 +87,121 @@ export default function CreateQuotationForm({customers}) {
   const [createErr, setCreateErr] = useState(false);
   const [fields, setFields] = useState({
     options : {
-      Customer_ID : '',
       customerInquiryNum : '',
+      grand_total : '',
+      validityOfOffer : '',
+      IncotermType : '',
+      PaymentTerms: '',
+      extraDetails : '',
+      preparedBy : '',
+      approvedBy : '',
+
     },
-    delivery_type : {
-       name : '',
+    delivery_type: {
+        name:  '',
+        package_fee: 0,
+        loading_fee: 0,
+        delivery_fee: 0,
+        export_fee: 0,
+        terminal_fee_exit: 0,
+        vehicleLoading_fee: 0,
+        transport_fee: 0,
+        insurance_fee: 0,
+        terminal_fee_entry: 0,
+        import_fee: 0,
+        description : '',
+    },
+
+    all : []
+  });
+
+  const [Customer_ID, setCustomer] = useState({
+    options : {
+      Customer_ID : ''
     }
-  }); 
+  })
+  const [all, setAll] = useState([]);
+
+  const [grandTotal, setGrandTotal] = useState(0);
   const router = useRouter();
 
   
 
   const handleChange = (field, area, e) => {
-    setFields(prev => {
+    let new_fields = fields
+    new_fields[field][area] = e.target.value
+    setFields(new_fields);
+  };
+
+  const handleChangeCustomer = (field, area, e) => {
+    setCustomer((old) => {
       return {
-        ...prev,
-        [field] : {
-          [area] : e.target.value 
+        ...old,
+        [field]: {
+          [area] : e.target.value
         }
       }
     })
-  };
+  }
 
   const handleValidation = () => {
     
   };
 
-  const handleSubmit = () => {}
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    let data = {
+      options : {
+        ...fields.options,
+        Customer_ID : Customer_ID.options.Customer_ID,
+        grand_total : all.reduce((prev ,val) => {
+          console.log()
+          return prev + val.total_price
+        }, 0)
+      },
+
+      delivery_type : {
+        ...fields.delivery_type,
+        total : parseFloat(fields.delivery_type.package_fee) + parseFloat(fields.delivery_type.loading_fee) + 
+        parseFloat(fields.delivery_type.delivery_fee) + parseFloat(fields.delivery_type.export_fee) + parseFloat(fields.delivery_type.terminal_fee_exit) +
+        parseFloat(fields.delivery_type.vehicleLoading_fee) + parseFloat(fields.delivery_type.transport_fee) +
+        parseFloat(fields.delivery_type.insurance_fee) + parseFloat(fields.delivery_type.terminal_fee_entry) + 
+        parseFloat(fields.delivery_type.import_fee)
+      },
+
+      all : all.map((item) => {
+        return {
+          item_id : item.item_id, 
+          description : item.description, 
+          deliveryTime : parseInt(item.deliveryTime)
+        }
+      })
+    }
+    
+    if (true) {
+      try{
+        const res = await axios({ 
+          method : "post",
+          data: data , 
+          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/create`,
+          withCredentials : true});
+          if(res.status === 200) {
+            setSubmit(true);
+            setIsvalid(true);
+          } 
+      }
+      catch(err) {
+        setSubmit(false);
+        setCreateErr(true);
+      }
+      
+
+      
+      
+    } else {
+      setIsvalid(false);
+    }
+  };
 
   // const handleSubmit = async (e) => {
   //   e.preventDefault();
@@ -164,7 +252,8 @@ export default function CreateQuotationForm({customers}) {
             strokeWidth={1.5}
             stroke="currentColor"
             className="w-6 h-6 relative top-0 left-0 hover:cursor-pointer"
-            onClick={toggleCreate}
+            onClick={() => {toggleCreate() 
+              router.reload(window.location.pathname);}}
           >
             <path
               strokeLinecap="round"
@@ -204,8 +293,8 @@ export default function CreateQuotationForm({customers}) {
                                 field="options"
                                 area="Customer_ID"
                                 items={CUSTOMER}
-                                fields={fields}
-                                handleChange={handleChange}
+                                fields={Customer_ID}
+                                handleChange={handleChangeCustomer}
                               />
                             </div>
 
@@ -243,7 +332,7 @@ export default function CreateQuotationForm({customers}) {
                 </div>
 
                 <div className="space-y-5 lg:grid lg:place-items-center">
-                  <SetItem fields={fields}/>
+                  <SetItem fields={Customer_ID} setAll={setAll} />
                 </div>
               </div>
 
@@ -288,7 +377,7 @@ export default function CreateQuotationForm({customers}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                onChange={(e) => handleChange("calc_raw", "euro", e)}
+                onChange={(e) => handleChange("delivery_type", "package_fee", e)}
               />
             </div>
 
@@ -306,7 +395,7 @@ export default function CreateQuotationForm({customers}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                onChange={(e) => handleChange("calc_raw", "euro", e)}
+                onChange={(e) => handleChange("delivery_type", "loading_fee", e)}
               />
             </div>
 
@@ -324,7 +413,7 @@ export default function CreateQuotationForm({customers}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                onChange={(e) => handleChange("calc_raw", "euro", e)}
+                onChange={(e) => handleChange("delivery_type", "delivery_fee", e)}
               />
             </div>
             <div className="flex flex-col">
@@ -341,7 +430,7 @@ export default function CreateQuotationForm({customers}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                onChange={(e) => handleChange("calc_raw", "euro", e)}
+                onChange={(e) => handleChange("delivery_type", "export_fee", e)}
               />
             </div>
 
@@ -359,7 +448,7 @@ export default function CreateQuotationForm({customers}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                onChange={(e) => handleChange("calc_raw", "euro", e)}
+                onChange={(e) => handleChange("delivery_type", "terminal_fee_exit", e)}
               />
             </div>
 
@@ -377,7 +466,7 @@ export default function CreateQuotationForm({customers}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                onChange={(e) => handleChange("calc_raw", "euro", e)}
+                onChange={(e) => handleChange("delivery_type", "vehicleLoading_fee", e)}
               />
             </div>
 
@@ -395,7 +484,7 @@ export default function CreateQuotationForm({customers}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                onChange={(e) => handleChange("calc_raw", "euro", e)}
+                onChange={(e) => handleChange("delivery_type", "transport_fee", e)}
               />
             </div>
 
@@ -413,7 +502,7 @@ export default function CreateQuotationForm({customers}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                onChange={(e) => handleChange("calc_raw", "euro", e)}
+                onChange={(e) => handleChange("delivery_type", "insurance_fee", e)}
               />
             </div>
 
@@ -431,7 +520,7 @@ export default function CreateQuotationForm({customers}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                onChange={(e) => handleChange("calc_raw", "euro", e)}
+                onChange={(e) => handleChange("delivery_type", "terminal_fee_entry", e)}
               />
             </div>
 
@@ -449,8 +538,34 @@ export default function CreateQuotationForm({customers}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                onChange={(e) => handleChange("calc_raw", "euro", e)}
+                onChange={(e) => handleChange("delivery_type", "import_fee", e)}
               />
+            </div>
+
+            <div className="flex flex-col ">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                    >
+                      Açıklama
+                    </label>
+                    <textarea
+                      type="text"
+                      className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      placeholder=""
+                      onChange={(e) =>
+                        handleChange("delivery_type", "description", e)
+                      }
+                    />
+                  </div>
+            <div className="flex flex-col">
+              <label
+                htmlFor="small-input"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+              >
+                Toplam Fiyat
+              </label>
+              <p className="font-poppins">{}</p>
             </div>
 
                 </div>
@@ -480,14 +595,10 @@ export default function CreateQuotationForm({customers}) {
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
                       onChange={(e) =>
-                        handleChange("adressinfo", "customer_Address", e)
+                        handleChange("options", "validityOfOffer", e)
                       }
                     />
                   </div>
-                
-                 
-
-                  <div className="flex flex-col"></div>
                   
                   <div className="flex flex-col ">
                     <label
@@ -501,7 +612,7 @@ export default function CreateQuotationForm({customers}) {
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
                       onChange={(e) =>
-                        handleChange("adressinfo", "customer_Address", e)
+                        handleChange("options", "IncotermType", e)
                       }
                     />
                   </div>
@@ -517,7 +628,7 @@ export default function CreateQuotationForm({customers}) {
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
                       onChange={(e) =>
-                        handleChange("adressinfo", "customer_Address", e)
+                        handleChange("options", "PaymentTerms", e)
                       }
                     />
                   </div>
@@ -533,7 +644,7 @@ export default function CreateQuotationForm({customers}) {
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
                       onChange={(e) =>
-                        handleChange("adressinfo", "customer_Address", e)
+                        handleChange("options", "extraDetails", e)
                       }
                       
                     />
@@ -552,7 +663,7 @@ export default function CreateQuotationForm({customers}) {
                       placeholder=""
                       required
                       onChange={(e) =>
-                        handleChange("adressinfo", "customer_town", e)
+                        handleChange("options", "preparedBy", e)
                       }
                     />
                   </div>
@@ -570,7 +681,7 @@ export default function CreateQuotationForm({customers}) {
                       placeholder=""
                       required
                       onChange={(e) =>
-                        handleChange("adressinfo", "customer_district", e)
+                        handleChange("options", "approvedBy", e)
                       }
                     />
                   </div>
