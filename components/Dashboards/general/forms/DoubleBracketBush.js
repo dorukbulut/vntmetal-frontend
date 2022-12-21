@@ -1,3 +1,4 @@
+import ModalImage from "../ui/ModalImage";
 export default function DoubleBracketBush ({handleChange, fields, calcs}) {
     const calcWeigth = (A8, B8, C8, D8, E8, F8, G8) => {
       return ((A8/2)*(A8/2)*3.14*8.6*D8-(C8/2)*(C8/2)*3.14*8.6*D8)/1000000+((B8/2)*(B8/2)*3.14*8.6*F8-(C8/2)*(C8/2)*3.14*8.6*F8)/1000000+((A8/2)*(A8/2)*3.14*8.6*E8-(C8/2)*(C8/2)*3.14*8.6*E8)/1000000
@@ -199,6 +200,10 @@ export default function DoubleBracketBush ({handleChange, fields, calcs}) {
               </label>
               <p className="font-poppins text-red-700">{calcs.calcW}</p>
             </div>
+            </div>
+
+            <div className="flex flex-col">
+              <ModalImage image={'/doublebracket.png'} />
             </div>
 
             

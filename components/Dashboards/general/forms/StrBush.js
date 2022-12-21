@@ -1,4 +1,4 @@
-
+import ModalImage from "../ui/ModalImage";
 export default function StrBush ({handleChange, fields, calcs}) {
     const calculateWeight = (A8, B8, C8) => {
       return ((A8/2)*(A8/2)*3.14*C8*8.6-(B8/2)*(B8/2)*3.14*C8*8.6)/1000000
@@ -84,6 +84,10 @@ export default function StrBush ({handleChange, fields, calcs}) {
               </label>
               <p className="font-poppins text-red-700">{calcs.calcW}</p>
             </div>
+            </div>
+
+            <div className="flex flex-col">
+              <ModalImage image={'/straightbush.png'} />
             </div>
             
         </div>

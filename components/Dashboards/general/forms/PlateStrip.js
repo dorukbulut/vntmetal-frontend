@@ -1,3 +1,4 @@
+import ModalImage from "../ui/ModalImage";
 export default function PlateStrip ({handleChange, fields, calcs}) {
     const calcWeigth = (A8, B8, C8) => {
       return A8*B8*C8*8.6/1000000
@@ -84,6 +85,10 @@ export default function PlateStrip ({handleChange, fields, calcs}) {
               </label>
               <p className="font-poppins text-red-700">{calcs.calcW}</p>
             </div>
+            </div>
+
+            <div className="flex flex-col">
+              <ModalImage image={"/platestrip.png"} />
             </div>
             
         </div>

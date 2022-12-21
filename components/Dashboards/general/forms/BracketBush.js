@@ -1,3 +1,5 @@
+import ModalImage from "../ui/ModalImage";
+
 export default function BracketBush ({handleChange, fields, calcs}) {
     const calcWeigth = (A8, B8, C8, D8, E8) => {
       return ((A8/2)*(A8/2)*3.14*D8*8.6-(B8/2)*(B8/2)*3.14*D8*8.6)/1000000+((B8/2)*(B8/2)*3.14*E8*8.6-(C8/2)*(C8/2)*3.14*E8*8.6)/1000000
@@ -12,6 +14,7 @@ export default function BracketBush ({handleChange, fields, calcs}) {
                   <hr />
             </div>
             <div className="space-y-5 lg:grid lg:grid-cols-2 lg:items-end lg:gap-3 space-x1-10">
+
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
@@ -129,6 +132,7 @@ export default function BracketBush ({handleChange, fields, calcs}) {
               </label>
               <p className="font-poppins text-red-700">{calcs.calcW}</p>
             </div>
+            <ModalImage image={'/bracketbush.png'} />
             </div>
 
             

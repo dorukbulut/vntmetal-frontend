@@ -117,6 +117,9 @@ export default function quotationMake({customers, forms}) {
                       Tarih
                     </th>
                     <th scope="col" className="px-6 py-3">
+                      Revizyon
+                    </th>
+                    <th scope="col" className="px-6 py-3">
                       İndir
                     </th>
                     <th scope="col" className="px-6 py-3">
@@ -144,7 +147,10 @@ export default function quotationMake({customers, forms}) {
                             {item.customerInquiryNum}
                           </td>
                           <td className="px-6 py-4">
-                            {}
+                            {`${item.day}-${item.month}-${item.year}`}
+                          </td>
+                          <td className="px-6 py-4">
+                            {item.revision}
                           </td>
                           <td className="px-6 py-4 text-right">
                            <button id={item.quotation_ID} onClick={generate} className="hover:underline">İndir</button>

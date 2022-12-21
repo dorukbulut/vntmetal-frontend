@@ -13,7 +13,6 @@ import Pagination from "@mui/material/Pagination";
 import UpdateMake from "../../../components/Dashboards/general/forms/UpdateMake";
 
 export default function quotationMake({analyzes, customers, items}) {
-  console.log(items);
   return (
     <div className="">
       <Navbar />
