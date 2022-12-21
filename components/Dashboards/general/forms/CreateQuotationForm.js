@@ -1,21 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios, { Axios } from "axios";
 import {useRouter} from "next/router";
 import Dropdown from "./Dropdown";
 import SetItem from "./SetQuotationItem";
 import { useStepContext } from "@mui/material";
 
-const INCOTERMS = [
-  {
-    key : "VNTFT",
-    value : "VNTFT",
-
-  },
-  {
-    key : "MT",
-    value : "MT",
-
-  },
+const INCOTERMS_EXTRA = [
   {
     key : "EXW",
     value : "EXW",
@@ -73,6 +63,30 @@ const INCOTERMS = [
   },
 ]
 
+const INCOTERMS_INTRA = [
+  {
+    key : "VNTFT",
+    value : "VNTFT",
+
+  },
+  {
+    key : "MT",
+    value : "MT",
+
+  },
+  {
+    key : "ARAS",
+    value : "ARAS",
+
+  },
+
+  {
+    key : "UPS",
+    value : "UPS",
+
+  },
+]
+
 
 export default function CreateQuotationForm({customers}) {
   const CUSTOMER = customers.map((customer) => {
@@ -97,6 +111,9 @@ export default function CreateQuotationForm({customers}) {
       approvedBy : '',
 
     },
+    area : {
+      name : ''
+    },
     delivery_type: {
         name:  '',
         package_fee: 0,
@@ -115,23 +132,70 @@ export default function CreateQuotationForm({customers}) {
     all : []
   });
 
+  const [currErrors, setCurrErrors] = useState({
+    Customer_ID : {
+      Customer_ID  : ''
+    },
+    all : {
+      all : '',
+    },
+    options : {
+      customerInquiryNum : '',
+      grand_total : '',
+      validityOfOffer : '',
+      IncotermType : '',
+      PaymentTerms: '',
+      extraDetails : '',
+      preparedBy : '',
+      approvedBy : '',
+
+    },
+    area : {
+      name : ''
+    },
+    delivery_type: {
+        name:  '',
+        package_fee: 0,
+        loading_fee: 0,
+        delivery_fee: 0,
+        export_fee: 0,
+        terminal_fee_exit: 0,
+        vehicleLoading_fee: 0,
+        transport_fee: 0,
+        insurance_fee: 0,
+        terminal_fee_entry: 0,
+        import_fee: 0,
+        description : '',
+    },
+
+    
+  });
+
   const [Customer_ID, setCustomer] = useState({
     options : {
       Customer_ID : ''
     }
   })
+  
+  
+
+
   const [all, setAll] = useState([]);
 
   const [grandTotal, setGrandTotal] = useState(0);
   const router = useRouter();
 
   
-
+  const [setting, setSetting] = useState('');
   const handleChange = (field, area, e) => {
     let new_fields = fields
     new_fields[field][area] = e.target.value
     setFields(new_fields);
+    setSetting(fields.area.name)
+    console.log(fields);
+    
   };
+  
 
   const handleChangeCustomer = (field, area, e) => {
     setCustomer((old) => {
@@ -144,17 +208,91 @@ export default function CreateQuotationForm({customers}) {
     })
   }
 
+  
   const handleValidation = () => {
+    let check_fields = fields;
+    let errors = currErrors;
+    let isValid = true;
+     
+     //customerInquiery
+     if (check_fields.options.customerInquiryNum === '') {
+      isValid = false
+      errors.options.customerInquiryNum = "Müşteri Referans Numarası Boş bırakalamaz !"
+     } else  {
+      errors.options.customerInquiryNum = ""
+     }
+
+     //account_id
+     if (Customer_ID.options.Customer_ID === '') {
+      isValid = false
+      errors.Customer_ID.Customer_ID = "Müşteri Cari Kodu Boş bırakalamaz !"
+     } else  {
+      errors.Customer_ID.Customer_ID = ""
+     }
+
+     //preparedBy
+     if (check_fields.options.preparedBy === '') {
+      isValid = false
+      errors.options.preparedBy = "Hazırlayan Kişi Boş bırakılamaz !"
+     } else  {
+      errors.options.preparedBy = ""
+     }
+
+     //approvedBy
+     if (check_fields.options.approvedBy === '') {
+      isValid = false
+      errors.options.approvedBy = "Onaylayan Kişi Boş bırakılamaz !"
+     } else  {
+      errors.options.approvedBy = ""
+     }
+
+     //delivery_type name !
+     if (check_fields.delivery_type.name === '') {
+      isValid = false
+      errors.delivery_type.name = "Teslimat Şekli boş bırakalamaz !"
+     } else  {
+      errors.delivery_type.name = ""
+     }
+
+     //items!
+     if (all.length === 0 ) {
+      isValid = false
+      errors.all.all = "Teslimat Kalemleri ve Açıklamaları boş bırakalamaz !"
+     } else  {
+        errors.all.all = ""
+      }
     
+      //every checked item
+    if(all.length !== 0) {
+      const check = all.filter(item => item!=undefined).map(item => {
+        if(item.description === "" || item.deliveryTime === "") return item
+      }).filter(item => item!=undefined);
+
+      if(check.length !== 0) {
+        isValid = false
+        errors.all.all = "Teslimat Kalemleri ve Açıklamaları boş bırakalamaz !"
+      }
+
+      else {
+        errors.all.all = ""
+      }
+    }
+     
+
+     
+    
+     setCurrErrors(errors)
+     return isValid
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (handleValidation()) {
     let data = {
       options : {
         ...fields.options,
         Customer_ID : Customer_ID.options.Customer_ID,
-        grand_total : all.reduce((prev ,val) => {
+        grand_total : all.filter(item => item!=undefined).reduce((prev ,val) => {
           console.log()
           return prev + val.total_price
         }, 0)
@@ -169,7 +307,7 @@ export default function CreateQuotationForm({customers}) {
         parseFloat(fields.delivery_type.import_fee)
       },
 
-      all : all.map((item) => {
+      all : all.filter(item => item!=undefined).map((item) => {
         return {
           item_id : item.item_id, 
           description : item.description, 
@@ -178,7 +316,7 @@ export default function CreateQuotationForm({customers}) {
       })
     }
     
-    if (true) {
+    
       try{
         const res = await axios({ 
           method : "post",
@@ -346,22 +484,42 @@ export default function CreateQuotationForm({customers}) {
                 </div>
 
                 <div className="space-y-5 lg:grid lg:grid-cols-3 lg:place-items-center">
+                <div className="flex flex-col space-y-3 ">
+                                <label
+                                  htmlFor="small-input"
+                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                                >
+                                  Teslimat Şekli *
+                                </label>
+                                <Dropdown
+                                  label="Teslimat"
+                                  field="area"
+                                  area="name"
+                                  items={[{key : "Yurt İçi", value: "intra"},{key:"Yurt Dışı", value : "extra"}]}
+                                  fields={fields}
+                                  handleChange={handleChange}
+                                />
+                  </div>
+
                   <div className="flex flex-col space-y-3 ">
                                 <label
                                   htmlFor="small-input"
                                   className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
                                 >
-                                  Incoterm Tipi *
+                                  Teslimat Tipi *
                                 </label>
                                 <Dropdown
-                                  label="Incoterm"
+                                  label="Teslimat Tipi"
                                   field="delivery_type"
                                   area="name"
-                                  items={INCOTERMS}
+                                  items={setting === "extra" ? INCOTERMS_EXTRA : INCOTERMS_INTRA }
                                   fields={fields}
                                   handleChange={handleChange}
                                 />
                   </div>
+
+                 
+                  
 
                   <div className="flex flex-col">
               <label
@@ -379,44 +537,44 @@ export default function CreateQuotationForm({customers}) {
                 required
                 onChange={(e) => handleChange("delivery_type", "package_fee", e)}
               />
-            </div>
+                  </div>
 
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-              >
-                Yükleme Ücreti *
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                onChange={(e) => handleChange("delivery_type", "loading_fee", e)}
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-              >
-                Liman veya Belirlenen Yerde teslim *
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                onChange={(e) => handleChange("delivery_type", "delivery_fee", e)}
-              />
-            </div>
-            <div className="flex flex-col">
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                    >
+                      Yükleme Ücreti *
+                    </label>
+                    <input
+                      type="number"
+                      step={"any"}
+                      
+                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      placeholder=""
+                      required
+                      onChange={(e) => handleChange("delivery_type", "loading_fee", e)}
+                    />
+                  </div>
+                  {setting === 'extra' ? <div className="flex flex-col">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                    >
+                      Liman veya Belirlenen Yerde teslim *
+                    </label>
+                    <input
+                      type="number"
+                      step={"any"}
+                      
+                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      placeholder=""
+                      required
+                      onChange={(e) => handleChange("delivery_type", "delivery_fee", e)}
+                    />
+                  </div> : '' }
+                  
+            {setting === "extra" ?  <div className="flex flex-col">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
@@ -432,9 +590,9 @@ export default function CreateQuotationForm({customers}) {
                 required
                 onChange={(e) => handleChange("delivery_type", "export_fee", e)}
               />
-            </div>
-
-            <div className="flex flex-col">
+            </div> : ''}   
+           
+            {setting === "extra" ? <div className="flex flex-col">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
@@ -450,9 +608,9 @@ export default function CreateQuotationForm({customers}) {
                 required
                 onChange={(e) => handleChange("delivery_type", "terminal_fee_exit", e)}
               />
-            </div>
-
-            <div className="flex flex-col">
+            </div> : ''}
+            
+            {setting === "extra" ?  <div className="flex flex-col">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
@@ -468,8 +626,9 @@ export default function CreateQuotationForm({customers}) {
                 required
                 onChange={(e) => handleChange("delivery_type", "vehicleLoading_fee", e)}
               />
-            </div>
-
+            </div> : ''}
+           
+            
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
@@ -487,8 +646,7 @@ export default function CreateQuotationForm({customers}) {
                 onChange={(e) => handleChange("delivery_type", "transport_fee", e)}
               />
             </div>
-
-            <div className="flex flex-col">
+            {setting === "extra" ? <div className="flex flex-col">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
@@ -504,9 +662,9 @@ export default function CreateQuotationForm({customers}) {
                 required
                 onChange={(e) => handleChange("delivery_type", "insurance_fee", e)}
               />
-            </div>
-
-            <div className="flex flex-col">
+            </div> : ''}
+            
+            {setting === "extra" ? <div className="flex flex-col">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
@@ -522,9 +680,9 @@ export default function CreateQuotationForm({customers}) {
                 required
                 onChange={(e) => handleChange("delivery_type", "terminal_fee_entry", e)}
               />
-            </div>
-
-            <div className="flex flex-col">
+            </div> : ''}
+            
+            {setting === "extra" ? <div className="flex flex-col">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
@@ -540,7 +698,8 @@ export default function CreateQuotationForm({customers}) {
                 required
                 onChange={(e) => handleChange("delivery_type", "import_fee", e)}
               />
-            </div>
+            </div>: ''}
+            
 
             <div className="flex flex-col ">
                     <label
@@ -558,15 +717,7 @@ export default function CreateQuotationForm({customers}) {
                       }
                     />
                   </div>
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-              >
-                Toplam Fiyat
-              </label>
-              <p className="font-poppins">{}</p>
-            </div>
+           
 
                 </div>
               </div>
@@ -736,7 +887,7 @@ export default function CreateQuotationForm({customers}) {
             </h3>
             <div className="mt-2 px-7 py-3">
               <p className="text-sm text-gray-500">
-                Müşteri Başarıyla Kaydedildi!
+                Teklif Formu Başarıyla Kaydedildi!
               </p>
             </div>
             <div className="items-center px-4 py-3">

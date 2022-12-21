@@ -16,6 +16,6 @@ const EditableCell = ({
   }
   
   
-  return <input value={value} onChange={onChange}  />
+  return  <input value={value} required onChange={onChange} className='border-2 invalid:border-red-600 valid:border-none' />
 }
 export default EditableCell
