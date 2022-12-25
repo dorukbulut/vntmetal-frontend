@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import usePagination from "../../../components/Dashboards/general/ui/Pagination";
 import Pagination from "@mui/material/Pagination";
 import CreateQuotationForm from "../../../components/Dashboards/general/forms/CreateQuotationForm";
-
+import UpdateQuotationForm from "../../../components/Dashboards/general/forms/UpdateQuotationForm";
 
 export default function quotationMake({customers, forms}) {
   const generate = (e) => {
@@ -156,7 +156,7 @@ export default function quotationMake({customers, forms}) {
                            <button id={item.quotation_ID} onClick={generate} className="hover:underline">İndir</button>
                           </td>
                           <td className="px-6 py-4 text-right">
-                            <a>Düzenle</a>
+                            <UpdateQuotationForm customers={customers} item={item}/>
                           </td>
 
                           
