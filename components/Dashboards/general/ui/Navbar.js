@@ -67,7 +67,7 @@ export default function Navbar () {
                           <p onClick={() => router.push("/admin/quotation/form")} className='pl-10 hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md'>Teklif Formlarım</p>
                         </div>
                       </div>
-                      <p className='hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md'>Sipariş Formlarım</p>
+                      <p onClick={() => router.push("/admin/sale-confirmation")} className='hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md'>Sipariş Formlarım</p>
                       <p className='hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md'>Iş Emirlerim</p>
                     
                     
