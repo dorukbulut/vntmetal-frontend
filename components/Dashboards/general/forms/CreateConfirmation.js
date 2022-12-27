@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import axios, { Axios } from "axios";
 import {useRouter} from "next/router";
 import Dropdown from "./Dropdown";
-import SetItem from "./SetQuotationItem";
-import { useStepContext } from "@mui/material";
-
+import ItemSelect from "./ItemSelect";
+import CheckMark from "./CheckMark";
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 
 
 
@@ -39,6 +40,58 @@ export default function CreateConfirmationForm({customers}) {
       }
   })
   const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    if (Customer_ID.options.Customer_ID !== '') {
+      axios({
+          method : "POST",
+          data : {
+              Quotation_ID : selectQuo.options.Quotation_ID
+          },
+          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/get-quo`,
+          withCredentials : true
+      })
+      .then(res => {
+          setItems(res.data.map((item, key) => {
+            let dim = ""
+            let name = ""
+            
+          if (item.straight_bush === null && item.plate_strip === null && item.doublebracket_bush === null && item.middlebracket_bush === null) {
+            dim = `${item.bracket_bush.bigger_diameter}*${item.bracket_bush.body_diameter}*${item.bracket_bush.inner_diameter}*${item.bracket_bush.bracket_length}*${item.bracket_bush.bush_length}`
+            name = "Flanşlı Burç"     
+          } if(item.plate_strip === null && item.bracket_bush === null && item.doublebracket_bush === null && item.middlebracket_bush === null) {
+            
+            dim = `${item.straight_bush.large_diameter}*${item.straight_bush.inner_diameter}*${item.straight_bush.bush_length}`
+            name = "Düz Burç"
+            
+          } if(item.bracket_bush === null && item.straight_bush === null && item.doublebracket_bush === null && item.middlebracket_bush === null) {
+
+            dim = `${item.plate_strip.width}*${item.plate_strip["length"]}*${item.plate_strip.thickness}`
+            name = "Plaka"
+          } if (item.bracket_bush === null && item.straight_bush=== null && item.plate_strip=== null && item.middlebracket_bush === null){
+            dim = `${item.doublebracket_bush.bigger_diameter}*${item.doublebracket_bush.body_diameter}*${item.doublebracket_bush.inner_diameter}*${item.doublebracket_bush.bracket_l1}*${item.doublebracket_bush.bracket_l2}*${item.doublebracket_bush.bracket_l3}*${item.doublebracket_bush.bracket_full}`
+            name = "Çift Flanşlı Burç"
+          } if (item.bracket_bush === null && item.straight_bush=== null && item.plate_strip=== null && item.doublebracket_bush === null){
+            dim = `${item.middlebracket_bush.bracket_q1}*${item.middlebracket_bush.bracket_q2}*${item.middlebracket_bush.bracket_q3}*${item.middlebracket_bush.bracket_q4}*${item.middlebracket_bush.bracket_l1}*${item.middlebracket_bush.bracket_l2}*${item.middlebracket_bush.bracket_l3}*${item.middlebracket_bush.bracket_full}`
+            name = "Ortadan Flanşlı Burç"
+
+          }
+
+          return {
+            "id": key + 1,
+            "description": item.description,
+            "dimensions": dim,
+            "qty" : item.unit_frequence,
+            "name" : name,
+            "analysis" : item.analyze.analyze_Name,
+            "price" : item.unit_price
+
+          }
+        }))
+      })
+      .catch(err => console.log(err));
+  }
+  }, [selectQuo.options.Quotation_ID]);
 
   useEffect(() =>  {
     if (Customer_ID.options.Customer_ID !== '') {
@@ -267,8 +320,55 @@ export default function CreateConfirmationForm({customers}) {
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
                       required
+                      
+                    />
+                  </div>
+
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                    >
+                      Sipariş Tarihi *
+                    </label>
+                    <input
+                      type="date"
+                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      placeholder=""
+                      required
+                      
+                    />
+                  </div>
+
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                    >
+                      Planlanan Teslim Tarihi *
+                    </label>
+                    <input
+                      type="date"
+                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      placeholder=""
+                      required
+                      
+                    />
+                  </div>
+
+                  <div className="flex flex-col ">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                    >
+                      Özel İstekler
+                    </label>
+                    <textarea
+                      type="text"
+                      className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      placeholder=""
                       onChange={(e) =>
-                        handleChange("options", "customerInquiryNum", e)
+                        handleChange("delivery_type", "description", e)
                       }
                     />
                   </div>
@@ -276,6 +376,59 @@ export default function CreateConfirmationForm({customers}) {
                   
 
                   
+                </div>
+              </div>
+              <div className="m-0 space-y-7 lg:flex lg:flex-col lg:items-center">
+                <div className="space-y-2 lg:w-1/2">
+                  <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
+                    Ürün Bilgileri
+                  </p>
+                  <hr />
+                </div>
+
+                <div className="space-y-5 lg:grid lg:place-items-center lg:w-4/5">
+                  <div className="flex flex-col w-full h-full">
+                      <ItemSelect items={items} />
+                  </div>
+                </div>
+              </div>
+
+              <div className="m-0 space-y-7 lg:flex lg:flex-col lg:items-center">
+                <div className="space-y-2 lg:w-1/2">
+                  <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
+                    Sertifika ve Paketleme
+                  </p>
+                  <hr />
+                </div>
+
+                <div className="space-y-5 lg:grid lg:place-items-center lg:w-full">
+                <div className="flex flex-col lg:w-1/2 ">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                    >
+                      Açıklama *
+                    </label>
+                    <textarea
+                      type="text"
+                      className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      placeholder=""
+                      
+                    />
+                  </div>
+                  <div className="flex flex-col lg:w-1/2">
+                    <label
+                        htmlFor="small-input"
+                        className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      >
+                        Sertifika
+                      </label>
+                        <CheckMark />          
+                    </div>
+
+                  <div className="flex flex-col ">
+                    <FormControlLabel control={<Checkbox defaultChecked />} label="Paketleme" />
+                  </div>
                 </div>
               </div>
             </form>
