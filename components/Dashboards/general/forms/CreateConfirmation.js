@@ -20,12 +20,21 @@ export default function CreateConfirmationForm({customers}) {
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
   const [createErr, setCreateErr] = useState(false);
-  const [fields, setFields] = useState({});
+  const [fields, setFields] = useState({
+    options : {
+      customerReference : '',
+      OrderDate : '',
+      deliveryDate : '',
+      specialOffers : '',
+      description : '',
+      package : '' ,
+    }
+  });
 
   const [currErrors, setCurrErrors] = useState();
 
   
-  useEffect(() =>  {}, [])
+  
   
   const [Customer_ID, setCustomer] = useState({
     options : {
@@ -42,7 +51,7 @@ export default function CreateConfirmationForm({customers}) {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
-    if (Customer_ID.options.Customer_ID !== '') {
+    if (selectQuo.options.Quotation_ID !== '') {
       axios({
           method : "POST",
           data : {
@@ -90,6 +99,8 @@ export default function CreateConfirmationForm({customers}) {
         }))
       })
       .catch(err => console.log(err));
+  } else {
+    setItems([]);
   }
   }, [selectQuo.options.Quotation_ID]);
 
@@ -128,6 +139,12 @@ export default function CreateConfirmationForm({customers}) {
         }
       }
     })
+
+    setSelectedQuo({
+      options : {
+        Quotation_ID : ''
+      }
+    })
   }
 
   const handleChangeQuo = (field, area, e) => {
@@ -147,13 +164,12 @@ export default function CreateConfirmationForm({customers}) {
   const router = useRouter();
 
   
-  const [setting, setSetting] = useState('');
+  
+
   const handleChange = (field, area, e) => {
     let new_fields = fields
     new_fields[field][area] = e.target.value
     setFields(new_fields);
-    setSetting(fields.area.name)
-    console.log(fields);
     
   };
   
@@ -320,6 +336,9 @@ export default function CreateConfirmationForm({customers}) {
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
                       required
+                      onChange={(e) => {
+                        handleChange("options", "customerReference", e)
+                      }}
                       
                     />
                   </div>
@@ -336,6 +355,9 @@ export default function CreateConfirmationForm({customers}) {
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
                       required
+                      onChange={(e) => {
+                        handleChange("options", "OrderDate", e);
+                      }}
                       
                     />
                   </div>
@@ -352,6 +374,10 @@ export default function CreateConfirmationForm({customers}) {
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
                       required
+
+                      onChange={(e) => {
+                        handleChange("options", "deliveryDate", e)
+                      }}
                       
                     />
                   </div>
@@ -368,7 +394,7 @@ export default function CreateConfirmationForm({customers}) {
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
                       onChange={(e) =>
-                        handleChange("delivery_type", "description", e)
+                        handleChange("options", "specialOffers", e)
                       }
                     />
                   </div>
@@ -438,6 +464,10 @@ export default function CreateConfirmationForm({customers}) {
               <button
                 className="bg-green-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="submit"
+                onClick={() => {
+                  console.log(fields)
+                  console.log(selectQuo.options.Quotation_ID);
+                }}
                 
               >
                 Oluştur
