@@ -22,9 +22,14 @@ const columns = [
  
 ];
 
-export default function ControlledSelectionGrid({items}) {
+export default function ControlledSelectionGrid({items, setSelectedItem}) {
+
+    
     
     const [selectionModel, setSelectionModel] = React.useState([]);
+    React.useEffect(() => {
+      setSelectedItem(selectionModel);
+    }, [selectionModel]);
   
     return (
       <div style={{ height: 400, width: '100%' }}>

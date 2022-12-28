@@ -8,8 +8,10 @@ import { useRouter } from "next/router";
 import usePagination from "../../components/Dashboards/general/ui/Pagination";
 import Pagination from "@mui/material/Pagination";
 import CreateConfirmationForm from "../../components/Dashboards/general/forms/CreateConfirmation";
+import UpdateConfirmationForm from "../../components/Dashboards/general/forms/UpdateConfirmation";
 
-export default function quotationMake({customers}) {
+export default function quotationMake({customers, confirmations}) {
+  console.log(confirmations);
   const generate = (e) => {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/generate`, {method : "POST", headers: {
       'Content-Type': 'application/json',
@@ -98,7 +100,7 @@ export default function quotationMake({customers}) {
 
         <div className="w-full bg-gray-100 ">
           <div className="relative overflow-x-auto shadow-md  sm:rounded-lg">
-            {[].length !== 0 ? (
+            {confirmations.length !== 0 ? (
               <table className="w-full text-sm text-left text-gray-500 ">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
@@ -131,7 +133,7 @@ export default function quotationMake({customers}) {
                 </thead>
                 <tbody>
                 {
-                   [].map((item, index) =>  {
+                   confirmations.map((item, index) =>  {
                     return (<tr
                           key={index}
                           className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -140,24 +142,28 @@ export default function quotationMake({customers}) {
                             scope="row"
                             className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                           >
-                            {}
+                            {item.reference}
                     
                           </th>
-                          <td className="px-6 py-4">{}</td>
+                          <td className="px-6 py-4">{item.quotation_form.reference}</td>
                           <td className="px-6 py-4">
-                            {}
+                            {item.customer.account_id}
                           </td>
                           <td className="px-6 py-4">
-                            {}
+                            {item.customerReference}
                           </td>
                           <td className="px-6 py-4">
-                            {}
+                            {item.day + "-" + item.month +  "-" + item.year}
                           </td>
                           <td className="px-6 py-4 text-right">
-                           
+                           {item.revision}
                           </td>
                           <td className="px-6 py-4 text-right">
-                            
+                            <button  className="hover:underline">İndir</button>
+                          </td>
+
+                          <td className="px-6 py-4 text-right">
+                            <UpdateConfirmationForm customers={customers} />
                           </td>
 
                           
@@ -192,12 +198,16 @@ export async function getServerSideProps(context) {
     const res2 = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`
     );
-    if (res2.status === 200 ) {
+
+    const res3 = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/all`
+    );
+    if (res2.status === 200 && res3.status === 200 ) {
       return {
         props: {
           
           customers : res2.data.customers,
-         
+          confirmations : res3.data
         },
       };
     }

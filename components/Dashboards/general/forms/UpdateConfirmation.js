@@ -9,7 +9,7 @@ import Checkbox from '@mui/material/Checkbox';
 
 
 
-export default function CreateConfirmationForm({customers}) {
+export default function UpdateConfirmationForm({customers}) {
     const CUSTOMER = customers.map((customer) => {
         return {
           key: customer.account_id,
@@ -307,13 +307,12 @@ export default function CreateConfirmationForm({customers}) {
   };
   return (
     <div>
-      <button
-        className="bg-green-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-        type="button"
+      <a
         onClick={toggleCreate}
+        className="hover:cursor-pointer font-medium text-text-fuchsia-500 dark:text-fuchsia-400-600 dark:text-text-fuchsia-500 dark:text-fuchsia-400-500 hover:underline"
       >
-        + Form Oluştur 
-      </button>
+        Düzenle
+      </a>
 
       <div
         className={`${

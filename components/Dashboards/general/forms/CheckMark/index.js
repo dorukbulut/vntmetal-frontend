@@ -38,10 +38,14 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function MultipleSelectChip() {
+export default function MultipleSelectChip({setCertificates}) {
   const theme = useTheme();
   const [personName, setPersonName] = React.useState([]);
 
+  React.useEffect(() => {
+    setCertificates(personName);
+  }, [personName])
+  
   const handleChange = (event) => {
     const {
       target: { value },
@@ -50,6 +54,8 @@ export default function MultipleSelectChip() {
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value,
     );
+
+    
   };
 
   return (
