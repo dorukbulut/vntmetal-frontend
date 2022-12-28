@@ -162,7 +162,7 @@ export default function quotationMake({customers, confirmations}) {
                           </td>
 
                           <td className="px-6 py-4 text-right">
-                            <UpdateConfirmationForm customers={customers} />
+                            <UpdateConfirmationForm item={item} />
                           </td>
 
                           

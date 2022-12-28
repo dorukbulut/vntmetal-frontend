@@ -9,24 +9,19 @@ import Checkbox from '@mui/material/Checkbox';
 
 
 
-export default function UpdateConfirmationForm({customers}) {
-    const CUSTOMER = customers.map((customer) => {
-        return {
-          key: customer.account_id,
-          value: customer.account_id,
-        };
-      });
+export default function UpdateConfirmationForm({item}) {
+  
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
   const [createErr, setCreateErr] = useState(false);
   const [fields, setFields] = useState({
     options : {
-      customerReference : '',
-      OrderDate : '',
-      deliveryDate : '',
-      specialOffers : '',
-      description : '',
+      customerReference : item.customerReference,
+      OrderDate : item.OrderDate,
+      deliveryDate : item.deliveryDate,
+      specialOffers : item.specialOffers,
+      description : item.description,
       
     }
   });
@@ -50,18 +45,18 @@ export default function UpdateConfirmationForm({customers}) {
   
   const [Customer_ID, setCustomer] = useState({
     options : {
-      Customer_ID : ''
+      Customer_ID : item.Customer_ID
     }
   })
   
-  const [quotations, setQuotations] = useState([])
+  const [quotation, setQuotation] = useState(`${item.quotation_form.reference}`)
   const [selectQuo, setSelectedQuo] = useState({
     options : {
-        Quotation_ID : ''
+        Quotation_ID : item.Quotation_ID
       }
   })
-  const[certificates, setCertificates] = useState([]);
-  const [checkPack, setPackage] = useState(true);
+  const [certificates, setCertificates] = useState(item.certificates.map(cert => cert.name));
+  const [checkPack, setPackage] = useState(item.package);
   const [items, setItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState([])
 
@@ -265,6 +260,7 @@ export default function UpdateConfirmationForm({customers}) {
         Quotation_ID : selectQuo.options.Quotation_ID,
         Item_ID : items[selectedItem[0] - 1].item_id,
         package : checkPack,
+        reference : item.reference
       },
 
       cert_options : certificates.map(certificate => {
@@ -281,7 +277,7 @@ export default function UpdateConfirmationForm({customers}) {
         const res = await axios({ 
           method : "post",
           data: data , 
-          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/create`,
+          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/update`,
           withCredentials : true});
           if(res.status === 200) {
             setSubmit(true);
@@ -342,8 +338,8 @@ export default function UpdateConfirmationForm({customers}) {
               !submit && isValid && !createErr ? "visible scale-100" : "invisible scale-0 h-0"
             } flex flex-col space-y-10`}
           >
-            <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
-              Yeni Sipariş Onay Formu
+            <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-yellow-600">
+               Sipariş Onay Formunu Güncelle
             </p>
             <form className="grid grid-cols-1 space-y-5 lg:grid-cols-1 ">
               {/*Customer info*/}
@@ -361,32 +357,27 @@ export default function UpdateConfirmationForm({customers}) {
                                 htmlFor="small-input"
                                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
                               >
-                                Cari Kod *
+                                Cari Kod 
                               </label>
-                              <Dropdown
-                                label="Cari Kod"
-                                field="options"
-                                area="Customer_ID"
-                                items={CUSTOMER}
-                                fields={Customer_ID}
-                                handleChange={handleChangeCustomer}
-                              />
+                              <p>{Customer_ID.options.Customer_ID}</p>
                             </div>
                             <div className="flex flex-col space-y-3 ">
                               <label
                                 htmlFor="small-input"
                                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
                               >
-                                Teklif Formu *
+                                Teklif Formu 
                               </label>
-                              <Dropdown
-                                label="Teklif Formu"
-                                field="options"
-                                area="Quotation_ID"
-                                items={quotations}
-                                fields={selectQuo}
-                                handleChange={handleChangeQuo}
-                              />
+                              <p>{quotation}</p>
+                            </div>
+                            <div className="flex flex-col space-y-3 ">
+                              <label
+                                htmlFor="small-input"
+                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                              >
+                                Teklif Revizyon
+                              </label>
+                              <p>REV {item.quotation_form.revision}</p>
                             </div>
                   <div className="flex flex-col">
                     <label
@@ -400,6 +391,7 @@ export default function UpdateConfirmationForm({customers}) {
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
                       required
+                      defaultValue={fields.options.customerReference}
                       onChange={(e) => {
                         handleChange("options", "customerReference", e)
                       }}
@@ -419,6 +411,7 @@ export default function UpdateConfirmationForm({customers}) {
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
                       required
+                      defaultValue={fields.options.OrderDate}
                       onChange={(e) => {
                         handleChange("options", "OrderDate", e);
                       }}
@@ -438,7 +431,7 @@ export default function UpdateConfirmationForm({customers}) {
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
                       required
-
+                      defaultValue={fields.options.deliveryDate}
                       onChange={(e) => {
                         handleChange("options", "deliveryDate", e)
                       }}
@@ -457,6 +450,7 @@ export default function UpdateConfirmationForm({customers}) {
                       type="text"
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
+                      defaultValue={fields.options.specialOffers}
                       onChange={(e) =>
                         handleChange("options", "specialOffers", e)
                       }
@@ -503,6 +497,7 @@ export default function UpdateConfirmationForm({customers}) {
                       type="text"
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
+                      defaultValue={fields.options.description}
                       onChange={(e) => {
                         handleChange("options", "description", e);
                       }}
@@ -516,7 +511,7 @@ export default function UpdateConfirmationForm({customers}) {
                       >
                         Sertifika
                       </label>
-                        <CheckMark setCertificates={setCertificates} />          
+                        <CheckMark setCertificates={setCertificates} defaultValues={item.certificates.map(cert => cert.name)} />          
                     </div>
 
                   <div className="flex flex-col ">
@@ -530,14 +525,14 @@ export default function UpdateConfirmationForm({customers}) {
             {/*Buttons*/}
             <div className="flex justify-end space-x-3">
               <button
-                className="bg-green-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                className="bg-yellow-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="submit"
                 onClick={(e) => {
                   handleSubmit(e);
                 }}
                 
               >
-                Oluştur
+                Güncelle
               </button>
               <button
                 className="bg-red-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"

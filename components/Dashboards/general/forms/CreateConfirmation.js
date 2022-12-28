@@ -517,7 +517,7 @@ export default function CreateConfirmationForm({customers}) {
                       >
                         Sertifika
                       </label>
-                        <CheckMark setCertificates={setCertificates} />          
+                        <CheckMark setCertificates={setCertificates} defaultValues={[]}/>          
                     </div>
 
                   <div className="flex flex-col ">

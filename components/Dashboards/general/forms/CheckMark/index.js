@@ -38,9 +38,9 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function MultipleSelectChip({setCertificates}) {
+export default function MultipleSelectChip({setCertificates,defaultValues}) {
   const theme = useTheme();
-  const [personName, setPersonName] = React.useState([]);
+  const [personName, setPersonName] = React.useState(defaultValues);
 
   React.useEffect(() => {
     setCertificates(personName);
