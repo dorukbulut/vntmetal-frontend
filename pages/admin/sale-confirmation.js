@@ -11,9 +11,8 @@ import CreateConfirmationForm from "../../components/Dashboards/general/forms/Cr
 import UpdateConfirmationForm from "../../components/Dashboards/general/forms/UpdateConfirmation";
 
 export default function quotationMake({customers, confirmations}) {
-  console.log(confirmations);
   const generate = (e) => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/generate`, {method : "POST", headers: {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/generate`, {method : "POST", headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({id : e.target.id}),}).then((response) => {
@@ -22,7 +21,7 @@ export default function quotationMake({customers, confirmations}) {
         let url = window.URL.createObjectURL(blob);
         let a = document.createElement("a");
         a.href = url;
-        a.download = "QuotationForm.docx";
+        a.download = "SaleConfirmation.docx";
         a.click();
       });
     });
@@ -159,7 +158,7 @@ export default function quotationMake({customers, confirmations}) {
                            {item.revision}
                           </td>
                           <td className="px-6 py-4 text-right">
-                            <button  className="hover:underline">İndir</button>
+                            <button id={item.sale_ID} onClick={generate} className="hover:underline">İndir</button>
                           </td>
 
                           <td className="px-6 py-4 text-right">
