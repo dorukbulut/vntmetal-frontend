@@ -68,7 +68,7 @@ export default function Navbar () {
                         </div>
                       </div>
                       <p onClick={() => router.push("/admin/sale-confirmation")} className='hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md'>Sipariş Formlarım</p>
-                      <p className='hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md'>Iş Emirlerim</p>
+                      <p onClick={() => router.push("/admin/work-order")} className='hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md'>Iş Emirlerim</p>
                     
                     
                 </div>
