@@ -6,9 +6,11 @@ import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import CreateWorkOrder from "../../components/Dashboards/general/forms/CreateWorkOrder";
+import UpdateWorkOrder from "../../components/Dashboards/general/forms/UpdateWorkOrder";
 
 
 export default function quotationMake({customers, workOrders}) {
+    
   const generate = (e) => {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/generate`, {method : "POST", headers: {
       'Content-Type': 'application/json',
@@ -175,7 +177,7 @@ export default function quotationMake({customers, workOrders}) {
                           </td>
 
                           <td className="px-6 py-4 text-right">
-                            
+                            <UpdateWorkOrder Workitem={item} />
                           </td>
 
                           

@@ -9,13 +9,7 @@ import Checkbox from '@mui/material/Checkbox';
 
 
 
-export default function CreateWorkOrder({customers}) {
-    const CUSTOMER = customers.map((customer) => {
-        return {
-          key: customer.account_id,
-          value: customer.account_id,
-        };
-      });
+export default function UpdateWorkOrder({Workitem}) {
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
@@ -41,7 +35,7 @@ export default function CreateWorkOrder({customers}) {
   
   const [Customer_ID, setCustomer] = useState({
     options : {
-      Customer_ID : ''
+      Customer_ID : Workitem.Customer_ID
     }
   })
   
@@ -49,66 +43,12 @@ export default function CreateWorkOrder({customers}) {
   const [confirmations, setConfirmations] = useState([])
   const [selectConf, setSelectedConf] = useState({
     options : {
-        sale_ID : ''
+        sale_ID : Workitem.Sale_ID
       }
   })
 
   const[typeName, setType] = useState('');
-  useEffect(() => {
-    if (selectConf.options.sale_ID !== ''){
-        const item = all.find(each => each.sale_ID === selectConf.options.sale_ID);
-        
-        let new_fields = fields
-        new_fields['options']['Item_ID'] = item.Item_ID
-        let type = ''
-        if (item.quotationItem.straight_bush === null && item.quotationItem.plate_strip === null && item.quotationItem.doublebracket_bush === null && item.quotationItem.middlebracket_bush === null) {
-           type = 'Flanşlı Burç'
-          } if(item.quotationItem.plate_strip === null && item.quotationItem.bracket_bush === null && item.quotationItem.doublebracket_bush === null && item.quotationItem.middlebracket_bush === null) {
-            
-            type = 'Düz Burç'
-            
-          } if(item.quotationItem.bracket_bush === null && item.quotationItem.straight_bush === null && item.quotationItem.doublebracket_bush === null && item.quotationItem.middlebracket_bush === null) {
-            type = 'Plaka'
-            
-          } if (item.quotationItem.bracket_bush === null && item.quotationItem.straight_bush=== null && item.quotationItem.plate_strip=== null && item.quotationItem.middlebracket_bush === null){
-            type = 'Çift Flanşlı Burç'
-          } if (item.quotationItem.bracket_bush === null && item.quotationItem.straight_bush=== null && item.quotationItem.plate_strip=== null && item.quotationItem.doublebracket_bush === null){
-            type = 'Ortadan Flanşlı Burç'
-
-          }
-        setType(type);
-        setFields(new_fields);
-
-    } 
-  }, [selectConf.options.sale_ID])
   
-  
-  useEffect(() =>  {
-    if (Customer_ID.options.Customer_ID !== '') {
-        axios({
-            method : "POST",
-            data : {
-                Customer_ID : Customer_ID.options.Customer_ID
-            },
-            url : `${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/get`,
-            withCredentials : true
-        })
-        .then(res => {
-            setAll(res.data);
-            let ITEMS = res.data.map(item => {
-                return {
-                    key : item.reference + "-REV" + item.revision,
-                    value :  item.sale_ID
-                }
-            });
-            
-            setConfirmations(ITEMS);
-        })
-        .catch(err => console.log(err));
-    }
-    
-    
-  }, [Customer_ID.options.Customer_ID]);
 
   const handleChangeCustomer = (field, area, e) => {
     setCustomer((old) => {
@@ -184,11 +124,12 @@ export default function CreateWorkOrder({customers}) {
     let data = {
       options : {
        
-        Customer_ID : Customer_ID.options.Customer_ID,
-        Sale_ID : selectConf.options.sale_ID,
-        Item_ID : fields.options.Item_ID,
+        Customer_ID : Workitem.Customer_ID,
+        Sale_ID : Workitem.Sale_ID,
+        Item_ID : Workitem.Item_ID,
         plate_model_size : fields.options.plate_model_size,
         treatment_size : fields.options.treatment_size,
+        reference : Workitem.reference
       },
 
     }
@@ -198,7 +139,7 @@ export default function CreateWorkOrder({customers}) {
         const res = await axios({ 
           method : "post",
           data: data , 
-          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/create`,
+          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/update`,
           withCredentials : true});
           if(res.status === 200) {
             setSubmit(true);
@@ -222,15 +163,33 @@ export default function CreateWorkOrder({customers}) {
   const toggleCreate = () => {
     setCreate(!create);
   };
+  useEffect(() => {
+    let type = ''
+        if (Workitem.quotationItem.straight_bush === null && Workitem.quotationItem.plate_strip === null && Workitem.quotationItem.doublebracket_bush === null && Workitem.quotationItem.middlebracket_bush === null) {
+           type = 'Flanşlı Burç'
+          } if(Workitem.quotationItem.plate_strip === null && Workitem.quotationItem.bracket_bush === null && Workitem.quotationItem.doublebracket_bush === null && Workitem.quotationItem.middlebracket_bush === null) {
+            
+            type = 'Düz Burç'
+            
+          } if(Workitem.quotationItem.bracket_bush === null && Workitem.quotationItem.straight_bush === null && Workitem.quotationItem.doublebracket_bush === null && Workitem.quotationItem.middlebracket_bush === null) {
+            type = 'Plaka'
+            
+          } if (Workitem.quotationItem.bracket_bush === null && Workitem.quotationItem.straight_bush=== null && Workitem.quotationItem.plate_strip=== null && Workitem.quotationItem.middlebracket_bush === null){
+            type = 'Çift Flanşlı Burç'
+          } if (Workitem.quotationItem.bracket_bush === null && Workitem.quotationItem.straight_bush=== null && Workitem.quotationItem.plate_strip=== null && Workitem.quotationItem.doublebracket_bush === null){
+            type = 'Ortadan Flanşlı Burç'
+
+          }
+        setType(type);
+  })
   return (
     <div>
-      <button
-        className="bg-green-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-        type="button"
+      <a
         onClick={toggleCreate}
+        className="hover:cursor-pointer font-medium text-text-fuchsia-500 dark:text-fuchsia-400-600 dark:text-text-fuchsia-500 dark:text-fuchsia-400-500 hover:underline"
       >
-        + İş Emri Oluştur 
-      </button>
+        Düzenle
+      </a>
 
       <div
         className={`${
@@ -273,7 +232,7 @@ export default function CreateWorkOrder({customers}) {
                   <hr />
                 </div>
 
-                <div className="space-y-5 lg:grid lg:grid-cols-3 lg:items-end lg:gap-3 ">
+                <div className="space-y-5 lg:grid lg:grid-cols-3 lg:items-end lg:gap-10 ">
                 <div className="flex flex-col space-y-3 ">
                               <label
                                 htmlFor="small-input"
@@ -281,14 +240,7 @@ export default function CreateWorkOrder({customers}) {
                               >
                                 Cari Kod *
                               </label>
-                              <Dropdown
-                                label="Cari Kod"
-                                field="options"
-                                area="Customer_ID"
-                                items={CUSTOMER}
-                                fields={Customer_ID}
-                                handleChange={handleChangeCustomer}
-                              />
+                              <p>{Customer_ID.options.Customer_ID}</p>
                             </div>
                             <div className="flex flex-col space-y-3 ">
                               <label
@@ -297,14 +249,7 @@ export default function CreateWorkOrder({customers}) {
                               >
                                 Sipariş Onay Formu *
                               </label>
-                              <Dropdown
-                                label="Teklif Formu"
-                                field="options"
-                                area="sale_ID"
-                                items={confirmations}
-                                fields={selectConf}
-                                handleChange={handleChangeQuo}
-                              />
+                              {Workitem.sale_confirmation.reference +  "-REV" + Workitem.revision}
                             </div>
                  
 
@@ -378,6 +323,7 @@ export default function CreateWorkOrder({customers}) {
               <button
                 className="bg-green-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="submit"
+                disabled={typeName === "Plake" ? false : true}
                 onClick={(e) => {
                   handleSubmit(e);
                 }}
