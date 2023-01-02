@@ -5,82 +5,76 @@ import Footer from "../../components/base/Footer";
 import CreateCustomer from "../../components/Dashboards/general/forms/CreateCustomer";
 import axios from "axios";
 import UpdateCustomer from "../../components/Dashboards/general/forms/UpdateCustomer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import usePagination from "../../components/Dashboards/general/ui/Pagination";
-import Pagination from "@mui/material/Pagination";
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+
 //TODO : Pagination Filter Problem
 
-export default function CustomersPage({ customers }) {
-  const router = useRouter();
-  let [page, setPage] = useState(1);
-  const PER_PAGE = 3;
-  const [filters, setFilters] = useState({
-    account_id: "",
-    account_title: "",
-    account_related: "",
-    customer_country: "",
-  });
-  const count = Math.ceil(customers.length / PER_PAGE);
-  const filterData = (data) => {
-    return data.filter((customer) => {
-      if (filters.account_title === "") return customer;
-      else {
-        if (
-          customer.account_title
-            .toLowerCase()
-            .includes(filters.account_title.toLowerCase())
-        )
-          return customer;
-      }
-    })
-    .filter((customer) => {
-      if (filters.account_id === "") return customer;
-      else {
-        if (
-          `${customer.account_id}`
-            .toLowerCase()
-            .includes(filters.account_id.toLowerCase())
-        )
-          return customer;
-      }
-    })
-
-    .filter((customer) => {
-      if (filters.account_related === "") return customer;
-      else {
-        if (
-          customer.account_related
-            .toLowerCase()
-            .includes(filters.account_related.toLowerCase())
-        )
-          return customer;
-      }
-    })
-    .filter((customer) => {
-      if (filters.customer_country === "") return customer;
-      else {
-        if (
-          customer.customer_adress.customer_country
-            .toLowerCase()
-            .includes(filters.customer_country.toLowerCase())
-        )
-          return customer;
-      }
-    })
-  }
-  const _DATA = usePagination(filterData(customers), PER_PAGE);
+export default function CustomersPage({ customerData }) {
   
-  const handleChange = (e, p) => {
-    setPage(p);
-    _DATA.jump(p);
+
+  const router = useRouter();
+  const PER_PAGE = 3;
+  const [filters, setFilters] = useState();
+
+  const [customers, setCustomers] = useState(customerData.rows);
+
+  const [page, setPage] = useState(1);
+  const handlePageChange = (event, value) => {
+    setPage(value);
   };
+  useEffect(() => {
+    axios({
+      method : "GET",
+      url : `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/get-page/${parseInt(page) - 1}`,
+      withCredentials : true
+    })
+    .then(res => {
+      if (res.status === 200) {
+        setCustomers(res.data.rows);
+      }
+    })
+    .catch(err => console.log(err));
+  } , [page])
+
+  useEffect(() => {
+    console.log(filters);
+    if(filters) {
+      axios({
+        method : "GET",
+        url : `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/filter`,
+        params : {
+          account : filters.account_id !== undefined && filters.account_id !== ''  ? filters.account_id : undefined,
+          title  :  filters.account_title !== undefined && filters.account_title !== '' ? filters.account_title.replaceAll(" ", "+") : undefined,
+          related : filters.account_related !== undefined &&  filters.account_related !== '' ? filters.account_related.replaceAll(" ", "+") : undefined,
+          country : filters.customer_country !== undefined &&  filters.customer_country !== '' ? filters.customer_country.replaceAll(" ", "+") : undefined
+        }
+  
+      })
+      .then(res => {
+        if (res.status === 200) {
+          setCustomers(res.data.rows);
+        }
+      })
+      .catch(err => {
+        router.reload(window.location.pathname);
+      });
+    }
+    
+  }, [filters]) 
+  
+  
   
 
   const handleFilters = (field, e) => {
-    let new_filters = filters;
-    new_filters[field] = e.target.value;
-    setFilters(new_filters);
+    setFilters(old => {
+      return {
+        ...old,
+        [field] : e.target.value
+      }
+    });
 
     router.replace(router.asPath);
   };
@@ -118,7 +112,7 @@ export default function CustomersPage({ customers }) {
               </p>
               <div className="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease-soft">
                 <input
-                  type="text"
+                  type="number"
                   className="pl-9 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                   placeholder="Cari Kod Ara..."
                   onChange={(e) => handleFilters("account_id", e)}
@@ -158,7 +152,7 @@ export default function CustomersPage({ customers }) {
 
         <div className="w-full bg-gray-100">
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-            {_DATA.currentData().length !== 0 ? (
+            {customers.length !== 0 ? (
               <table className="w-full text-sm text-left text-gray-500 ">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
@@ -181,7 +175,7 @@ export default function CustomersPage({ customers }) {
                 </thead>
                 <tbody>
                   {
-                    _DATA.currentData().map((customer, index) => {
+                  customers.map((customer, index) => {
                       return (
                         <tr
                           key={index}
@@ -220,7 +214,9 @@ export default function CustomersPage({ customers }) {
         
       </div>
       <div className="grid place-items-center mb-10">
-        {_DATA.currentData().length !==0 ? <Pagination count={count} page={page} onChange={handleChange} color="primary" /> : <div></div>}
+        {customers.length !==0 ? <Stack spacing={2}>
+        <Pagination count={Math.ceil(customerData.count / 6)} page={page} onChange={handlePageChange} />
+    </Stack> : <div></div>}
       </div>
       <Footer />
     </div>
@@ -230,12 +226,12 @@ export default function CustomersPage({ customers }) {
 export async function getServerSideProps(context) {
   try {
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`
+      `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/get-page/0`
     );
     if (res.status === 200) {
       return {
         props: {
-          customers: res.data.customers,
+          customerData: res.data,
         },
       };
     }
