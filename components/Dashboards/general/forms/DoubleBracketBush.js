@@ -206,6 +206,13 @@ export default function DoubleBracketBush ({handleChange, fields, calcs}) {
               <ModalImage image={'/doublebracket.png'} />
             </div>
 
+            <div className="flex flex-col">
+              <p className="font-poppins text-red-700">UYARI: PAYLI/PAYSIZ ÖLÇÜ GİRİŞİNE DİKKAT EDİNİZ !</p>
+            </div>
+            {calcs.calcW < 1 ? <div className="flex flex-col">
+              <p className="font-poppins text-red-700">UYARI: 1 kg. altı ÜRÜN</p>
+            </div>: "" }
+
             
         </div>
     );
