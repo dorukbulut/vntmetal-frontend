@@ -249,7 +249,7 @@ export default function UpdateWorkOrder({Workitem}) {
                               >
                                 Sipariş Onay Formu *
                               </label>
-                              {Workitem.sale_confirmation.reference +  "-REV" + Workitem.revision}
+                              {Workitem.sale_confirmation.reference +  "-REV" + Workitem.sale_confirmation.revision}
                             </div>
                  
 
@@ -323,8 +323,8 @@ export default function UpdateWorkOrder({Workitem}) {
               <button
                 className="bg-green-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="submit"
-                disabled={typeName === "Plake" ? false : true}
                 onClick={(e) => {
+                  console.log(typeName);
                   handleSubmit(e);
                 }}
                 
