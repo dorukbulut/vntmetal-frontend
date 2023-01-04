@@ -1080,7 +1080,7 @@ export default function CreateMake({ analyzes, customers }) {
                   }
 
                   {
-                    activeStep == 3 ? <p className="text-lg mt-10 leading-6 font-medium text-green-500 text-center">Bütün bilgiler başarıyla dolduruldu. Teklif Oluşturmak için "Oluştur"seçeneğine tıklayınız.</p>: ""
+                    activeStep == 3 ? <p className="text-lg mt-10 leading-6 font-medium text-green-500 text-center">Bütün bilgiler başarıyla dolduruldu. Teklif Oluşturmak için Oluştur seçeneğine tıklayınız.</p>: ""
                   }
 
                   <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
