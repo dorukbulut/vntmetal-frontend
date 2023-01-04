@@ -11,7 +11,7 @@ import CreateWorkOrder from "../../components/Dashboards/general/forms/CreateWor
 import UpdateWorkOrder from "../../components/Dashboards/general/forms/UpdateWorkOrder";
 
 
-export default function quotationMake({customers, workOrders}) {
+export default function QuotationMake({customers, workOrders}) {
     
   const generate = (e) => {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/generate`, {method : "POST", headers: {

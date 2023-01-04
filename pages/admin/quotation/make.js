@@ -12,7 +12,7 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import UpdateMake from "../../../components/Dashboards/general/forms/UpdateMake";
 
-export default function quotationMake({analyzes, customers, items}) {
+export default function QuotationMake({analyzes, customers, items}) {
   const router = useRouter();
   const [filters, setFilters] = useState();
 

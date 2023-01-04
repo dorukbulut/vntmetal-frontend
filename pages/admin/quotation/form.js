@@ -10,7 +10,7 @@ import Stack from '@mui/material/Stack';
 import CreateQuotationForm from "../../../components/Dashboards/general/forms/CreateQuotationForm";
 import UpdateQuotationForm from "../../../components/Dashboards/general/forms/UpdateQuotationForm";
 
-export default function quotationMake({customers, forms}) {
+export default function QuotationMake({customers, forms}) {
   const generate = (e) => {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/generate`, {method : "POST", headers: {
       'Content-Type': 'application/json',

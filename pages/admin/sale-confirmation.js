@@ -10,7 +10,7 @@ import UpdateConfirmationForm from "../../components/Dashboards/general/forms/Up
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
-export default function quotationMake({customers, confirmations}) {
+export default function QuotationMake({customers, confirmations}) {
   const generate = (e) => {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/generate`, {method : "POST", headers: {
       'Content-Type': 'application/json',
