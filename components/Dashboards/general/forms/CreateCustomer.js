@@ -12,7 +12,7 @@ export default function CreateCustomer() {
       account_id: "",
       account_title: "",
       account_related: "",
-      account_IN: "",
+      account_IN: 0,
       account_tel1: "",
       account_tel2: "",
       account_fax: "",
@@ -21,22 +21,22 @@ export default function CreateCustomer() {
       account_KEP: "",
     },
     taxinfo: {
-      tax_info_taxID: "",
+      tax_info_taxID: 0,
       tax_info_Admin: "",
-      tax_info_AdminID: "",
+      tax_info_AdminID: 0,
     },
 
     adressinfo: {
       customer_Address: "",
-      customer_bID: "",
+      customer_bID: 0,
       customer_bName: "",
-      customer_dID: "",
+      customer_dID: 0,
       customer_town: "",
       customer_district: "",
       customer_city: "",
       customer_country: "",
-      customer_UAVT: "",
-      customer_postal: "",
+      customer_UAVT: 0,
+      customer_postal: 0,
     },
   });
   const [currErrors, setErrors] = useState({
@@ -106,113 +106,6 @@ export default function CreateCustomer() {
     } else {
       errors["customer"]["account_related"] = "";
     }
-
-    //account_IN
-    if (check_fields["customer"]["account_IN"]  === "") {
-      isValid = false;
-      errors["customer"]["account_IN"] =
-        "T.C. Kimlik Numarası  boş bırakalamaz !";
-    } else {
-      errors["customer"]["account_IN"] = "";
-    }
-
-    //account_KEP
-    if (check_fields["customer"]["account_KEP"] === "") {
-      isValid = false;
-      errors["customer"]["account_KEP"] = "KEP adresi  boş bırakalamaz !";
-    } else {
-      errors["customer"]["account_KEP"] = "";
-    }
-
-    //tax_info_taxID
-    if (check_fields["taxinfo"]["tax_info_taxID"]  === "") {
-      isValid = false;
-      errors["taxinfo"]["tax_info_taxID"] = "Vergi Numarası boş bırakalamaz !";
-    } else {
-      errors["taxinfo"]["tax_info_taxID"] = "";
-    }
-
-    //tax_info_AdminID
-    if (check_fields["taxinfo"]["tax_info_AdminID"]  === "") {
-      isValid = false;
-      errors["taxinfo"]["tax_info_AdminID"] =
-        "Vergi Dairesi No boş bırakalamaz !";
-    } else {
-      errors["taxinfo"]["tax_info_AdminID"] = "";
-    }
-
-    //customer_bID
-    if (check_fields["adressinfo"]["customer_bID"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_bID"] = "Bina No boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_bID"] = "";
-    }
-
-    //customer_bName
-    if (check_fields["adressinfo"]["customer_bName"] === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_bName"] = "Bina Adı boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_bName"] = "";
-    }
-
-    //customer_dID
-    if (check_fields["adressinfo"]["customer_dID"] === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_dID"] = "Kapı Numarası boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_dID"] = "";
-    }
-
-    //customer_town
-    if (check_fields["adressinfo"]["customer_town"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_town"] = "Kasaba  boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_town"] = "";
-    }
-
-    //customer_district
-    if (check_fields["adressinfo"]["customer_district"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_district"] = "Semt  boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_district"] = "";
-    }
-
-    //customer_city
-    if (check_fields["adressinfo"]["customer_city"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_city"] = "Şehir boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_city"] = "";
-    }
-
-    //customer_country
-    if (check_fields["adressinfo"]["customer_country"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_country"] = "Ülke  boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_country"] = "";
-    }
-
-    //customer_UAVT
-    if (check_fields["adressinfo"]["customer_UAVT"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_UAVT"] = "Adres No  boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_UAVT"] = "";
-    }
-
-    //customer_postal
-    if (check_fields["adressinfo"]["customer_postal"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_postal"] = "Posta Kodu boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_postal"] = "";
-    }
-
     setErrors(errors);
 
     return isValid;
@@ -362,9 +255,8 @@ export default function CreateCustomer() {
                     </label>
                     <input
                       type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
                       onChange={(e) =>
                         handleChange("customer", "account_IN", e)
                       }
@@ -464,9 +356,9 @@ export default function CreateCustomer() {
                     </label>
                     <input
                       type=""
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
+                      
                       onChange={(e) =>
                         handleChange("customer", "account_KEP", e)
                       }
@@ -494,9 +386,9 @@ export default function CreateCustomer() {
                     </label>
                     <input
                       type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
+                      
                       onChange={(e) =>
                         handleChange("taxinfo", "tax_info_taxID", e)
                       }
@@ -512,9 +404,9 @@ export default function CreateCustomer() {
                     </label>
                     <input
                       type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
+                      
                       onChange={(e) =>
                         handleChange("taxinfo", "tax_info_Admin", e)
                       }
@@ -530,9 +422,9 @@ export default function CreateCustomer() {
                     </label>
                     <input
                       type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
+                      
                       onChange={(e) =>
                         handleChange("taxinfo", "tax_info_AdminID", e)
                       }
@@ -577,9 +469,9 @@ export default function CreateCustomer() {
                     </label>
                     <input
                       type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
+                      
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_bID", e)
                       }
@@ -594,9 +486,9 @@ export default function CreateCustomer() {
                     </label>
                     <input
                       type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
+                      
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_bName", e)
                       }
@@ -611,9 +503,9 @@ export default function CreateCustomer() {
                     </label>
                     <input
                       type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
+                      
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_dID", e)
                       }
@@ -629,9 +521,9 @@ export default function CreateCustomer() {
                     </label>
                     <input
                       type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
+                      
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_town", e)
                       }
@@ -647,9 +539,9 @@ export default function CreateCustomer() {
                     </label>
                     <input
                       type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
+                      
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_district", e)
                       }
@@ -665,9 +557,8 @@ export default function CreateCustomer() {
                     </label>
                     <input
                       type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_city", e)
                       }
@@ -683,9 +574,9 @@ export default function CreateCustomer() {
                     </label>
                     <input
                       type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
+                      
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_country", e)
                       }
@@ -701,9 +592,9 @@ export default function CreateCustomer() {
                     </label>
                     <input
                       type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
+                      
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_UAVT", e)
                       }
@@ -719,9 +610,9 @@ export default function CreateCustomer() {
                     </label>
                     <input
                       type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
+                      
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_postal", e)
                       }

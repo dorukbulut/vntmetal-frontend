@@ -1,9 +1,8 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {useRouter} from "next/router";
 import axios from "axios";
 
 export default function UpdateCustomer({ customer }) {
-
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
@@ -26,22 +25,22 @@ export default function UpdateCustomer({ customer }) {
       account_KEP: `${customer.account_KEP}`,
     },
     taxinfo: {
-      tax_info_taxID: `${customer.tax_info.tax_info_taxID}`,
-      tax_info_Admin: `${customer.tax_info.tax_info_Admin}`,
-      tax_info_AdminID: `${customer.tax_info.tax_info_AdminID}`,
+      tax_info_taxID: '', 
+      tax_info_Admin:  '',
+      tax_info_AdminID: '',
     },
 
     adressinfo: {
-      customer_Address: `${customer.customer_adress.customer_Address}`,
-      customer_bID: `${customer.customer_adress.customer_bID}`,
-      customer_bName: `${customer.customer_adress.customer_bName}`,
-      customer_dID: `${customer.customer_adress.customer_dID}`,
-      customer_town: `${customer.customer_adress.customer_town}`,
-      customer_district : `${customer.customer_adress.customer_district}`,
-      customer_city: `${customer.customer_adress.customer_city}`,
-      customer_country: `${customer.customer_adress.customer_country}`,
-      customer_UAVT: `${customer.customer_adress.customer_UAVT}`,
-      customer_postal: `${customer.customer_adress.customer_postal}`,
+      customer_Address: '',
+      customer_bID: '',
+      customer_bName: '',
+      customer_dID: '',
+      customer_town: '',
+      customer_district : '',
+      customer_city: '',
+      customer_country: '',
+      customer_UAVT: '',
+      customer_postal: '',
     },
   });
   const [currErrors, setErrors] = useState({
@@ -129,113 +128,6 @@ export default function UpdateCustomer({ customer }) {
     } else {
       errors["customer"]["account_related"] = "";
     }
-
-    //account_IN
-    if (check_fields["customer"]["account_IN"]  === "") {
-      isValid = false;
-      errors["customer"]["account_IN"] =
-        "T.C. Kimlik Numarası  boş bırakalamaz !";
-    } else {
-      errors["customer"]["account_IN"] = "";
-    }
-
-    //account_KEP
-    if (check_fields["customer"]["account_KEP"] === "") {
-      isValid = false;
-      errors["customer"]["account_KEP"] = "KEP adresi  boş bırakalamaz !";
-    } else {
-      errors["customer"]["account_KEP"] = "";
-    }
-
-    //tax_info_taxID
-    if (check_fields["taxinfo"]["tax_info_taxID"]  === "") {
-      isValid = false;
-      errors["taxinfo"]["tax_info_taxID"] = "Vergi Numarası boş bırakalamaz !";
-    } else {
-      errors["taxinfo"]["tax_info_taxID"] = "";
-    }
-
-    //tax_info_AdminID
-    if (check_fields["taxinfo"]["tax_info_AdminID"]  === "") {
-      isValid = false;
-      errors["taxinfo"]["tax_info_AdminID"] =
-        "Vergi Dairesi No boş bırakalamaz !";
-    } else {
-      errors["taxinfo"]["tax_info_AdminID"] = "";
-    }
-
-    //customer_bID
-    if (check_fields["adressinfo"]["customer_bID"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_bID"] = "Bina No boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_bID"] = "";
-    }
-
-    //customer_bName
-    if (check_fields["adressinfo"]["customer_bName"] === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_bName"] = "Bina Adı boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_bName"] = "";
-    }
-
-    //customer_dID
-    if (check_fields["adressinfo"]["customer_dID"] === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_dID"] = "Kapı Numarası boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_dID"] = "";
-    }
-
-    //customer_town
-    if (check_fields["adressinfo"]["customer_town"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_town"] = "Kasaba  boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_town"] = "";
-    }
-
-    //customer_district
-    if (check_fields["adressinfo"]["customer_district"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_district"] = "Semt  boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_district"] = "";
-    }
-
-    //customer_city
-    if (check_fields["adressinfo"]["customer_city"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_city"] = "Şehir boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_city"] = "";
-    }
-
-    //customer_country
-    if (check_fields["adressinfo"]["customer_country"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_country"] = "Ülke  boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_country"] = "";
-    }
-
-    //customer_UAVT
-    if (check_fields["adressinfo"]["customer_UAVT"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_UAVT"] = "Adres No  boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_UAVT"] = "";
-    }
-
-    //customer_postal
-    if (check_fields["adressinfo"]["customer_postal"]  === "") {
-      isValid = false;
-      errors["adressinfo"]["customer_postal"] = "Posta Kodu boş bırakalamaz !";
-    } else {
-      errors["adressinfo"]["customer_postal"] = "";
-    }
-
     setErrors(errors);
 
     return isValid;
@@ -271,10 +163,53 @@ export default function UpdateCustomer({ customer }) {
   const toggleCreate = () => {
     setCreate(!create);
   };
+
+  const getCustomer = () => {
+    axios({
+      method : "POST",
+      data : {
+        account_id : customer.account_id,
+      },
+      url : `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/get`,
+      withCredentials : true
+    })
+    .then(res => {
+      console.log(res);
+      if (res.status === 200) {
+        setFields(old => {
+          return {
+            ...old,
+            taxinfo: {
+              tax_info_taxID: `${res.data.customer[0].tax_info.tax_info_taxID}`, 
+              tax_info_Admin:  `${res.data.customer[0].tax_info.tax_info_Admin}`,
+              tax_info_AdminID:`${res.data.customer[0].tax_info.tax_info_AdminID}`,
+            },
+        
+            adressinfo: {
+              customer_Address: `${res.data.customer[0].customer_adress.customer_Address}`,
+              customer_bID: `${res.data.customer[0].customer_adress.customer_bID}`,
+              customer_bName: `${res.data.customer[0].customer_adress.customer_bName}`,
+              customer_dID: `${res.data.customer[0].customer_adress.customer_dID}`,
+              customer_town: `${res.data.customer[0].customer_adress.customer_town}`,
+              customer_district : `${res.data.customer[0].customer_adress.customer_districts}`,
+              customer_city: `${res.data.customer[0].customer_adress.customer_city}`,
+              customer_country: `${res.data.customer[0].customer_adress.customer_country}`,
+              customer_UAVT: `${res.data.customer[0].customer_adress.customer_UAVT}`,
+              customer_postal: `${res.data.customer[0].customer_adress.customer_postal}`,
+            },
+          }
+        })
+      }
+    })
+    .catch(err => console.log);
+  }
   return (
     <div>
       <a
-        onClick={toggleCreate}
+        onClick={() => {
+          getCustomer();
+          toggleCreate();
+        }}
         className="hover:cursor-pointer font-medium text-text-fuchsia-500 dark:text-fuchsia-400-600 dark:text-text-fuchsia-500 dark:text-fuchsia-400-500 hover:underline"
       >
         Düzenle
@@ -392,9 +327,9 @@ export default function UpdateCustomer({ customer }) {
                     </label>
                     <input
                       type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
+                      
                       defaultValue={customer.account_IN}
                       onChange={(e) =>
                         handleChange("customer", "account_IN", e)
@@ -431,7 +366,7 @@ export default function UpdateCustomer({ customer }) {
                       type="text"
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      defaultValue={customer.account_tel2}
+                      defaultValue={customer.account_tel1}
                       onChange={(e) =>
                         handleChange("customer", "account_tel2", e)
                       }
@@ -500,9 +435,9 @@ export default function UpdateCustomer({ customer }) {
                     </label>
                     <input
                       type=""
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
+                      
                       defaultValue={customer.account_KEP}
                       onChange={(e) =>
                         handleChange("customer", "account_KEP", e)
@@ -531,10 +466,10 @@ export default function UpdateCustomer({ customer }) {
                     </label>
                     <input
                       type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      defaultValue={customer.tax_info.tax_info_taxID}
-                      required
+                      defaultValue={fields.taxinfo.tax_info_taxID}
+                      
                       onChange={(e) =>
                         handleChange("taxinfo", "tax_info_taxID", e)
                       }
@@ -550,10 +485,10 @@ export default function UpdateCustomer({ customer }) {
                     </label>
                     <input
                       type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
-                      defaultValue={customer.tax_info.tax_info_Admin}
+                      
+                      defaultValue={fields.taxinfo.tax_info_Admin}
                       onChange={(e) =>
                         handleChange("taxinfo", "tax_info_Admin", e)
                       }
@@ -569,10 +504,10 @@ export default function UpdateCustomer({ customer }) {
                     </label>
                     <input
                       type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
-                      defaultValue={customer.tax_info.tax_info_AdminID}
+                      
+                      defaultValue={fields.taxinfo.tax_info_AdminID}
                       onChange={(e) =>
                         handleChange("taxinfo", "tax_info_AdminID", e)
                       }
@@ -602,7 +537,7 @@ export default function UpdateCustomer({ customer }) {
                       type="text"
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      defaultValue={customer.customer_adress.customer_Address}
+                      defaultValue={fields.adressinfo.customer_Address}
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_Address", e)
                       }
@@ -618,10 +553,10 @@ export default function UpdateCustomer({ customer }) {
                     </label>
                     <input
                       type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      defaultValue={customer.customer_adress.customer_bID}
-                      required
+                      defaultValue={fields.adressinfo.customer_bID}
+                      
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_bID", e)
                       }
@@ -636,10 +571,10 @@ export default function UpdateCustomer({ customer }) {
                     </label>
                     <input
                       type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
-                      defaultValue={customer.customer_adress.customer_bName}
+                      
+                      defaultValue={fields.adressinfo.customer_bName}
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_bName", e)
                       }
@@ -654,10 +589,10 @@ export default function UpdateCustomer({ customer }) {
                     </label>
                     <input
                       type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
-                      defaultValue={customer.customer_adress.customer_dID}
+                      
+                      defaultValue={fields.adressinfo.customer_dID}
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_dID", e)
                       }
@@ -673,10 +608,10 @@ export default function UpdateCustomer({ customer }) {
                     </label>
                     <input
                       type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
-                      defaultValue={customer.customer_adress.customer_town}
+                      
+                      defaultValue={fields.adressinfo.customer_town}
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_town", e)
                       }
@@ -692,10 +627,10 @@ export default function UpdateCustomer({ customer }) {
                     </label>
                     <input
                       type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
-                      defaultValue={customer.customer_adress.customer_district}
+                      
+                      defaultValue={fields.adressinfo.customer_district}
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_district", e)
                       }
@@ -711,10 +646,10 @@ export default function UpdateCustomer({ customer }) {
                     </label>
                     <input
                       type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
-                      defaultValue={customer.customer_adress.customer_city}
+                      
+                      defaultValue={fields.adressinfo.customer_city}
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_city", e)
                       }
@@ -730,10 +665,10 @@ export default function UpdateCustomer({ customer }) {
                     </label>
                     <input
                       type="text"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
-                      defaultValue={customer.customer_adress.customer_country}
+                      
+                      defaultValue={fields.adressinfo.customer_country}
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_country", e)
                       }
@@ -749,10 +684,10 @@ export default function UpdateCustomer({ customer }) {
                     </label>
                     <input
                       type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
-                      defaultValue={customer.customer_adress.customer_UAVT}
+                      
+                      defaultValue={fields.adressinfo.customer_UAVT}
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_UAVT", e)
                       }
@@ -768,10 +703,10 @@ export default function UpdateCustomer({ customer }) {
                     </label>
                     <input
                       type="number"
-                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      required
-                      defaultValue={customer.customer_adress.customer_postal}
+                      
+                      defaultValue={fields.adressinfo.customer_postal}
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_postal", e)
                       }

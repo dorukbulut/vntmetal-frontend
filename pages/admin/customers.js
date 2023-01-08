@@ -10,8 +10,6 @@ import { useRouter } from "next/router";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
-//TODO : Pagination Filter Problem
-
 export default function CustomersPage({ customerData }) {
   
 
@@ -59,7 +57,7 @@ export default function CustomersPage({ customerData }) {
         }
       })
       .catch(err => {
-        router.reload(window.location.pathname);
+        console.log(err);
       });
     }
     
@@ -133,20 +131,6 @@ export default function CustomersPage({ customerData }) {
                 />
               </div>
             </div>
-
-            <div className="flex flex-col space-y-3">
-              <p className="text-xs font-poppins font-medium italic text-sky-700">
-                Ülke
-              </p>
-              <div className="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease-soft">
-                <input
-                  type="text"
-                  className="pl-9 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                  placeholder="Ülke ara..."
-                  onChange={(e) => handleFilters("customer_country", e)}
-                />
-              </div>
-            </div>
           </div>
         </div>
 
@@ -164,9 +148,6 @@ export default function CustomersPage({ customerData }) {
                     </th>
                     <th scope="col" className="px-6 py-3">
                       İLGİLİ KİŞİ
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      ÜLKE
                     </th>
                     <th scope="col" className="px-6 py-3">
                       <span className="sr-only">Düzenle</span>
@@ -190,9 +171,6 @@ export default function CustomersPage({ customerData }) {
                           <td className="px-6 py-4">{customer.account_id}</td>
                           <td className="px-6 py-4">
                             {customer.account_related}
-                          </td>
-                          <td className="px-6 py-4">
-                            {customer.customer_adress.customer_country}
                           </td>
                           <td className="px-6 py-4 text-right">
                             <UpdateCustomer customer={customer} />
