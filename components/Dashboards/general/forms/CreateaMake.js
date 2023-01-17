@@ -453,7 +453,6 @@ export default function CreateMake({ analyzes, customers }) {
     const new_fields = fields
     new_fields[field][area] = e.target.value
     setFields(new_fields);
-    console.log(fields)
     const an = analyzes.find(analyze => fields.calc_raw.analyze_Name === analyze.analyze_id)
     if (an) {
       setCoef(`${an.analyze_coefCopper},${an.analyze_coefTin}`); 
