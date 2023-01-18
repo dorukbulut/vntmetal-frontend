@@ -93,10 +93,10 @@ export default function CalculateRaw({customers, analyzes}) {
     //for TIN
 
     useEffect(() => {
+      
       setCalculated((old) => {
         let inter = (parseFloat(fields.calc_raw.TIN)) * parseFloat(fields.calc_raw.usd);
-        let price = (((inter * 1000) * parseFloat(old.TIN)) / 100).toFixed(2);
-
+        let price = (((inter / 1000) * parseFloat(old.TIN)) / 100).toFixed(2);
         return {
           ...old,
           priceTin : price,
@@ -115,7 +115,7 @@ export default function CalculateRaw({customers, analyzes}) {
         return {
           ...old, 
 
-          totalRaw : parseFloat(calculated.priceCopper) + parseFloat(calculated.priceTin)
+          totalRaw : parseFloat(old.priceCopper) + parseFloat(old.priceTin)
         }
       });
     }, [calculated.priceCopper, calculated.priceTin] );
@@ -329,7 +329,7 @@ export default function CalculateRaw({customers, analyzes}) {
               >
                 Kalay ₺ Değeri
               </label>
-              <p className="font-poppins">{calculated.TIN} ₺</p>
+              <p className="font-poppins">{calculated.priceTin} ₺</p>
             </div>
 
             <div className="flex flex-col">
