@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios, { Axios } from "axios";
 import {useRouter} from "next/router";
-import Dropdown from "./Dropdown";
+import Dropdown from "../../Common/Dropdown";
 import SetItem from "./SetQuotationItem";
 import { useStepContext } from "@mui/material";
 
@@ -88,21 +88,27 @@ const INCOTERMS_INTRA = [
 ]
 
 
-export default function UpdateQuotationForm({item}) {
+export default function CreateQuotationForm({customers}) {
+  const CUSTOMER = customers.map((customer) => {
+    return {
+      key: customer.account_id,
+      value: customer.account_id,
+    };
+  });
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
   const [createErr, setCreateErr] = useState(false);
   const [fields, setFields] = useState({
     options : {
-      customerInquiryNum : item.customerInquiryNum,
-      grand_total : item.grand_total,
-      validityOfOffer : item.validityOfOffer,
-      IncotermType : item.IncotermType,
-      PaymentTerms: item.PaymentTerms,
-      extraDetails : item.extraDetails,
-      preparedBy : item.preparedBy,
-      approvedBy : item.approvedBy,
+      customerInquiryNum : '',
+      grand_total : '',
+      validityOfOffer : '',
+      IncotermType : '',
+      PaymentTerms: '',
+      extraDetails : '',
+      preparedBy : '',
+      approvedBy : '',
 
     },
     area : {
@@ -167,7 +173,7 @@ export default function UpdateQuotationForm({item}) {
 
   const [Customer_ID, setCustomer] = useState({
     options : {
-      Customer_ID : item.Customer_ID
+      Customer_ID : ''
     }
   })
   
@@ -285,7 +291,6 @@ export default function UpdateQuotationForm({item}) {
     let data = {
       options : {
         ...fields.options,
-        reference : item.reference,
         Customer_ID : Customer_ID.options.Customer_ID,
         grand_total : all.filter(item => item!=undefined).reduce((prev ,val) => {
           console.log()
@@ -316,7 +321,7 @@ export default function UpdateQuotationForm({item}) {
         const res = await axios({ 
           method : "post",
           data: data , 
-          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/update`,
+          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/create`,
           withCredentials : true});
           if(res.status === 200) {
             setSubmit(true);
@@ -364,12 +369,13 @@ export default function UpdateQuotationForm({item}) {
   };
   return (
     <div>
-      <a
+      <button
+        className="bg-green-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+        type="button"
         onClick={toggleCreate}
-        className="hover:cursor-pointer font-medium text-text-fuchsia-500 dark:text-fuchsia-400-600 dark:text-text-fuchsia-500 dark:text-fuchsia-400-500 hover:underline"
       >
-        Düzenle
-      </a>
+        + Form Oluştur 
+      </button>
 
       <div
         className={`${
@@ -399,8 +405,8 @@ export default function UpdateQuotationForm({item}) {
               !submit && isValid && !createErr ? "visible scale-100" : "invisible scale-0 h-0"
             } flex flex-col space-y-10`}
           >
-            <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-yellow-600">
-              Teklif Formunu Güncelle
+            <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
+              Yeni Teklif Formu
             </p>
             <form className="grid grid-cols-1 space-y-5 lg:grid-cols-1 ">
               {/*Customer info*/}
@@ -424,7 +430,7 @@ export default function UpdateQuotationForm({item}) {
                                 label="Cari Kod"
                                 field="options"
                                 area="Customer_ID"
-                                items={[{key : item.Customer_ID, value : item.Customer_ID}]}
+                                items={CUSTOMER}
                                 fields={Customer_ID}
                                 handleChange={handleChangeCustomer}
                               />
@@ -441,7 +447,6 @@ export default function UpdateQuotationForm({item}) {
                       type="text"
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      defaultValue={item.customerInquiryNum}
                       required
                       onChange={(e) =>
                         handleChange("options", "customerInquiryNum", e)
@@ -740,7 +745,6 @@ export default function UpdateQuotationForm({item}) {
                       type="text"
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      defaultValue={item.validityOfOffer}
                       onChange={(e) =>
                         handleChange("options", "validityOfOffer", e)
                       }
@@ -758,7 +762,6 @@ export default function UpdateQuotationForm({item}) {
                       type="text"
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      defaultValue={item.IncotermType}
                       onChange={(e) =>
                         handleChange("options", "IncotermType", e)
                       }
@@ -775,7 +778,6 @@ export default function UpdateQuotationForm({item}) {
                       type="text"
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      defaultValue={item.PaymentTerms}
                       onChange={(e) =>
                         handleChange("options", "PaymentTerms", e)
                       }
@@ -792,7 +794,6 @@ export default function UpdateQuotationForm({item}) {
                       type="text"
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      defaultValue={item.extraDetails}
                       onChange={(e) =>
                         handleChange("options", "extraDetails", e)
                       }
@@ -811,7 +812,6 @@ export default function UpdateQuotationForm({item}) {
                       type="text"
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      defaultValue={item.preparedBy}
                       required
                       onChange={(e) =>
                         handleChange("options", "preparedBy", e)
@@ -830,7 +830,6 @@ export default function UpdateQuotationForm({item}) {
                       type="text"
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      defaultValue={item.approvedBy}
                       required
                       onChange={(e) =>
                         handleChange("options", "approvedBy", e)
@@ -846,11 +845,11 @@ export default function UpdateQuotationForm({item}) {
             {/*Buttons*/}
             <div className="flex justify-end space-x-3">
               <button
-                className="bg-yellow-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                className="bg-green-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="submit"
                 onClick={handleSubmit}
               >
-                Güncelle
+                Oluştur
               </button>
               <button
                 className="bg-red-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
@@ -888,7 +887,7 @@ export default function UpdateQuotationForm({item}) {
             </h3>
             <div className="mt-2 px-7 py-3">
               <p className="text-sm text-gray-500">
-                Teklif Formu Başarıyla Güncellendi!
+                Teklif Formu Başarıyla Kaydedildi!
               </p>
             </div>
             <div className="items-center px-4 py-3">
@@ -971,7 +970,7 @@ export default function UpdateQuotationForm({item}) {
 
             </div>
             <h3 className="text-lg leading-6 font-medium text-gray-900">
-              Bir hata oluştu !
+              Böyle bir müşteri zaten mecvut !
             </h3>
             <div className="mt-2 px-7 py-3">
               <p className="text-sm text-gray-500">

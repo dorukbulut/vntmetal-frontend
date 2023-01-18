@@ -1,41 +1,48 @@
-import ModalImage from "../ui/ModalImage";
-export default function DoubleBracketBush ({handleChange, fields, calcs}) {
-    const calcWeigth = (A8, B8, C8, D8, E8, F8, G8) => {
-      return ((A8/2)*(A8/2)*3.14*8.6*D8-(C8/2)*(C8/2)*3.14*8.6*D8)/1000000+((B8/2)*(B8/2)*3.14*8.6*F8-(C8/2)*(C8/2)*3.14*8.6*F8)/1000000+((A8/2)*(A8/2)*3.14*8.6*E8-(C8/2)*(C8/2)*3.14*8.6*E8)/1000000
-    }
+import Dropdown from "../../Common/Dropdown";
+import React, {useState} from "react";
+export default function QuotationItem({ name, children,kgPrice, usd, euro, handleChange, calcs, fields}) {
     
-    return (
-        <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center ">
-            <div className="space-y-2 lg:w-1/2">
-                  <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
-                    Çift Flanşlı Burç Ölçüleri
-                  </p>
-                  <hr />
-            </div>
-            <div className="space-y-5 lg:grid lg:grid-cols-2 lg:items-end lg:gap-3 space-x1-10">
+  const childrenWithProps = React.Children.map(children, child => {
+    // Checking isValidElement is the safe way and avoids a
+    // typescript error too.
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, { handleChange, fields, calcs });
+    }
+    return child;
+  });
+  return (
+    <div className="mt-10 lg:grid lg:place-items-center">
+      <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
+        Yeni {name}
+      </p>
+      <div className="grid grid-cols-1 space-y-5 lg:grid lg:grid-cols-2 space-x-10 ">
+        
+        {childrenWithProps}
+        <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
+          <div className="space-y-2 lg:w-1/2">
+            <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
+              {name} Oluştur
+            </p>
+            <hr />
+          </div>
+          <div className="space-y-5 lg:grid lg:grid-cols-3 lg:items-end lg:gap-3 space-x1-10">
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
               >
-                Büyük Çap *
+                Adet *
               </label>
               <input
                 type="number"
                 step={"any"}
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
+                defaultValue={fields["quotation_item"]["unit_frequence"]}
                 required
-                defaultValue={fields["doublebracket_bush"]["bigger_diameter"]}
                 onChange={(e) => {
-                  handleChange("doublebracket_bush", "bigger_diameter",e);
-                  calcs.setCalcW(calcWeigth(fields["doublebracket_bush"]["bigger_diameter"],
-                              fields["doublebracket_bush"]["body_diameter"],
-                              fields["doublebracket_bush"]["inner_diameter"],
-                              fields["doublebracket_bush"]["bracket_l1"],
-                              fields["doublebracket_bush"]["bracket_l2"],
-                              fields["doublebracket_bush"]["bracket_l3"]
-                              ));
+                  handleChange("quotation_item","unit_frequence", e);
+                  
                 }}
               />
             </div>
@@ -45,60 +52,27 @@ export default function DoubleBracketBush ({handleChange, fields, calcs}) {
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
               >
-                 Body Çap *
+                Döküm Kilogram Fiyatı (₺)
               </label>
-              <input
-                type="number"
-                step={"any"}
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                defaultValue={fields["doublebracket_bush"]["body_diameter"]}
-                onChange={(e) => {
-                  handleChange("doublebracket_bush", "body_diameter",e);
-                  calcs.setCalcW(calcWeigth(fields["doublebracket_bush"]["bigger_diameter"],
-                              fields["doublebracket_bush"]["body_diameter"],
-                              fields["doublebracket_bush"]["inner_diameter"],
-                              fields["doublebracket_bush"]["bracket_l1"],
-                              fields["doublebracket_bush"]["bracket_l2"],
-                              fields["doublebracket_bush"]["bracket_l3"]
-                              ));
-                }}
-              />
+              <p className="font-poppins text-red-700">{kgPrice} ₺</p>
             </div>
+
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
               >
-                İç Çap  *
+                Döküm Fiyatı (₺)
               </label>
-              <input
-                type="number"
-                step={"any"}
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                defaultValue={fields["doublebracket_bush"]["inner_diameter"]}
-                onChange={(e) => {
-                  handleChange("doublebracket_bush", "inner_diameter",e);
-                  calcs.setCalcW(calcWeigth(fields["doublebracket_bush"]["bigger_diameter"],
-                              fields["doublebracket_bush"]["body_diameter"],
-                              fields["doublebracket_bush"]["inner_diameter"],
-                              fields["doublebracket_bush"]["bracket_l1"],
-                              fields["doublebracket_bush"]["bracket_l2"],
-                              fields["doublebracket_bush"]["bracket_l3"]
-                              ));
-                }}
-              />
+              <p className="font-poppins">{calcs.moldingPrice} ₺</p>
             </div>
-            
+
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
               >
-                Flanş Boyu L1 *
+                Model Fiyatı *
               </label>
               <input
                 type="number"
@@ -106,42 +80,10 @@ export default function DoubleBracketBush ({handleChange, fields, calcs}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                defaultValue={fields["doublebracket_bush"]["bracket_l1"]}
+                
                 onChange={(e) => {
-                  handleChange("doublebracket_bush", "bracket_l1",e);
-                  calcs.setCalcW(calcWeigth(fields["doublebracket_bush"]["bigger_diameter"],
-                              fields["doublebracket_bush"]["body_diameter"],
-                              fields["doublebracket_bush"]["inner_diameter"],
-                              fields["doublebracket_bush"]["bracket_l1"],
-                              fields["doublebracket_bush"]["bracket_l2"],
-                              fields["doublebracket_bush"]["bracket_l3"]
-                              ));
-                }}
-              />
-            </div>
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-              >
-                Flanş Boyu L2  *
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                defaultValue={fields["doublebracket_bush"]["bracket_l2"]}
-                onChange={(e) => {
-                  handleChange("doublebracket_bush", "bracket_l2",e);
-                  calcs.setCalcW(calcWeigth(fields["doublebracket_bush"]["bigger_diameter"],
-                              fields["doublebracket_bush"]["body_diameter"],
-                              fields["doublebracket_bush"]["inner_diameter"],
-                              fields["doublebracket_bush"]["bracket_l1"],
-                              fields["doublebracket_bush"]["bracket_l2"],
-                              fields["doublebracket_bush"]["bracket_l3"]
-                              ));
+                  handleChange("quotation_item","model_price", e);
+                  
                 }}
               />
             </div>
@@ -151,7 +93,35 @@ export default function DoubleBracketBush ({handleChange, fields, calcs}) {
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
               >
-                Ara Boy L3  *
+                Model Adet Fiyatı (₺)
+              </label>
+              <p className="font-poppins">{calcs.modelUnitPrice} ₺</p>
+            </div>
+
+            <div className="flex flex-col">
+              <label
+                htmlFor="small-input"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+              >
+                Model Firma Adı *
+              </label>
+              <input
+                type="text"
+                step={"any"}
+                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                placeholder=""
+                required
+                defaultValue={fields["quotation_item"]["model_firm"]}
+                onChange={(e) => handleChange("quotation_item","model_firm", e)}
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label
+                htmlFor="small-input"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+              >
+                İşleme Fiyatı *
               </label>
               <input
                 type="number"
@@ -159,25 +129,36 @@ export default function DoubleBracketBush ({handleChange, fields, calcs}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                defaultValue={fields["doublebracket_bush"]["bracket_l3"]}
-                onChange={(e) => {
-                  handleChange("doublebracket_bush", "bracket_l3",e);
-                  calcs.setCalcW(calcWeigth(fields["doublebracket_bush"]["bigger_diameter"],
-                              fields["doublebracket_bush"]["body_diameter"],
-                              fields["doublebracket_bush"]["inner_diameter"],
-                              fields["doublebracket_bush"]["bracket_l1"],
-                              fields["doublebracket_bush"]["bracket_l2"],
-                              fields["doublebracket_bush"]["bracket_l3"]
-                              ));
-                }}
+                
+                onChange={(e) => handleChange("quotation_item","treatment_price", e)}
               />
             </div>
+
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
               >
-                Tam Boy L  *
+                İşleme Firma Adı *
+              </label>
+              <input
+                type="text"
+                step={"any"}
+                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                placeholder=""
+                required
+                defaultValue={fields["quotation_item"]["treatment_firm"]}
+                onChange={(e) => handleChange("quotation_item","treatment_firm", e)}
+                
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label
+                htmlFor="small-input"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+              >
+                Test Fiyatı *
               </label>
               <input
                 type="number"
@@ -185,35 +166,80 @@ export default function DoubleBracketBush ({handleChange, fields, calcs}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                defaultValue={fields["doublebracket_bush"]["bracket_full"]}
-                onChange={(e) => {
-                  handleChange("doublebracket_bush", "bracket_full",e)
-                }}
+                
+                onChange={(e) => handleChange("quotation_item","test_price", e)}
               />
             </div>
+
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
               >
-                Hesaplanan Ağırlık
+                Maliyet (₺)
               </label>
-              <p className="font-poppins text-red-700">{calcs.calcW}</p>
-            </div>
-            </div>
-
-            <div className="flex flex-col">
-              <ModalImage image={'/doublebracket.png'} />
+              <p className="font-poppins text-red-700">{calcs.cost } ₺</p>
             </div>
 
             <div className="flex flex-col">
-              <p className="font-poppins text-red-700">UYARI: PAYLI/PAYSIZ ÖLÇÜ GİRİŞİNE DİKKAT EDİNİZ !</p>
+              <label
+                htmlFor="small-input"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+              >
+                Kar Oranı(yüzde) *
+              </label>
+              <input
+                type="number"
+                min={0}
+                max={100}
+                step={"any"}
+                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                placeholder=""
+                required
+                defaultValue={fields["quotation_item"]["benefit"]}
+                onChange={(e) => handleChange("quotation_item","benefit", e)}
+              />
             </div>
-            {calcs.calcW < 1 ? <div className="flex flex-col">
-              <p className="font-poppins text-red-700">UYARI: 1 kg. altı ÜRÜN</p>
-            </div>: "" }
 
-            
+            <div className="flex flex-col space-y-3">
+              <label
+                htmlFor="small-input"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+              >
+                Satış Fiyatı *
+              </label>
+              <Dropdown
+                label="Satış Fiyatı"
+                field="final"
+                area="price"
+                items={calcs.salePrice}
+                fields={fields}
+                handleChange={handleChange}
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label
+                htmlFor="small-input"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+              >
+                Alternatif Fiyat *
+              </label>
+              <input
+                type="number"
+                step={"any"}
+                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                placeholder=""
+                required
+                defaultValue={fields["quotation_item"]["alterPrice"]}
+                onChange={(e) => handleChange("quotation_item","alterPrice", e)}
+              />
+            </div>
+          </div>
+          
         </div>
-    );
+        
+      </div>
+    </div>
+  );
 }

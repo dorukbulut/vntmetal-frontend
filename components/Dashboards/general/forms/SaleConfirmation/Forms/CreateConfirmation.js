@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import axios, { Axios } from "axios";
 import {useRouter} from "next/router";
-import Dropdown from "./Dropdown";
-import ItemSelect from "./ItemSelect";
-import CheckMark from "./CheckMark";
+import Dropdown from "../../Common/Dropdown";
+import ItemSelect from "../../ItemSelect";
+import CheckMark from "../../CheckMark";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
 
 
-export default function CreateWorkOrder({customers}) {
+export default function CreateConfirmationForm({customers}) {
     const CUSTOMER = customers.map((customer) => {
         return {
           key: customer.account_id,
@@ -22,17 +22,26 @@ export default function CreateWorkOrder({customers}) {
   const [createErr, setCreateErr] = useState(false);
   const [fields, setFields] = useState({
     options : {
-      Item_ID : '',
-      type : '',
-      plate_model_size : '',
-      treatment_size : ''
+      customerReference : '',
+      OrderDate : '',
+      deliveryDate : '',
+      specialOffers : '',
+      description : '',
+      
     }
   });
 
   const [currErrors, setCurrErrors] = useState({
     options : {
+      customerReference : '',
+      OrderDate : '',
+      deliveryDate : '',
+      specialOffers : '',
+      description : '',
+      item : '',
       Customer_ID : '',
-      sale_ID : '',
+      Quotation_ID : '',
+      certificates :  '',
     }
   });
 
@@ -45,44 +54,72 @@ export default function CreateWorkOrder({customers}) {
     }
   })
   
-  const [all, setAll] = useState([]);
-  const [confirmations, setConfirmations] = useState([])
-  const [selectConf, setSelectedConf] = useState({
+  const [quotations, setQuotations] = useState([])
+  const [selectQuo, setSelectedQuo] = useState({
     options : {
-        sale_ID : ''
+        Quotation_ID : ''
       }
   })
+  const[certificates, setCertificates] = useState([]);
+  const [checkPack, setPackage] = useState(true);
+  const [items, setItems] = useState([]);
+  const [selectedItem, setSelectedItem] = useState([])
 
-  const[typeName, setType] = useState('');
   useEffect(() => {
-    if (selectConf.options.sale_ID !== ''){
-        const item = all.find(each => each.sale_ID === selectConf.options.sale_ID);
-        
-        let new_fields = fields
-        new_fields['options']['Item_ID'] = item.Item_ID
-        let type = ''
-        if (item.quotationItem.straight_bush === null && item.quotationItem.plate_strip === null && item.quotationItem.doublebracket_bush === null && item.quotationItem.middlebracket_bush === null) {
-           type = 'Flanşlı Burç'
-          } if(item.quotationItem.plate_strip === null && item.quotationItem.bracket_bush === null && item.quotationItem.doublebracket_bush === null && item.quotationItem.middlebracket_bush === null) {
+    if (selectQuo.options.Quotation_ID !== '') {
+      axios({
+          method : "POST",
+          data : {
+              Quotation_ID : selectQuo.options.Quotation_ID
+          },
+          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/get-quo`,
+          withCredentials : true
+      })
+      .then(res => {
+          setItems(res.data.map((item, key) => {
+            let dim = ""
+            let name = ""
             
-            type = 'Düz Burç'
+          if (item.straight_bush === null && item.plate_strip === null && item.doublebracket_bush === null && item.middlebracket_bush === null) {
+            dim = `${item.bracket_bush.bigger_diameter}*${item.bracket_bush.body_diameter}*${item.bracket_bush.inner_diameter}*${item.bracket_bush.bracket_length}*${item.bracket_bush.bush_length}`
+            name = "Flanşlı Burç"     
+          } if(item.plate_strip === null && item.bracket_bush === null && item.doublebracket_bush === null && item.middlebracket_bush === null) {
             
-          } if(item.quotationItem.bracket_bush === null && item.quotationItem.straight_bush === null && item.quotationItem.doublebracket_bush === null && item.quotationItem.middlebracket_bush === null) {
-            type = 'Plaka'
+            dim = `${item.straight_bush.large_diameter}*${item.straight_bush.inner_diameter}*${item.straight_bush.bush_length}`
+            name = "Düz Burç"
             
-          } if (item.quotationItem.bracket_bush === null && item.quotationItem.straight_bush=== null && item.quotationItem.plate_strip=== null && item.quotationItem.middlebracket_bush === null){
-            type = 'Çift Flanşlı Burç'
-          } if (item.quotationItem.bracket_bush === null && item.quotationItem.straight_bush=== null && item.quotationItem.plate_strip=== null && item.quotationItem.doublebracket_bush === null){
-            type = 'Ortadan Flanşlı Burç'
+          } if(item.bracket_bush === null && item.straight_bush === null && item.doublebracket_bush === null && item.middlebracket_bush === null) {
+
+            dim = `${item.plate_strip.width}*${item.plate_strip["length"]}*${item.plate_strip.thickness}`
+            name = "Plaka"
+          } if (item.bracket_bush === null && item.straight_bush=== null && item.plate_strip=== null && item.middlebracket_bush === null){
+            dim = `${item.doublebracket_bush.bigger_diameter}*${item.doublebracket_bush.body_diameter}*${item.doublebracket_bush.inner_diameter}*${item.doublebracket_bush.bracket_l1}*${item.doublebracket_bush.bracket_l2}*${item.doublebracket_bush.bracket_l3}*${item.doublebracket_bush.bracket_full}`
+            name = "Çift Flanşlı Burç"
+          } if (item.bracket_bush === null && item.straight_bush=== null && item.plate_strip=== null && item.doublebracket_bush === null){
+            dim = `${item.middlebracket_bush.bracket_q1}*${item.middlebracket_bush.bracket_q2}*${item.middlebracket_bush.bracket_q3}*${item.middlebracket_bush.bracket_q4}*${item.middlebracket_bush.bracket_l1}*${item.middlebracket_bush.bracket_l2}*${item.middlebracket_bush.bracket_l3}*${item.middlebracket_bush.bracket_full}`
+            name = "Ortadan Flanşlı Burç"
 
           }
-        setType(type);
-        setFields(new_fields);
 
-    } 
-  }, [selectConf.options.sale_ID])
-  
-  
+          return {
+            "id": key + 1,
+            "item_id" : item.item_id,
+            "description": item.description,
+            "dimensions": dim,
+            "qty" : item.unit_frequence,
+            "name" : name,
+            "analysis" : item.analyze.analyze_Name,
+            "price" : item.unit_price
+
+          }
+        }))
+      })
+      .catch(err => console.log(err));
+  } else {
+    setItems([]);
+  }
+  }, [selectQuo.options.Quotation_ID]);
+
   useEffect(() =>  {
     if (Customer_ID.options.Customer_ID !== '') {
         axios({
@@ -90,19 +127,18 @@ export default function CreateWorkOrder({customers}) {
             data : {
                 Customer_ID : Customer_ID.options.Customer_ID
             },
-            url : `${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/get`,
+            url : `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/get`,
             withCredentials : true
         })
         .then(res => {
-            setAll(res.data);
             let ITEMS = res.data.map(item => {
                 return {
                     key : item.reference + "-REV" + item.revision,
-                    value :  item.sale_ID
+                    value : item.quotation_ID
                 }
             });
-            
-            setConfirmations(ITEMS);
+
+            setQuotations(ITEMS);
         })
         .catch(err => console.log(err));
     }
@@ -120,15 +156,15 @@ export default function CreateWorkOrder({customers}) {
       }
     })
 
-    setSelectedConf({
+    setSelectedQuo({
       options : {
-        sale_ID : ''
+        Quotation_ID : ''
       }
     })
   }
 
   const handleChangeQuo = (field, area, e) => {
-    setSelectedConf((old) => {
+    setSelectedQuo((old) => {
       return {
         ...old,
         [field]: {
@@ -136,6 +172,8 @@ export default function CreateWorkOrder({customers}) {
         }
       }
     })
+
+    
   }
 
   
@@ -156,6 +194,14 @@ export default function CreateWorkOrder({customers}) {
     let errors = currErrors;
     let isValid = true;
      
+     //customerReference
+     if (check_fields.options.customerReference === '') {
+      isValid = false
+      errors.options.customerReference = "Müşteri Referans Numarası Boş bırakalamaz !"
+     } else  {
+      errors.options.customerReference = ""
+     }
+
      //Customer_ID
      if (Customer_ID.options.Customer_ID === '') {
       isValid = false
@@ -165,14 +211,45 @@ export default function CreateWorkOrder({customers}) {
      }
 
      //Quotation_ID
-     if (selectConf.options.sale_ID === '') {
+     if (selectQuo.options.Quotation_ID === '') {
       isValid = false
-      errors.options.sale_ID = "Form Referans Numarası Boş bırakalamaz !"
+      errors.options.Quotation_ID = "Form Referans Numarası Boş bırakalamaz !"
      } else  {
-      errors.options.sale_ID = ""
+      errors.options.Quotation_ID = ""
      }
 
-     
+     //OrderDate
+     if (check_fields.options.OrderDate === '') {
+      isValid = false
+      errors.options.OrderDate = "Sipariş Tarihi Boş bırakalamaz !"
+     } else  {
+      errors.options.OrderDate = ""
+     }
+
+     //deliveryDate
+     if (check_fields.options.deliveryDate === '') {
+      isValid = false
+      errors.options.deliveryDate = "Teslim Tarihi Boş bırakalamaz !"
+     } else  {
+      errors.options.deliveryDate = ""
+     }
+
+     //item
+     if (selectedItem.length === 0) {
+      isValid = false
+      errors.options.item = "En az bir adet ürün seçmelisiniz  !"
+     } else  {
+      errors.options.item = ""
+     }
+
+     //item
+     if (certificates.length === 0) {
+      isValid = false
+      errors.options.certificates = "En az bir adet sertifika seçmelisiniz !"
+     } else  {
+      errors.options.certificates = ""
+     }
+
      setCurrErrors(errors)
      return isValid
   };
@@ -183,22 +260,28 @@ export default function CreateWorkOrder({customers}) {
 
     let data = {
       options : {
-       
+        ...fields.options,
         Customer_ID : Customer_ID.options.Customer_ID,
-        Sale_ID : selectConf.options.sale_ID,
-        Item_ID : fields.options.Item_ID,
-        plate_model_size : fields.options.plate_model_size,
-        treatment_size : fields.options.treatment_size,
+        Quotation_ID : selectQuo.options.Quotation_ID,
+        Item_ID : items[selectedItem[0] - 1].item_id,
+        package : checkPack,
       },
 
+      cert_options : certificates.map(certificate => {
+        return {
+          name : certificate
+        }
+      }),
+
+      
+      
     }
-    
 
       try{
         const res = await axios({ 
           method : "post",
           data: data , 
-          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/create`,
+          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/create`,
           withCredentials : true});
           if(res.status === 200) {
             setSubmit(true);
@@ -229,7 +312,7 @@ export default function CreateWorkOrder({customers}) {
         type="button"
         onClick={toggleCreate}
       >
-        + İş Emri Oluştur 
+        + Form Oluştur 
       </button>
 
       <div
@@ -261,7 +344,7 @@ export default function CreateWorkOrder({customers}) {
             } flex flex-col space-y-10`}
           >
             <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
-              Yeni İş Emri 
+              Yeni Sipariş Onay Formu
             </p>
             <form className="grid grid-cols-1 space-y-5 lg:grid-cols-1 ">
               {/*Customer info*/}
@@ -295,18 +378,91 @@ export default function CreateWorkOrder({customers}) {
                                 htmlFor="small-input"
                                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
                               >
-                                Sipariş Onay Formu *
+                                Teklif Formu *
                               </label>
                               <Dropdown
                                 label="Teklif Formu"
                                 field="options"
-                                area="sale_ID"
-                                items={confirmations}
-                                fields={selectConf}
+                                area="Quotation_ID"
+                                items={quotations}
+                                fields={selectQuo}
                                 handleChange={handleChangeQuo}
                               />
                             </div>
-                 
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                    >
+                      Müşteri Referans Numarası *
+                    </label>
+                    <input
+                      type="text"
+                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      placeholder=""
+                      required
+                      onChange={(e) => {
+                        handleChange("options", "customerReference", e)
+                      }}
+                      
+                    />
+                  </div>
+
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                    >
+                      Sipariş Tarihi *
+                    </label>
+                    <input
+                      type="date"
+                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      placeholder=""
+                      required
+                      onChange={(e) => {
+                        handleChange("options", "OrderDate", e);
+                      }}
+                      
+                    />
+                  </div>
+
+                  <div className="flex flex-col">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                    >
+                      Planlanan Teslim Tarihi *
+                    </label>
+                    <input
+                      type="date"
+                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      placeholder=""
+                      required
+
+                      onChange={(e) => {
+                        handleChange("options", "deliveryDate", e)
+                      }}
+                      
+                    />
+                  </div>
+
+                  <div className="flex flex-col ">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                    >
+                      Özel İstekler
+                    </label>
+                    <textarea
+                      type="text"
+                      className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      placeholder=""
+                      onChange={(e) =>
+                        handleChange("options", "specialOffers", e)
+                      }
+                    />
+                  </div>
 
                   
 
@@ -316,60 +472,59 @@ export default function CreateWorkOrder({customers}) {
               <div className="m-0 space-y-7 lg:flex lg:flex-col lg:items-center">
                 <div className="space-y-2 lg:w-1/2">
                   <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
-                    İş Emri Bilgileri
+                    Ürün Bilgileri
                   </p>
                   <hr />
                 </div>
 
                 <div className="space-y-5 lg:grid lg:place-items-center lg:w-4/5">
-                  <div className="flex flex-col ">
-                  <label
-                                htmlFor="small-input"
-                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                              >
-                                Ürün Tipi
-                              </label>
-                    <p>{typeName}</p>
+                  <div className="flex flex-col w-full h-full">
+                      <ItemSelect items={items} setSelectedItem={setSelectedItem} />
                   </div>
                 </div>
-                {typeName === "Plaka" ? <div>
-                <div className="flex flex-col">
+              </div>
+
+              <div className="m-0 space-y-7 lg:flex lg:flex-col lg:items-center">
+                <div className="space-y-2 lg:w-1/2">
+                  <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
+                    Sertifika ve Paketleme
+                  </p>
+                  <hr />
+                </div>
+
+                <div className="space-y-5 lg:grid lg:place-items-center lg:w-full">
+                <div className="flex flex-col lg:w-1/2 ">
                     <label
                       htmlFor="small-input"
                       className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
                     >
-                      Plaka Model Ölçüsü *
+                      Açıklama *
                     </label>
-                    <input
-                      type="number"
-                      step={"any"}
-                      className="invalid:border-red-500  pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                    <textarea
+                      type="text"
+                      className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
+                      onChange={(e) => {
+                        handleChange("options", "description", e);
+                      }}
                       
-                      onChange={(e) =>
-                        handleChange("options", "plate_model_size", e)
-                      }
                     />
                   </div>
-                  <div className="flex flex-col">
+                  <div className="flex flex-col lg:w-1/2">
                     <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
-                    >
-                      Dış Atölyede İşlenecek Ölçü *
-                    </label>
-                    <input
-                      type="number"
-                      step={"any"}
-                      className="invalid:border-red-500  pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                
-                      onChange={(e) =>
-                        handleChange("options", "treatment_size", e)
-                      }
-                    />
-                  </div> </div> : ''}
-                
+                        htmlFor="small-input"
+                        className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      >
+                        Sertifika
+                      </label>
+                        <CheckMark setCertificates={setCertificates} defaultValues={[]}/>          
+                    </div>
+
+                  <div className="flex flex-col ">
+                    <FormControlLabel control={<Checkbox defaultValue={checkPack} onClick={(e) => setPackage(e.target.checked)} defaultChecked />} label="Paketleme" />
+                  </div>
+
+                </div>
               </div>
             </form>
 
@@ -421,7 +576,7 @@ export default function CreateWorkOrder({customers}) {
             </h3>
             <div className="mt-2 px-7 py-3">
               <p className="text-sm text-gray-500">
-                İş Emri Başarıyla Oluşturuldu!
+                Sipariş Onay Formu Başarıyla Kaydedildi!
               </p>
             </div>
             <div className="items-center px-4 py-3">

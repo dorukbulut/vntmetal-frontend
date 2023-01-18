@@ -7,8 +7,8 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import CreateWorkOrder from "../../components/Dashboards/general/forms/CreateWorkOrder";
-import UpdateWorkOrder from "../../components/Dashboards/general/forms/UpdateWorkOrder";
+import CreateWorkOrder from "../../components/Dashboards/general/forms/WorkOrder/Forms/CreateWorkOrder";
+import UpdateWorkOrder from "../../components/Dashboards/general/forms/WorkOrder/Forms/UpdateWorkOrder";
 
 
 export default function QuotationMake({customers, workOrders}) {

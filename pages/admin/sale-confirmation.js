@@ -5,8 +5,8 @@ import Footer from "../../components/base/Footer";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import CreateConfirmationForm from "../../components/Dashboards/general/forms/CreateConfirmation";
-import UpdateConfirmationForm from "../../components/Dashboards/general/forms/UpdateConfirmation";
+import CreateConfirmationForm from "../../components/Dashboards/general/forms/SaleConfirmation/Forms/CreateConfirmation";
+import UpdateConfirmationForm from "../../components/Dashboards/general/forms/SaleConfirmation/Forms/UpdateConfirmation";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 

@@ -2,15 +2,14 @@ import Navbar from "../../../components/Dashboards/general/ui/Navbar";
 import ProfileBar from "../../../components/Dashboards/general/ui/ProfileBar";
 import BreadCrumbs from "../../../components/Dashboards/general/ui/BreadCrumbs";
 import Footer from "../../../components/base/Footer";
-import CreateMake from "../../../components/Dashboards/general/forms/CreateaMake";
-import CreateAnalyze from "../../../components/Dashboards/general/forms/CreateAnalyze";
+import CreateMake from "../../../components/Dashboards/general/forms/QuotationMake/Forms/CreateaMake";
+import CreateAnalyze from "../../../components/Dashboards/general/forms/QuotationMake/Forms/CreateAnalyze";
 import axios from "axios";
-import UpdateCustomer from "../../../components/Dashboards/general/forms/UpdateCustomer";
 import { useState, useEffect} from "react";
 import { useRouter } from "next/router";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import UpdateMake from "../../../components/Dashboards/general/forms/UpdateMake";
+import UpdateMake from "../../../components/Dashboards/general/forms/QuotationMake/Forms/UpdateMake";
 
 export default function QuotationMake({analyzes, customers, items}) {
   const router = useRouter();

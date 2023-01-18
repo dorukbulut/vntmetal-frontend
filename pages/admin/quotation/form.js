@@ -7,8 +7,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import CreateQuotationForm from "../../../components/Dashboards/general/forms/CreateQuotationForm";
-import UpdateQuotationForm from "../../../components/Dashboards/general/forms/UpdateQuotationForm";
+import CreateQuotationForm from "../../../components/Dashboards/general/forms/QuotationForms/Forms/CreateQuotationForm";
+import UpdateQuotationForm from "../../../components/Dashboards/general/forms/QuotationForms/Forms/UpdateQuotationForm";
 
 export default function QuotationMake({customers, forms}) {
   const generate = (e) => {

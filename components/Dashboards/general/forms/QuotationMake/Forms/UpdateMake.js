@@ -1,20 +1,14 @@
 import { useState, useEffect } from "react";
 import * as React from "react";
-import axios, { Axios } from "axios";
-import Box from "@mui/material/Box";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import axios from "axios";
 import { useRouter } from "next/router";
-import Dropdown from "./Dropdown";
+import Dropdown from "../../Common/Dropdown";
 import QuotationItem from "./QuotationItem";
-import StrBush from "./StrBush";
-import PlateStrip from "./PlateStrip";
-import BracketBush from "./BracketBush";
-import DoubleBracketBush from "./DoubleBracketBush";
-import MiddleBracketBush from "./MiddleBracketBush";
+import StrBush from "../TypeForms/StrBush";
+import PlateStrip from "../TypeForms/PlateStrip";
+import BracketBush from "../TypeForms/BracketBush";
+import DoubleBracketBush from "../TypeForms/DoubleBracketBush";
+import MiddleBracketBush from "../TypeForms/MiddleBracketBush";
 
 const steps = [
   "Teklif Tipi Seç",

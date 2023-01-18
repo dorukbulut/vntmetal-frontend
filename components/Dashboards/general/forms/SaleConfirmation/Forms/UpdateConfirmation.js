@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import axios, { Axios } from "axios";
 import {useRouter} from "next/router";
-import Dropdown from "./Dropdown";
-import ItemSelect from "./ItemSelect";
-import CheckMark from "./CheckMark";
+import Dropdown from "../../Common/Dropdown";
+import ItemSelect from "../../ItemSelect";
+import CheckMark from "../../CheckMark";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 

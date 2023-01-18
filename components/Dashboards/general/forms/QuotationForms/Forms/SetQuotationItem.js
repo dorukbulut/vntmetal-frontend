@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
-import Table from "./Table"
-import EditableCell from "./Table/EditableCell.js"
+import Table from "../../Table"
+import EditableCell from "../../Table/EditableCell.js/index.js"
 import Checkbox from '@mui/material/Checkbox';
 import axios from "axios"
 function SetItem({fields,setAll}) {

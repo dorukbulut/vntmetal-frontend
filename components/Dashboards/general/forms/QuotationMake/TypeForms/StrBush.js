@@ -1,13 +1,13 @@
-import ModalImage from "../ui/ModalImage";
-export default function PlateStrip ({handleChange, fields, calcs}) {
-    const calcWeigth = (A8, B8, C8) => {
-      return A8*B8*C8*8.6/1000000
+import ModalImage from "../../../ui/ModalImage";
+export default function StrBush ({handleChange, fields, calcs}) {
+    const calculateWeight = (A8, B8, C8) => {
+      return ((A8/2)*(A8/2)*3.14*C8*8.6-(B8/2)*(B8/2)*3.14*C8*8.6)/1000000
     }
     return (
         <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center ">
             <div className="space-y-2 lg:w-1/2">
                   <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
-                    Plaka Ölçüleri
+                    Düz Burç Ölçüleri
                   </p>
                   <hr />
             </div>
@@ -17,7 +17,7 @@ export default function PlateStrip ({handleChange, fields, calcs}) {
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
               >
-                En  *
+                Büyük Çap *
               </label>
               <input
                 type="number"
@@ -25,12 +25,11 @@ export default function PlateStrip ({handleChange, fields, calcs}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                defaultValue={fields["plate_strip"]["width"]}
+                defaultValue={fields["straigth_bush"]["bigger_diameter"]}
                 onChange={(e) => {
-                  handleChange("plate_strip", "width",e);
-                  calcs.setCalcW(calcWeigth(fields["plate_strip"]["width"],fields["plate_strip"]["length"],fields["plate_strip"]["thickness"] ));
-                }
-                }
+                  handleChange("straigth_bush", "bigger_diameter",e);
+                  calcs.setCalcW(calculateWeight(fields["straigth_bush"]["bigger_diameter"],fields["straigth_bush"]["inner_diameter"],fields["straigth_bush"]["length"] ))
+                } }
               />
             </div>
 
@@ -39,7 +38,7 @@ export default function PlateStrip ({handleChange, fields, calcs}) {
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
               >
-               Boy *
+                İç Çap *
               </label>
               <input
                 type="number"
@@ -47,11 +46,11 @@ export default function PlateStrip ({handleChange, fields, calcs}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                defaultValue={fields["plate_strip"]["length"]}
+                defaultValue={fields["straigth_bush"]["inner_diameter"]}
                 onChange={(e) => {
-                  handleChange("plate_strip", "length",e);
-                  calcs.setCalcW(calcWeigth(fields["plate_strip"]["width"],fields["plate_strip"]["length"],fields["plate_strip"]["thickness"] ))
-              }}
+                  handleChange("straigth_bush", "inner_diameter",e);
+                  calcs.setCalcW(calculateWeight(fields["straigth_bush"]["bigger_diameter"],fields["straigth_bush"]["inner_diameter"],fields["straigth_bush"]["length"] ))
+                }}
               />
             </div>
 
@@ -60,7 +59,7 @@ export default function PlateStrip ({handleChange, fields, calcs}) {
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
               >
-                Kalınlık  *
+                Boy  *
               </label>
               <input
                 type="number"
@@ -68,10 +67,10 @@ export default function PlateStrip ({handleChange, fields, calcs}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                defaultValue={fields["plate_strip"]["thickness"]}
+                defaultValue={fields["straigth_bush"]["length"]}
                 onChange={(e) => {
-                  handleChange("plate_strip", "thickness",e);
-                  calcs.setCalcW(calcWeigth(fields["plate_strip"]["width"],fields["plate_strip"]["length"],fields["plate_strip"]["thickness"] ))
+                  handleChange("straigth_bush", "length",e);
+                  calcs.setCalcW(calculateWeight(fields["straigth_bush"]["bigger_diameter"],fields["straigth_bush"]["inner_diameter"],fields["straigth_bush"]["length"] ));
               }}
               />
             </div>
@@ -88,7 +87,7 @@ export default function PlateStrip ({handleChange, fields, calcs}) {
             </div>
 
             <div className="flex flex-col">
-              <ModalImage image={"/platestrip.png"} />
+              <ModalImage image={'/straightbush.png'} />
             </div>
 
             <div className="flex flex-col">

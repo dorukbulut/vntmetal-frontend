@@ -1,4 +1,4 @@
-import ModalImage from "../ui/ModalImage";
+import ModalImage from "../../../ui/ModalImage";
 
 export default function BracketBush ({handleChange, fields, calcs}) {
     const calcWeigth = (A8, B8, C8, D8, E8) => {
