@@ -3,7 +3,7 @@ import * as React from "react";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
+import Step, { useStepContext } from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -341,55 +341,7 @@ export default function CreateMake({ analyzes, customers }) {
     setActiveStep(0);
   };
 
-  const handleValidation0 = () => {
-    let check_fields = fields;
-    let isValid = true;
-    
-    // account_id
-    if (check_fields["calc_raw"]["account_id"] === "") {
-      isValid = false;
-    }
-
-    // analyze_Name
-    if (check_fields["calc_raw"]["analyze_Name"] === "") {
-      isValid = false;
-    }
-
-
-
-    // analyze_Name
-
-    // LME
-    if (check_fields["calc_raw"]["LME"] === "") {
-      isValid = false;
-    }
-
-    // TIN
-    if (check_fields["calc_raw"]["TIN"] === "") {
-      isValid = false;
-    }
-
-    // euro
-    if (check_fields["calc_raw"]["euro"] === "") {
-      isValid = false;
-    }
-
-    // usd
-    if (check_fields["calc_raw"]["usd"] === "") {
-      isValid = false;
-    }
-
-    // workmanship
-    if (check_fields["calc_raw"]["workmanship"] === "") {
-      isValid = false;
-    }
-
-    // type
-    if (check_fields["calc_raw"]["type"] === "") {
-      isValid = false;
-    }
-    return isValid;
-  };
+  
 
   const handleValidationInput = () => {
     let check_fields = fields;
@@ -452,20 +404,30 @@ export default function CreateMake({ analyzes, customers }) {
     {value : (parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(fields["calc_raw"]["usd"])).toFixed(3), key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(fields["calc_raw"]["usd"])).toFixed(3)} $ `},
     {value : (parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(fields["calc_raw"]["euro"])).toFixed(3), key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(fields["calc_raw"]["euro"])).toFixed(3)} € `},
   ])
-    setCanSkip1(handleValidation1());
-    if(fields.quo_type.quo_type_name === "0") {
-      
-      
-    }else {
-      setCanSkip2(handleValidation0());
-    }
-    
+    setCanSkip1(handleValidation1()); 
     const all_type_val = (TYPE_VALIDATE["Düz Burç"]() || TYPE_VALIDATE["Flanşlı Burç"]() || TYPE_VALIDATE["Ortadan Flanşlı Burç"]() || TYPE_VALIDATE["Plaka"]() || TYPE_VALIDATE["Çift Flanşlı Burç"]())
     setCanSkip3(all_type_val  && handleValidateQuotationItems());
       
   };
 
-  
+  // states 
+  const [calcRaws, setCalcRaws] = useState({
+    validity : false,
+    values : {}
+  });
+
+  //handlers
+  const getCalcRaw = (validity, values) => {
+    setCalcRaws((old) => {
+      return {
+        ...old,
+        "validity" : validity,
+        "values" : {
+          ...values
+        } 
+      }
+    });
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -829,12 +791,12 @@ export default function CreateMake({ analyzes, customers }) {
                           </div>
                         </div>
                       </form>
-                    </div>) : (<CalculateRaw customers={customers} analyzes={analyzes} />)
+                    </div>) : (<CalculateRaw prevValues={calcRaws} customers={customers} analyzes={analyzes} getCalcRaw={getCalcRaw} />)
                     ) : ("")
                   }
 
                   {
-                    activeStep == 2 ? <QuotationItem fields={fields} calcs={{modelUnitPrice, moldingPrice, cost, salePrice, calcW, setCalcW, setModelUnitPrice}} handleChange={handleChange} kgPrice={kgPrice} name={type}> {TYPE_COMPS[type]} </QuotationItem> : ""
+                    activeStep == 2 ? <QuotationItem fields={fields} calcs={{modelUnitPrice, moldingPrice, cost, salePrice, calcW, setCalcW, setModelUnitPrice}} handleChange={handleChange} kgPrice={kgPrice} name={calcRaws.values.type}> {TYPE_COMPS[calcRaws.values.type]} </QuotationItem> : ""
                   }
 
                   {
@@ -858,7 +820,7 @@ export default function CreateMake({ analyzes, customers }) {
                     }
 
                     {
-                      activeStep === 1 ?  <Button disabled={!canSkipStep2} onClick={handleNext}>
+                      activeStep === 1 ?  <Button disabled={!calcRaws.validity} onClick={handleNext}>
                       { "ileri"}
                     </Button> : ''
                     }

@@ -1,151 +1,205 @@
 import Dropdown from "../../Common/Dropdown";
-import { use, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 
 const TYPE = [
-    { key: "Düz Burç", value: "Düz Burç" },
-    { key: "Plaka", value: "Plaka" },
-    { key: "Flanşlı Burç", value: "Flanşlı Burç" },
-    { key: "Ortadan Flanşlı Burç", value: "Ortadan Flanşlı Burç" },
-    { key: "Çift Flanşlı Burç", value: "Çift Flanşlı Burç" },
-  ];
+  { key: "Düz Burç", value: "Düz Burç" },
+  { key: "Plaka", value: "Plaka" },
+  { key: "Flanşlı Burç", value: "Flanşlı Burç" },
+  { key: "Ortadan Flanşlı Burç", value: "Ortadan Flanşlı Burç" },
+  { key: "Çift Flanşlı Burç", value: "Çift Flanşlı Burç" },
+];
 
-export default function CalculateRaw({customers, analyzes}) {
-
-    //constants
-    const ANALYZE = analyzes.map((analyse) => {
-        return {
-          key: analyse.analyze_Name,
-          value : analyse.analyze_id,
-          TIN : analyse.analyze_coefTin,
-          COPPER : analyse.analyze_coefCopper
-        };
-      });
-    
-      const CUSTOMER = customers.map((customer) => {
-        return {
-          key: customer.account_id,
-          value: customer.account_id,
-        };
-      });
-    
-
-    //states
-    const [fields, setFields] = useState({
-      calc_raw : {
-        account_id : '',
-        analyze_Name : '',
-        LME  : '',
-        TIN : '',
-        usd  : '',
-        euro : '',
-        type : '',
-        workmanship : ''
-      }
-    });
-    
-    const [calculated, setCalculated] = useState({
-        COPPER : '',
-        TIN : '',
-        priceCopper : '',
-        priceTin : '',
-        totalRaw : '',
-        kgPrice : ''
-
-    })
-
-    //hooks
-    // react hook for analyse
-    useEffect(() => {
-        
-        const item = ANALYZE.find(analyse => analyse.value === fields.calc_raw.analyze_Name);
-        
-        if (item !== undefined) {
-            setCalculated((old) => {
-                return {
-                    ...old,
-                    TIN : item.TIN,
-                    COPPER : item.COPPER
-                }
-            })
-
-        
-        }
-        
-    }, [fields.calc_raw.analyze_Name])
-
-    //for Copper Prices TODO
-    useEffect(() => {
-      setCalculated((old) => {
-        let inter = (parseFloat(fields.calc_raw.LME)) * parseFloat(fields.calc_raw.usd);
-        let price = ((inter * parseFloat(old.COPPER)) / 1000).toFixed(2);
-
-        return {
-          ...old,
-          priceCopper : price,
-        }
-      });
-    }, [
-      fields.calc_raw.LME,
-      fields.calc_raw.usd,
-      fields.calc_raw.analyze_Name
-    ])
-
-    //for TIN
-
-    useEffect(() => {
-      
-      setCalculated((old) => {
-        let inter = (parseFloat(fields.calc_raw.TIN)) * parseFloat(fields.calc_raw.usd);
-        let price = (((inter / 1000) * parseFloat(old.TIN)) / 100).toFixed(2);
-        return {
-          ...old,
-          priceTin : price,
-        }
-      });
-    }, [
-      fields.calc_raw.TIN,
-      fields.calc_raw.usd,
-      fields.calc_raw.analyze_Name
-    ])
-
-    // for totalCalc
-
-    useEffect(() => {
-      setCalculated((old) => {
-        return {
-          ...old, 
-
-          totalRaw : parseFloat(old.priceCopper) + parseFloat(old.priceTin)
-        }
-      });
-    }, [calculated.priceCopper, calculated.priceTin] );
-
-    // for kgPrice
-
-    useEffect(() => {
-      setCalculated((old) => {
-        return {
-          ...old,
-          kgPrice : (parseFloat(fields.calc_raw.workmanship) + parseFloat(old.totalRaw)).toFixed(2)
-        }
-      });
-    }, [calculated.totalRaw, fields.calc_raw.workmanship]);
-    
-    //handlers
-    const handleChange =  (field, area, e) => {
-      setFields(old => {
-        return {
-          calc_raw : {
-            ...old.calc_raw,
-            [area] : e.target.value
-          }
-        }
-      });
-
-      
+export default function CalculateRaw({ customers, analyzes, getCalcRaw, prevValues}) {
+  const prevCountRef = useRef();
+  //constants
+  const ANALYZE = analyzes.map((analyse) => {
+    return {
+      key: analyse.analyze_Name,
+      value: analyse.analyze_id,
+      TIN: analyse.analyze_coefTin,
+      COPPER: analyse.analyze_coefCopper,
     };
-    return (
-        <div className="mt-10">
+  });
+
+  const CUSTOMER = customers.map((customer) => {
+    return {
+      key: customer.account_id,
+      value: customer.account_id,
+    };
+  });
+
+  //states
+  console.log(prevValues);
+  const [fields, setFields] = useState({
+    calc_raw: {
+      account_id: "account_id" in prevValues.values ? prevValues.values.account_id : "" ,
+      analyze_Name: "analyze_Name" in prevValues.values ? prevValues.values.analyze_Name : "" ,
+      LME: "LME" in prevValues.values ? prevValues.values.LME : "",
+      TINP: "TINP" in prevValues.values ? prevValues.values.TINP : "",
+      usd: "usd" in prevValues.values ? prevValues.values.usd : "",
+      euro: "euro" in prevValues.values ? prevValues.values.euro : "",
+      type: "type" in prevValues.values ? prevValues.values.type : "",
+      workmanship: "workmanship" in prevValues.values ? prevValues.values.workmanship : "",
+    },
+  });
+
+  const [calculated, setCalculated] = useState({
+    COPPER: "COPPER" in prevValues.values ? prevValues.values.COPPER : "",
+    TIN: "TIN" in prevValues.values ? prevValues.values.TIN : "",
+    priceCopper: "priceCopper" in prevValues.values ? prevValues.values.priceCopper : "",
+    priceTin: "priceTin" in prevValues.values ? prevValues.values.priceTin : "",
+    totalRaw: "totalRaw" in prevValues.values ? prevValues.values.totalRaw : "",
+    kgPrice: "kgPrice" in prevValues.values ? prevValues.values.kgPrice : "",
+  });
+
+
+  //hooks
+  // react hook for analyse
+  useEffect(() => {
+    const item = ANALYZE.find(
+      (analyse) => analyse.value === fields.calc_raw.analyze_Name
+    );
+
+    if (item !== undefined) {
+      setCalculated((old) => {
+        return {
+          ...old,
+          TIN: item.TIN,
+          COPPER: item.COPPER,
+        };
+      });
+    }
+  }, [fields.calc_raw.analyze_Name]);
+
+  //for Copper Prices 
+  useEffect(() => {
+    setCalculated((old) => {
+      let inter =
+        parseFloat(fields.calc_raw.LME) * parseFloat(fields.calc_raw.usd);
+      let price = ((inter * parseFloat(old.COPPER)) / 1000).toFixed(2);
+
+      return {
+        ...old,
+        priceCopper: price,
+      };
+    });
+  }, [fields.calc_raw.LME, fields.calc_raw.usd, fields.calc_raw.analyze_Name]);
+
+  //for TIN
+
+  useEffect(() => {
+    setCalculated((old) => {
+      let inter =
+        parseFloat(fields.calc_raw.TINP) * parseFloat(fields.calc_raw.usd);
+      let price = (((inter / 1000) * parseFloat(old.TIN)) / 100).toFixed(2);
+      return {
+        ...old,
+        priceTin: price,
+      };
+    });
+  }, [fields.calc_raw.TINP, fields.calc_raw.usd, fields.calc_raw.analyze_Name]);
+
+  // for totalCalc
+
+  useEffect(() => {
+    setCalculated((old) => {
+      return {
+        ...old,
+
+        totalRaw: (parseFloat(old.priceCopper) + parseFloat(old.priceTin)).toFixed(2),
+      };
+    });
+  }, [calculated.priceCopper, calculated.priceTin]);
+
+  // for kgPrice
+
+  useEffect(() => {
+    setCalculated((old) => {
+      return {
+        ...old,
+        kgPrice: (
+          parseFloat(fields.calc_raw.workmanship) + parseFloat(old.totalRaw)
+        ).toFixed(2),
+      };
+    });
+  }, [calculated.totalRaw, fields.calc_raw.workmanship]);
+
+  // getValues hook with lmeCopper, lmeTin, usd, euro, kgPrice
+  useEffect(() => {
+    if (handleValidation()) {
+      getCalcRaw(true, {
+
+        ...fields.calc_raw,
+        ...calculated,
+        
+      });
+    } else {
+      getCalcRaw(false, {});
+    }
+    
+  }, [fields, calculated]);
+
+  //handlers
+  const handleChange = (field, area, e) => {
+    setFields((old) => {
+      return {
+        calc_raw: {
+          ...old.calc_raw,
+          [area]: e.target.value,
+        },
+      };
+    });
+  };
+
+  const handleValidation = () => {
+    let check_fields = fields;
+    let isValid = true;
+
+    // account_id
+    if (check_fields["calc_raw"]["account_id"] === "") {
+      isValid = false;
+    }
+
+    // analyze_Name
+    if (check_fields["calc_raw"]["analyze_Name"] === "") {
+      isValid = false;
+    }
+
+    // analyze_Name
+
+    // LME
+    if (check_fields["calc_raw"]["LME"] === "") {
+      isValid = false;
+    }
+
+    // TIN
+    if (check_fields["calc_raw"]["TIN"] === "") {
+      isValid = false;
+    }
+
+    // euro
+    if (check_fields["calc_raw"]["euro"] === "") {
+      isValid = false;
+    }
+
+    // usd
+    if (check_fields["calc_raw"]["usd"] === "") {
+      isValid = false;
+    }
+
+    // workmanship
+    if (check_fields["calc_raw"]["workmanship"] === "") {
+      isValid = false;
+    }
+
+    // type
+    if (check_fields["calc_raw"]["type"] === "") {
+      isValid = false;
+    }
+    return isValid;
+  };
+  return (
+    <div className="mt-10">
       <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
         Yeni Teklif
       </p>
@@ -188,7 +242,6 @@ export default function CalculateRaw({customers, analyzes}) {
                 label="Analiz"
                 field="calc_raw"
                 area="analyze_Name"
-                
                 fields={fields}
                 items={ANALYZE}
                 handleChange={handleChange}
@@ -208,9 +261,9 @@ export default function CalculateRaw({customers, analyzes}) {
                 id={"LME"}
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
-                defaultValue={fields['calc_raw']["LME"]}
+                defaultValue={fields["calc_raw"]["LME"]}
                 required
-                onChange={(e) => handleChange('calc_raw', 'LME', e)}
+                onChange={(e) => handleChange("calc_raw", "LME", e)}
               />
             </div>
 
@@ -224,11 +277,11 @@ export default function CalculateRaw({customers, analyzes}) {
               <input
                 type="number"
                 step={"any"}
-                defaultValue={fields["calc_raw"]["TIN"]}
+                defaultValue={fields["calc_raw"]["TINP"]}
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                onChange={(e) => handleChange("calc_raw", "TIN", e)}
+                onChange={(e) => handleChange("calc_raw", "TINP", e)}
               />
             </div>
 
@@ -311,7 +364,6 @@ export default function CalculateRaw({customers, analyzes}) {
               <p className="font-poppins">{calculated.totalRaw}</p>
             </div>
 
-            
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
@@ -358,11 +410,13 @@ export default function CalculateRaw({customers, analyzes}) {
               >
                 Döküm Kilogram Fiyatı (₺)
               </label>
-              <p className="font-poppins text-red-700">{calculated.kgPrice} ₺</p>
+              <p className="font-poppins text-red-700">
+                {calculated.kgPrice} ₺
+              </p>
             </div>
           </div>
         </div>
       </form>
     </div>
-    );
-};
+  );
+}
