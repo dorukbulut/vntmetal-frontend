@@ -29,7 +29,6 @@ export default function CalculateRaw({ customers, analyzes, getCalcRaw, prevValu
   });
 
   //states
-  console.log(prevValues);
   const [fields, setFields] = useState({
     calc_raw: {
       account_id: "account_id" in prevValues.values ? prevValues.values.account_id : "" ,
@@ -126,16 +125,14 @@ export default function CalculateRaw({ customers, analyzes, getCalcRaw, prevValu
 
   // getValues hook with lmeCopper, lmeTin, usd, euro, kgPrice
   useEffect(() => {
-    if (handleValidation()) {
-      getCalcRaw(true, {
+    
+      getCalcRaw(handleValidation(), {
 
         ...fields.calc_raw,
         ...calculated,
         
       });
-    } else {
-      getCalcRaw(false, {});
-    }
+    
     
   }, [fields, calculated]);
 
