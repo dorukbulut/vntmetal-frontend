@@ -294,47 +294,6 @@ export default function CreateMake({ analyzes, customers }) {
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    let new_fields = fields
-    new_fields["straigth_bush"] = {
-      bigger_diameter : '',
-      inner_diameter : '',
-      length : '',
-    }
-    new_fields["plate_strip"] = {
-      width : '',
-      length : '',
-      thickness : '',
-
-    }
-    new_fields["bracket_bush"] = {
-      bigger_diameter : '',
-      inner_diameter : '',
-      body_diameter : '',
-      bush_length : '',
-      bracket_length : '',
-    }
-    new_fields["middlebracket_bush"] = {
-      bracket_q1 : '',
-      bracket_q2 : '',
-      bracket_q3 : '',
-      bracket_q4 : '',
-      bracket_l1 : '',
-      bracket_l2 : '',
-      bracket_l3 : '',
-      bracket_full : '',
-
-    }
-    new_fields["doublebracket_bush"] = {
-      bigger_diameter : '',
-      body_diameter : '',
-      inner_diameter : '',
-      bracket_l1 : '',
-      bracket_l2 : '',
-      bracket_l3 : '',
-      bracket_full : '',
-    }
-    setFields(new_fields);
-    setCanSkip3(false);
   };
 
   const handleReset = () => {
