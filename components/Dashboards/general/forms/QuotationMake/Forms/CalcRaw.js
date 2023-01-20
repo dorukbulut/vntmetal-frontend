@@ -1,33 +1,9 @@
 import Dropdown from "../../Common/Dropdown";
 import { useRef, useEffect, useState } from "react";
 
-const TYPE = [
-  { key: "Düz Burç", value: "Düz Burç" },
-  { key: "Plaka", value: "Plaka" },
-  { key: "Flanşlı Burç", value: "Flanşlı Burç" },
-  { key: "Ortadan Flanşlı Burç", value: "Ortadan Flanşlı Burç" },
-  { key: "Çift Flanşlı Burç", value: "Çift Flanşlı Burç" },
-];
 
-export default function CalculateRaw({ customers, analyzes, getCalcRaw, prevValues}) {
-  const prevCountRef = useRef();
-  //constants
-  const ANALYZE = analyzes.map((analyse) => {
-    return {
-      key: analyse.analyze_Name,
-      value: analyse.analyze_id,
-      TIN: analyse.analyze_coefTin,
-      COPPER: analyse.analyze_coefCopper,
-    };
-  });
 
-  const CUSTOMER = customers.map((customer) => {
-    return {
-      key: customer.account_id,
-      value: customer.account_id,
-    };
-  });
-
+export default function CalculateRaw({ CUSTOMER, TYPE,ANALYZE, getCalcRaw, prevValues}) {
   //states
   const [fields, setFields] = useState({
     calc_raw: {
@@ -102,9 +78,9 @@ export default function CalculateRaw({ customers, analyzes, getCalcRaw, prevValu
 
   useEffect(() => {
     setCalculated((old) => {
+      
       return {
         ...old,
-
         totalRaw: (parseFloat(old.priceCopper) + parseFloat(old.priceTin)).toFixed(2),
       };
     });
@@ -114,10 +90,10 @@ export default function CalculateRaw({ customers, analyzes, getCalcRaw, prevValu
 
   useEffect(() => {
     setCalculated((old) => {
+      
       return {
         ...old,
-        kgPrice: (
-          parseFloat(fields.calc_raw.workmanship) + parseFloat(old.totalRaw)
+        kgPrice: (parseFloat(fields.calc_raw.workmanship) + parseFloat(old.totalRaw)
         ).toFixed(2),
       };
     });
