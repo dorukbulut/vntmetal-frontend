@@ -10,15 +10,15 @@ import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
 import Dropdown from "../../Common/Dropdown";
 import QuotationItem from "./QuotationItem";
+import CalculateRaw from "./CalcRaw";
+import Contracted from "./Contracted";
 import StrBush from "../TypeForms/StrBush";
 import PlateStrip from "../TypeForms/PlateStrip";
 import BracketBush from "../TypeForms/BracketBush"
 import DoubleBracketBush from "../TypeForms/DoubleBracketBush";
 import MiddleBracketBush from "../TypeForms/MiddleBracketBush";
-import CalculateRaw from "./CalcRaw";
-import Contracted from "./Contracted";
 
-const steps = ["Teklif Tipi Seç", "Teklif Hazırla", "Teklif Oluştur", "İşlemi Tamamla"];
+
 const TYPE = [
   { key: "Düz Burç", value: "Düz Burç" },
   { key: "Plaka", value: "Plaka" },
@@ -38,6 +38,9 @@ const TYPE_COMPS = {
   "Ortadan Flanşlı Burç" : <MiddleBracketBush />
 }
 
+
+
+const steps = ["Teklif Tipi Seç", "Teklif Hazırla", "Teklif Oluştur", "İşlemi Tamamla"];
 export default function CreateMake({ analyzes, customers }) {
 
   const CUSTOMER = customers.map((customer) => {
@@ -68,72 +71,8 @@ export default function CreateMake({ analyzes, customers }) {
     quo_type  :  {
       quo_type_name : ""
     },
-    final : {
-      price : 0,
-    },
-    quotation_item : {
-      unit_frequence : '',
-      model_price : '',
-      model_firm : '',
-      treatment_price : '',
-      treatment_firm : '',
-      test_price : '',
-      benefit : '',
-      alterPrice : '',
-    },
-    straigth_bush : {
-      bigger_diameter : '',
-      inner_diameter : '',
-      length : '',
-
-    },
-    plate_strip : {
-      width : '',
-      length : '',
-      thickness : '',
-
-    },
-    bracket_bush : {
-      bigger_diameter : '',
-      inner_diameter : '',
-      body_diameter : '',
-      bush_length : '',
-      bracket_length : '',
-    },
-    middlebracket_bush : {
-      bracket_q1 : '',
-      bracket_q2 : '',
-      bracket_q3 : '',
-      bracket_q4 : '',
-      bracket_l1 : '',
-      bracket_l2 : '',
-      bracket_l3 : '',
-      bracket_full : '',
-
-    },
-    doublebracket_bush : {
-      bigger_diameter : '',
-      body_diameter : '',
-      inner_diameter : '',
-      bracket_l1 : '',
-      bracket_l2 : '',
-      bracket_l3 : '',
-      bracket_full : '',
-    },
-    calc_raw: {
-      account_id : '',
-      analyze_Name : '',
-      LME :  '',
-      TIN : '',
-      euro : '',
-      usd : '',
-      workmanship : '',
-      type : '',
-
-    },
   });
 
-  const [kgPrice, setUnitPrice] = useState(0);  
   const [canSkipStep1, setCanSkip1] = useState(false);
   
 
@@ -206,33 +145,32 @@ export default function CreateMake({ analyzes, customers }) {
     e.preventDefault();
     let data = {}
     const  standartOptions = {
-            "Customer_ID": fields.calc_raw.account_id,
-            "Analyze_ID" : fields.calc_raw.analyze_Name,
-            "unit_frequence" : fields.quotation_item.unit_frequence,
-            "unit_price" : fields.final.price,
-            "benefitPercent" : fields.quotation_item.benefit,
-            "model_price" : fields.quotation_item.model_price,
-            "model_firm" : fields.quotation_item.model_firm,
-            "treatment_price" : fields.quotation_item.treatment_price,
-            "test_price" : fields.quotation_item.test_price,
-            "alternativeSale_price" : fields.quotation_item.alterPrice,
-            "treatment_firm" : fields.quotation_item.treatment_firm,
-            "euro" : fields.calc_raw.euro,
-            "lmeCopper" : fields.calc_raw.LME !== '' ? fields.calc_raw.LME : 0  ,
-            "lmeTin": fields.calc_raw.TIN !== '' ? fields.calc_raw.TIN : 0 ,
+            "Customer_ID": calcRaws.values.account_id,
+            "Analyze_ID" : calcRaws.values.analyze_Name,
+            "unit_frequence" : calcRaws.values.unit_frequence,
+            "unit_price" : calcRaws.values.totalPrice,
+            "benefitPercent" : calcRaws.values.benefit,
+            "model_price" : calcRaws.values.model_price,
+            "model_firm" : calcRaws.values.model_firm,
+            "treatment_price" : calcRaws.values.treatment_price,
+            "test_price" : calcRaws.values.test_price,
+            "alternativeSale_price" : calcRaws.values.alterPrice,
+            "treatment_firm" : calcRaws.values.treatment_firm,
+            "euro" : calcRaws.values.euro,
+            "lmeCopper" : calcRaws.values.LME !== undefined ? calcRaws.values.LME : 0  ,
+            "lmeTin": calcRaws.values.TINP !== undefined ? calcRaws.values.TINP : 0 ,
             "type" : fields.quo_type.quo_type_name,
-            "kgPrice" : kgPrice,
-            "usd" : fields.calc_raw.usd,
+            "kgPrice" : calcRaws.values.kgPrice,
+            "usd" : calcRaws.values.usd,
     }
-    switch (fields.calc_raw.type) {
+    
+    switch (calcRaws.values.type) {
       case "Plaka":
         data = {
           "options" : {
             ...standartOptions,
             "plate_strip" : {
-              "width" : fields.plate_strip.width,
-              "length" : fields.plate_strip["length"],
-              "thickness" : fields.plate_strip.thickness,
+              ...calcRaws.values.plate_strip
             }
           },
 
@@ -244,11 +182,11 @@ export default function CreateMake({ analyzes, customers }) {
           "options" : {
             ...standartOptions,
             "straight_bush" : {
-              "large_diameter" : fields.straigth_bush.bigger_diameter,
-              "inner_diameter" : fields.straigth_bush.inner_diameter,
-              "bush_length" : fields.straigth_bush["length"],
-              
+              "large_diameter" :   calcRaws.values.straigth_bush.bigger_diameter,
+              "inner_diameter" : calcRaws.values.straigth_bush.inner_diameter,
+              "bush_length" : calcRaws.values.straigth_bush["length"],
             }
+              
           },
 
           "type" : "straight_bush"
@@ -259,11 +197,7 @@ export default function CreateMake({ analyzes, customers }) {
           "options" : {
             ...standartOptions,
             "bracket_bush" : {
-              "bigger_diameter" : fields.bracket_bush.bigger_diameter,
-              "body_diameter" : fields.bracket_bush.body_diameter,
-              "inner_diameter" : fields.bracket_bush.inner_diameter,
-              "bracket_length" : fields.bracket_bush.bracket_length,
-              "bush_length" : fields.bracket_bush.bush_length,
+              ...calcRaws.values.bracket_bush
             }
           },
 
@@ -275,13 +209,7 @@ export default function CreateMake({ analyzes, customers }) {
           "options" : {
             ...standartOptions,
             "doublebracket_bush" : {
-              "bigger_diameter" : fields.doublebracket_bush.bigger_diameter,
-              "body_diameter" : fields.doublebracket_bush.body_diameter,
-              "inner_diameter" : fields.doublebracket_bush.inner_diameter,
-              "bracket_l1" : fields.doublebracket_bush.bracket_l1,
-              "bracket_l2" : fields.doublebracket_bush.bracket_l2,
-              "bracket_l3" : fields.doublebracket_bush.bracket_l3,
-              "bracket_full" : fields.doublebracket_bush.bracket_full,
+              ...calcRaws.values.doublebracket_bush
               
             }
           },
@@ -294,14 +222,7 @@ export default function CreateMake({ analyzes, customers }) {
           "options" : {
             ...standartOptions,
             "middlebracket_bush" : {
-              "bracket_q1" : fields.middlebracket_bush.bracket_q1,
-              "bracket_q2" : fields.middlebracket_bush.bracket_q2,
-              "bracket_q3" : fields.middlebracket_bush.bracket_q3,
-              "bracket_q4" : fields.middlebracket_bush.bracket_q4,
-              "bracket_l1" : fields.middlebracket_bush.bracket_l1,
-              "bracket_l2" : fields.middlebracket_bush.bracket_l2,
-              "bracket_l3" : fields.middlebracket_bush.bracket_l3,
-              "bracket_full" : fields.middlebracket_bush.bracket_full,
+             ...calcRaws.middlebracket_bush
               
             }
           },
@@ -309,8 +230,7 @@ export default function CreateMake({ analyzes, customers }) {
           "type" : "middle_bracket_bush"
         }
         break;
-    }
-    
+    } 
       try {
         const res = await axios({
           method: "post",

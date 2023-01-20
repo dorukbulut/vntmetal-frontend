@@ -5,9 +5,9 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-export default function QuotationItem({ name, children, kgPrice, usd, euro,getCalcRaw, prevValues}) {
-  //states
+export default function QuotationItem({ name, children, kgPrice, usd, euro, getCalcRaw, prevValues}){
 
+  //states
   const [fields, setFields] = useState({
     quotation_item: {
       unit_frequence: "unit_frequence" in prevValues ? prevValues.unit_frequence : "",

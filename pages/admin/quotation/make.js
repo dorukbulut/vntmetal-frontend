@@ -12,6 +12,7 @@ import Stack from '@mui/material/Stack';
 import UpdateMake from "../../../components/Dashboards/general/forms/QuotationMake/Forms/UpdateMake";
 
 export default function QuotationMake({analyzes, customers, items}) {
+  // 
   const router = useRouter();
   const [filters, setFilters] = useState();
 
@@ -175,7 +176,7 @@ export default function QuotationMake({analyzes, customers, items}) {
                             {item.createdAt}
                           </td>
                           <td className="px-6 py-4 text-right">
-                          <UpdateMake analyzes={analyzes} customers={customers} item={item}/>
+                          {/* <UpdateMake analyzes={analyzes} customers={customers} item={item}/> */}
                           </td>
                         </tr>)
                    })
