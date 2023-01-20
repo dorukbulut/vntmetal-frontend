@@ -132,164 +132,10 @@ export default function CreateMake({ analyzes, customers }) {
 
     },
   });
-  const handleValidateStr =  () => {
-    let check_fields = fields;
-    let isValid = true;
-    if (check_fields["straigth_bush"]["bigger_diameter"] === "") {
-      isValid = false;
-    }
-    if (check_fields["straigth_bush"]["inner_diameter"] === "") {
-      isValid = false;
-    }
-    if (check_fields["straigth_bush"]["lenght"] === "") {
-      isValid = false;
-    }
-    return isValid
-  }
 
-  const handleValidatePlate =  () => {
-    let check_fields = fields;
-    let isValid = true;
-    if (check_fields["plate_strip"]["width"] === "") {
-      isValid = false;
-    }
-    if (check_fields["plate_strip"]["length"] === "") {
-      isValid = false;
-    }
-    if (check_fields["plate_strip"]["thickness"] === "") {
-      isValid = false;
-    }
-    return isValid
-  }
-
-  const handleValidateBracket =  () => {
-    let check_fields = fields;
-    let isValid = true;
-    if (check_fields["bracket_bush"]["bigger_diameter"] === "") {
-      isValid = false;
-    }
-    if (check_fields["bracket_bush"]["inner_diameter"] === "") {
-      isValid = false;
-    }
-    if (check_fields["bracket_bush"]["body_diameter"] === "") {
-      isValid = false;
-    }
-    if (check_fields["bracket_bush"]["bush_length"] === "") {
-      isValid = false;
-    }
-    if (check_fields["bracket_bush"]["bracket_length"] === "") {
-      isValid = false;
-    }
-    return isValid
-  }
-
-  const handleValidateDoubleBracket =  () => {
-    let check_fields = fields;
-    let isValid = true;
-    if (check_fields["doublebracket_bush"]["bigger_diameter"] === "") {
-      isValid = false;
-    }
-    if (check_fields["doublebracket_bush"]["inner_diameter"] === "") {
-      isValid = false;
-    }
-    if (check_fields["doublebracket_bush"]["body_diameter"] === "") {
-      isValid = false;
-    }
-    if (check_fields["doublebracket_bush"]["bracket_l1"] === "") {
-      isValid = false;
-    }
-    if (check_fields["doublebracket_bush"]["bracket_l2"] === "") {
-      isValid = false;
-    }
-    if (check_fields["doublebracket_bush"]["bracket_l3"] === "") {
-      isValid = false;
-    }
-    if (check_fields["doublebracket_bush"]["bracket_full"] === "") {
-      isValid = false;
-    }
-    return isValid
-  }
-
-  const handleValidateMiddleBracket =  () => {
-    let check_fields = fields;
-    let isValid = true;
-    if (check_fields["middlebracket_bush"]["bracket_q1"] === "") {
-      isValid = false;
-    }
-    if (check_fields["middlebracket_bush"]["bracket_q2"] === "") {
-      isValid = false;
-    }
-    if (check_fields["middlebracket_bush"]["bracket_q3"] === "") {
-      isValid = false;
-    }
-    if (check_fields["middlebracket_bush"]["bracket_q4"] === "") {
-      isValid = false;
-    }
-    if (check_fields["middlebracket_bush"]["bracket_l1"] === "") {
-      isValid = false;
-    }
-    if (check_fields["middlebracket_bush"]["bracket_l2"] === "") {
-      isValid = false;
-    }
-    if (check_fields["middlebracket_bush"]["bracket_l3"] === "") {
-      isValid = false;
-    }
-    if (check_fields["middlebracket_bush"]["bracket_full"] === "") {
-      isValid = false;
-    }
-    return isValid
-  }
-
-  const handleValidateQuotationItems = () => {
-    let check_fields = fields;
-    let isValid = true;
-    if (check_fields["quotation_item"]["unit_frequence"] === "") {
-      isValid = false;
-    }
-    if (check_fields["quotation_item"]["model_price"] === "") {
-    
-      isValid = false;
-    }
-    if (check_fields["quotation_item"]["model_firm"] === "") {
-      isValid = false;
-    }
-    if (check_fields["quotation_item"]["treatment_price"] === "") {
-      isValid = false;
-    }
-    if (check_fields["quotation_item"]["treatment_firm"] === "") {
-      isValid = false;
-    }
-    if (check_fields["quotation_item"]["test_price"] === "") {
-      isValid = false;
-    }
-    if (check_fields["quotation_item"]["benefit"] === "") {
-      isValid = false;
-    }
-    if (check_fields["quotation_item"]["alterPrice"] === "") {
-      isValid = false;
-    }
-
-    return isValid
-  }
- 
-  const TYPE_VALIDATE = {
-    "Düz Burç" : handleValidateStr,
-    "Plaka" : handleValidatePlate,
-    "Flanşlı Burç" : handleValidateBracket ,
-    "Çift Flanşlı Burç": handleValidateDoubleBracket ,
-    "Ortadan Flanşlı Burç" : handleValidateMiddleBracket,
-  }
-
-  
-  const [kgPrice, setUnitPrice ] = useState(0);  
+  const [kgPrice, setUnitPrice] = useState(0);  
   const [canSkipStep1, setCanSkip1] = useState(false);
-  const [canSkipStep3, setCanSkip3] = useState(false);
-
-  const [moldingPrice, setMolding] = useState(0);
-  const [modelUnitPrice, setModelUnitPrice]  = useState(0);
-  const [cost, setCost] = useState(0);
-  const [salePrice,setPrice] = useState([]);
-  const [calcW, setCalcW] = useState(0);
+  
 
   const isStepOptional = (step) => {
     return step === -1;
@@ -331,21 +177,8 @@ export default function CreateMake({ analyzes, customers }) {
     const new_fields = fields
     new_fields[field][area] = e.target.value
     setFields(new_fields);
-    
-    setMolding(parseFloat(calcW) * parseFloat(kgPrice));
-    setModelUnitPrice(parseFloat(fields["quotation_item"]["model_price"]) / parseInt(fields["quotation_item"]["unit_frequence"]));
-    setCost((parseFloat(moldingPrice) + parseFloat(modelUnitPrice ? modelUnitPrice : 0) + parseFloat(fields["quotation_item"]["treatment_price"] !== '' ?fields["quotation_item"]["treatment_price"] :0 ) + parseFloat(fields["quotation_item"]["test_price"] !== '' ? fields["quotation_item"]["test_price"] :0 )))
-    let sale = (parseFloat(cost) +  parseFloat(cost) * parseFloat(fields["quotation_item"]["benefit"]) / 100).toFixed(3)
-    setPrice([{value : parseFloat(sale).toFixed(3), key : `${parseFloat(sale).toFixed(3)} ₺ `}, 
-    {value : (sale * parseFloat(fields["calc_raw"]["usd"])).toFixed(3), key : `${(sale / parseFloat(fields["calc_raw"]["usd"])).toFixed(3)} $ `},
-    {value : (sale * parseFloat(fields["calc_raw"]["euro"])).toFixed(3), key : `${(sale / parseFloat(fields["calc_raw"]["euro"])).toFixed(3)} € `},
-    {value : parseFloat(fields["quotation_item"]["alterPrice"]).toFixed(3), key : `${(parseFloat(fields["quotation_item"]["alterPrice"])).toFixed(3)} ₺ `},
-    {value : (parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(fields["calc_raw"]["usd"])).toFixed(3), key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(fields["calc_raw"]["usd"])).toFixed(3)} $ `},
-    {value : (parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(fields["calc_raw"]["euro"])).toFixed(3), key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(fields["calc_raw"]["euro"])).toFixed(3)} € `},
-  ])
+
     setCanSkip1(handleValidation1()); 
-    const all_type_val = (TYPE_VALIDATE["Düz Burç"]() || TYPE_VALIDATE["Flanşlı Burç"]() || TYPE_VALIDATE["Ortadan Flanşlı Burç"]() || TYPE_VALIDATE["Plaka"]() || TYPE_VALIDATE["Çift Flanşlı Burç"]())
-    setCanSkip3(all_type_val  && handleValidateQuotationItems());
       
   };
 
@@ -612,7 +445,7 @@ export default function CreateMake({ analyzes, customers }) {
                   }
 
                   {
-                    activeStep == 2 ? <QuotationItem fields={fields} calcs={{modelUnitPrice, moldingPrice, cost, salePrice, calcW, setCalcW, setModelUnitPrice}} handleChange={handleChange} kgPrice={kgPrice} name={calcRaws.values.type}> {TYPE_COMPS[calcRaws.values.type]} </QuotationItem> : ""
+                    activeStep == 2 ? <QuotationItem getCalcRaw={getCalcRaw} euro={calcRaws.values.euro} usd={calcRaws.values.usd}  prevValues={calcRaws.values} kgPrice={calcRaws.values.kgPrice} name={calcRaws.values.type}> {TYPE_COMPS[calcRaws.values.type]} </QuotationItem> : ""
                   }
 
                   {
@@ -641,7 +474,7 @@ export default function CreateMake({ analyzes, customers }) {
                     </Button> : ''
                     }
                     {
-                      activeStep === 2 ?  <Button disabled={!canSkipStep3} onClick={handleNext}>
+                      activeStep === 2 ?  <Button disabled={!calcRaws.validity} onClick={handleNext}>
                       {"ileri"}
                     </Button> : ''
                     }
