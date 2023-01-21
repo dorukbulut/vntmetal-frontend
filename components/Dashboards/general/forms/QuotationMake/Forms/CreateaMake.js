@@ -41,7 +41,8 @@ const TYPE_COMPS = {
 
 
 const steps = ["Teklif Tipi Seç", "Teklif Hazırla", "Teklif Oluştur", "İşlemi Tamamla"];
-export default function CreateMake({ analyzes, customers }) {
+
+export default function CreateMake({ analyzes, customers, prevValues, type}) {
 
   const CUSTOMER = customers.map((customer) => {
     return {
@@ -62,14 +63,14 @@ export default function CreateMake({ analyzes, customers }) {
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
   const [createErr, setCreateErr] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(type === "update" ? 2 : 0);
   const [skipped, setSkipped] = useState(new Set());
   
   const router = useRouter();
 
   const [fields, setFields] = useState({
     quo_type  :  {
-      quo_type_name : ""
+      quo_type_name : "type" in prevValues ? prevValues.type : ""
     },
   });
 
@@ -124,8 +125,24 @@ export default function CreateMake({ analyzes, customers }) {
   // states 
   const [calcRaws, setCalcRaws] = useState({
     validity : false,
-    values : {}
+
+    values  : type === "update" ?  {
+      ...prevValues,
+      "account_id" : "Customer_ID" in prevValues ? prevValues.Customer_ID : "",
+      "analyze_Name" : "Analyze_ID" in prevValues ?  prevValues.Analyze_ID: "",
+      "benefit"  : "benefitPercent" in prevValues ? prevValues.benefitPercent : "",
+      "alterPrice"  :  "alternativeSale_price" in prevValues ? prevValues.alternativeSale_price : "",
+      "LME" : "lmeCopper" in prevValues ? prevValues.lmeCopper : "",
+      "TINP" : "lmeTin" in prevValues ? prevValues.lmeTin : "",
+      "type" : prevValues.middlebracket_bush !== null ? "Ortadan Flanşlı Burç" :  prevValues.doublebracket_bush !==null ?
+      "Çift Flanşlı Burç" :  prevValues.bracket_bush !==null ? "Flanşlı Burç" : prevValues.straight_bush !== null  ? "Düz Burç" :
+      prevValues.plate_strip !== null ? "Plaka" : ""
+
+    } : {}
+     
   });
+
+  
 
   //handlers
   const getCalcRaw = (validity, values) => {
@@ -157,8 +174,8 @@ export default function CreateMake({ analyzes, customers }) {
             "alternativeSale_price" : calcRaws.values.alterPrice,
             "treatment_firm" : calcRaws.values.treatment_firm,
             "euro" : calcRaws.values.euro,
-            "lmeCopper" : calcRaws.values.LME !== undefined ? calcRaws.values.LME : 0  ,
-            "lmeTin": calcRaws.values.TINP !== undefined ? calcRaws.values.TINP : 0 ,
+            "lmeCopper" : calcRaws.values.LME !== undefined || calcRaws.values.LME !== '' ? calcRaws.values.LME : 0  ,
+            "lmeTin": calcRaws.values.TINP !== undefined || calcRaws.values.TINP !== '' ? calcRaws.values.TINP : 0 ,
             "type" : fields.quo_type.quo_type_name,
             "kgPrice" : calcRaws.values.kgPrice,
             "usd" : calcRaws.values.usd,
@@ -182,9 +199,7 @@ export default function CreateMake({ analyzes, customers }) {
           "options" : {
             ...standartOptions,
             "straight_bush" : {
-              "large_diameter" :   calcRaws.values.straigth_bush.bigger_diameter,
-              "inner_diameter" : calcRaws.values.straigth_bush.inner_diameter,
-              "bush_length" : calcRaws.values.straigth_bush["length"],
+               ...calcRaws.values.straight_bush
             }
               
           },
@@ -222,7 +237,7 @@ export default function CreateMake({ analyzes, customers }) {
           "options" : {
             ...standartOptions,
             "middlebracket_bush" : {
-             ...calcRaws.middlebracket_bush
+             ...calcRaws.values.middlebracket_bush
               
             }
           },
@@ -231,6 +246,8 @@ export default function CreateMake({ analyzes, customers }) {
         }
         break;
     } 
+    console.log(data);
+    
       try {
         const res = await axios({
           method: "post",
@@ -251,15 +268,26 @@ export default function CreateMake({ analyzes, customers }) {
   const toggleCreate = () => {
     setCreate(!create);
   };
+
+  //hooks
+  React.useEffect(() => {
+    setCanSkip1(handleValidation1());
+  }, [prevValues]);
   return (
     <div>
-      <button
+      {type === "update" ? <a
+        onClick={toggleCreate}
+        className="hover:cursor-pointer font-medium text-text-fuchsia-500 dark:text-fuchsia-400-600 dark:text-text-fuchsia-500 dark:text-fuchsia-400-500 hover:underline"
+      >
+        Düzenle
+      </a>: <button
         className="bg-green-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
         type="button"
         onClick={toggleCreate}
       >
         + Teklif Hazırla
-      </button>
+      </button>}
+      
 
       <div
         className={`${
@@ -365,7 +393,7 @@ export default function CreateMake({ analyzes, customers }) {
                   }
 
                   {
-                    activeStep == 2 ? <QuotationItem getCalcRaw={getCalcRaw} euro={calcRaws.values.euro} usd={calcRaws.values.usd}  prevValues={calcRaws.values} kgPrice={calcRaws.values.kgPrice} name={calcRaws.values.type}> {TYPE_COMPS[calcRaws.values.type]} </QuotationItem> : ""
+                    activeStep == 2 ? <QuotationItem  getCalcRaw={getCalcRaw} euro={calcRaws.values.euro} usd={calcRaws.values.usd}  prevValues={calcRaws.values} kgPrice={calcRaws.values.kgPrice} name={calcRaws.values.type}> {TYPE_COMPS[calcRaws.values.type]} </QuotationItem> : ""
                   }
 
                   {

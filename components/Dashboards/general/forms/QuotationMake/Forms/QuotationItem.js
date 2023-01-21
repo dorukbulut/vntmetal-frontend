@@ -6,7 +6,6 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 export default function QuotationItem({ name, children, kgPrice, usd, euro, getCalcRaw, prevValues}){
-
   //states
   const [fields, setFields] = useState({
     quotation_item: {
@@ -99,6 +98,7 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
   
 
   //hooks
+  
   useEffect(() => {
     if (
       parseInt(fields.quotation_item.unit_frequence) !== 0 &&
@@ -147,8 +147,8 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
   useEffect(() => {
     let sale = (parseFloat(calculated.totalCost) +  parseFloat(calculated.totalCost) * parseFloat(fields["quotation_item"]["benefit"]) / 100).toFixed(2)
     let tCost = [{value : parseFloat(sale).toFixed(2), key : `${parseFloat(sale).toFixed(2)} ₺ `}, 
-    {value : (sale * parseFloat(usd)).toFixed(2), key : `${(sale / parseFloat(usd)).toFixed(2)} $ `},
-    {value : (sale * parseFloat(euro)).toFixed(2), key : `${(sale / parseFloat(euro)).toFixed(2)} € `},
+    {value : (sale / parseFloat(usd)).toFixed(2), key : `${(sale / parseFloat(usd)).toFixed(2)} $ `},
+    {value : (sale / parseFloat(euro)).toFixed(2), key : `${(sale / parseFloat(euro)).toFixed(2)} € `},
     {value : parseFloat(fields["quotation_item"]["alterPrice"]).toFixed(2), key : `${(parseFloat(fields["quotation_item"]["alterPrice"])).toFixed(2)} ₺ `},
     {value : (parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(usd)).toFixed(2), key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(usd)).toFixed(2)} $ `},
     {value : (parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(euro)).toFixed(2), key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(euro)).toFixed(2)} € `},

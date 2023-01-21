@@ -9,7 +9,7 @@ import { useState, useEffect} from "react";
 import { useRouter } from "next/router";
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import UpdateMake from "../../../components/Dashboards/general/forms/QuotationMake/Forms/UpdateMake";
+
 
 export default function QuotationMake({analyzes, customers, items}) {
   // 
@@ -37,8 +37,6 @@ export default function QuotationMake({analyzes, customers, items}) {
   } , [page])
 
   useEffect(() => {
-    console.log(filters);
-    
     if(filters) {
       axios({
         method : "GET",
@@ -85,7 +83,7 @@ export default function QuotationMake({analyzes, customers, items}) {
           Teklif Hazırlama
         </h2>
         <div className="relative flex overflow-x-auto shadow-md sm:rounded-lg p-5 space-x-5 items-center">
-          <CreateMake analyzes={analyzes} customers={customers}/>
+          <CreateMake key={`${1021}+${new Date().getTime()}`} analyzes={analyzes} customers={customers} prevValues={{}} type={"create"}/>
           <CreateAnalyze />
           <p className="text-sky-700 italic font-poppins tracking-widest">
             Filtrele
@@ -176,7 +174,7 @@ export default function QuotationMake({analyzes, customers, items}) {
                             {item.createdAt}
                           </td>
                           <td className="px-6 py-4 text-right">
-                          {/* <UpdateMake analyzes={analyzes} customers={customers} item={item}/> */}
+                            <CreateMake key={`${index}+${new Date().getTime()}`} analyzes={analyzes} prevValues={item} customers={customers} item={item} type={"update"}/>
                           </td>
                         </tr>)
                    })

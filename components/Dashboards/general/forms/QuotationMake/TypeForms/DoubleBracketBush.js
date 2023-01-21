@@ -17,37 +17,37 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
 
   const [fields, setFields] = useState({
     doublebracket_bush: {
-      bigger_diameter:  "doublebracket_bush" in prevValues
+      bigger_diameter:  "doublebracket_bush" in prevValues && prevValues.doublebracket_bush !== null
       ? "bigger_diameter" in prevValues.doublebracket_bush
         ? prevValues.doublebracket_bush.bigger_diameter
         : ""
       : "",
-      inner_diameter:  "doublebracket_bush" in prevValues
+      inner_diameter:  "doublebracket_bush" in prevValues && prevValues.doublebracket_bush !== null
       ? "inner_diameter" in prevValues.doublebracket_bush
         ? prevValues.doublebracket_bush.inner_diameter
         : ""
       : "",
-      body_diameter:  "doublebracket_bush" in prevValues
+      body_diameter:  "doublebracket_bush" in prevValues && prevValues.doublebracket_bush !== null
       ? "body_diameter" in prevValues.doublebracket_bush
         ? prevValues.doublebracket_bush.body_diameter
         : ""
       : "",
-      bracket_l1: "doublebracket_bush" in prevValues
+      bracket_l1: "doublebracket_bush" in prevValues && prevValues.doublebracket_bush !== null
       ? "bracket_l1" in prevValues.doublebracket_bush
         ? prevValues.doublebracket_bush.bracket_l1
         : ""
       : "",
-      bracket_l2: "doublebracket_bush" in prevValues
+      bracket_l2: "doublebracket_bush" in prevValues && prevValues.doublebracket_bush !== null
       ? "bracket_l2" in prevValues.doublebracket_bush
         ? prevValues.doublebracket_bush.bracket_l2
         : ""
       : "",
-      bracket_l3: "doublebracket_bush" in prevValues
+      bracket_l3: "doublebracket_bush" in prevValues && prevValues.doublebracket_bush !== null
       ? "bracket_l3" in prevValues.doublebracket_bush
         ? prevValues.doublebracket_bush.bracket_l3
         : ""
       : "",
-      bracket_full: "doublebracket_bush" in prevValues
+      bracket_full: "doublebracket_bush" in prevValues && prevValues.doublebracket_bush !== null
       ? "bracket_full" in prevValues.doublebracket_bush
         ? prevValues.doublebracket_bush.bracket_full
         : ""
@@ -84,6 +84,7 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
       isValid = false;
     }
     if (check_fields["doublebracket_bush"]["bracket_l1"] === "") {
+      
       isValid = false;
     }
     if (check_fields["doublebracket_bush"]["bracket_l2"] === "") {
@@ -101,6 +102,7 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
   //hooks
 
   useEffect(() => {
+    console.log("entered calc raws")
     let numbers = { ...fields.doublebracket_bush };
     if (true) {
       const calc = calcWeigth(
@@ -130,11 +132,12 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
   ]);
 
   useEffect(() => {
+    console.log("entered measures");
     getMeasures(handleValidation(), {
       doublebracket_bush: { ...fields.doublebracket_bush },
       ...calculated,
     });
-  }, [calculated.calcRaw]);
+  }, [calculated.calcRaw, fields]);
 
   return (
     <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center ">

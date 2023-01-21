@@ -10,17 +10,17 @@ export default function PlateStrip ({getMeasures, prevValues}) {
     //state
     const [fields, setFields] = useState({
       plate_strip : {
-        width : "plate_strip" in prevValues
+        width : "plate_strip" in prevValues && prevValues.plate_strip !== null
         ? "width" in prevValues.plate_strip
           ? prevValues.plate_strip.width
           : ""
         : "",
-        thickness : "plate_strip" in prevValues
+        thickness : "plate_strip" in prevValues && prevValues.plate_strip !== null
         ? "thickness" in prevValues.plate_strip
           ? prevValues.plate_strip.thickness
           : ""
         : "",
-        length : "plate_strip" in prevValues
+        length : "plate_strip" in prevValues && prevValues.plate_strip !== null
         ? "length" in prevValues.plate_strip
           ? prevValues.plate_strip.length
           : ""
@@ -86,7 +86,7 @@ export default function PlateStrip ({getMeasures, prevValues}) {
         plate_strip : {...fields.plate_strip},
         ...calculated
       });
-    }, [calculated.calcRaw])
+    }, [calculated.calcRaw, fields]);
     return (
         <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center ">
             <div className="space-y-2 lg:w-1/2">

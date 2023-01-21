@@ -7,20 +7,20 @@ export default function StrBush ({getMeasures, prevValues}) {
 
     //state
     const [fields, setFields] = useState({
-      straigth_bush : {
-        bigger_diameter : "straigth_bush" in prevValues
-        ? "bigger_diameter" in prevValues.straigth_bush
-          ? prevValues.straigth_bush.bigger_diameter
+      straight_bush : {
+        large_diameter : "straight_bush" in prevValues && prevValues.straight_bush !== null
+        ? "large_diameter" in prevValues.straight_bush
+          ? prevValues.straight_bush.large_diameter
           : ""
         : "",
-        inner_diameter : "straigth_bush" in prevValues
-        ? "inner_diameter" in prevValues.straigth_bush
-          ? prevValues.straigth_bush.inner_diameter
+        inner_diameter : "straight_bush" in prevValues  && prevValues.straight_bush !== null
+        ? "inner_diameter" in prevValues.straight_bush
+          ? prevValues.straight_bush.inner_diameter
           : ""
         : "",
-        length : "straigth_bush" in prevValues
-        ? "length" in prevValues.straigth_bush
-          ? prevValues.straigth_bush.length
+        bush_length : "straight_bush" in prevValues  && prevValues.straight_bush !== null
+        ? "bush_length" in prevValues.straight_bush
+          ? prevValues.straight_bush.bush_length
           : ""
         : "",
       }
@@ -34,8 +34,8 @@ export default function StrBush ({getMeasures, prevValues}) {
     const handleChange = (field, area, e) => {
       setFields((old) => {
         return {
-          straigth_bush: {
-            ...old.straigth_bush,
+          straight_bush: {
+            ...old.straight_bush,
             [area]: e.target.value,
           },
         };
@@ -45,13 +45,13 @@ export default function StrBush ({getMeasures, prevValues}) {
     const handleValidation =  () => {
       let check_fields = fields;
       let isValid = true;
-      if (check_fields["straigth_bush"]["bigger_diameter"] === "") {
+      if (check_fields["straight_bush"]["large_diameter"] === "") {
         isValid = false;
       }
-      if (check_fields["straigth_bush"]["inner_diameter"] === "") {
+      if (check_fields["straight_bush"]["inner_diameter"] === "") {
         isValid = false;
       }
-      if (check_fields["straigth_bush"]["length"] === "") {
+      if (check_fields["straight_bush"]["bush_length"] === "") {
         isValid = false;
       }
       return isValid
@@ -60,9 +60,9 @@ export default function StrBush ({getMeasures, prevValues}) {
     //hooks
 
     useEffect(() => {
-      let numbers = {...fields.straigth_bush}
+      let numbers = {...fields.straight_bush}
       if (true) {
-        const calc = calculateWeight(parseFloat(numbers.bigger_diameter), parseFloat(numbers.inner_diameter), parseFloat(numbers.length))
+        const calc = calculateWeight(parseFloat(numbers.large_diameter), parseFloat(numbers.inner_diameter), parseFloat(numbers.bush_length))
         setCalculated((old) => {
           return {
             ...old,
@@ -75,14 +75,14 @@ export default function StrBush ({getMeasures, prevValues}) {
       } else {
        
       }
-    }, [fields.straigth_bush.bigger_diameter, fields.straigth_bush.inner_diameter, fields.straigth_bush.length])
+    }, [fields.straight_bush.large_diameter, fields.straight_bush.inner_diameter, fields.straight_bush.bush_length])
 
     useEffect(() => {
       getMeasures(handleValidation(), {
-        straigth_bush : {...fields.straigth_bush},
+        straight_bush : {...fields.straight_bush},
         ...calculated
       });
-    }, [calculated.calcRaw])
+    }, [calculated.calcRaw, fields]);
     
     
     return (
@@ -107,9 +107,9 @@ export default function StrBush ({getMeasures, prevValues}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                defaultValue={fields.straigth_bush.bigger_diameter}
+                defaultValue={fields.straight_bush.large_diameter}
                 onChange={(e) => {
-                  handleChange("straigth_bush", "bigger_diameter",e);
+                  handleChange("straight_bush", "large_diameter",e);
                   
                 } }
               />
@@ -128,9 +128,9 @@ export default function StrBush ({getMeasures, prevValues}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                defaultValue={fields.straigth_bush.inner_diameter}
+                defaultValue={fields.straight_bush.inner_diameter}
                 onChange={(e) => {
-                  handleChange("straigth_bush", "inner_diameter",e);
+                  handleChange("straight_bush", "inner_diameter",e);
                   
                 }}
               />
@@ -149,9 +149,9 @@ export default function StrBush ({getMeasures, prevValues}) {
                 className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                 placeholder=""
                 required
-                defaultValue={fields.straigth_bush['length']}
+                defaultValue={fields.straight_bush['bush_length']}
                 onChange={(e) => {
-                  handleChange("straigth_bush", "length",e);
+                  handleChange("straight_bush", "bush_length",e);
                   
               }}
               />

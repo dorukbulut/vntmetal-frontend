@@ -7,42 +7,42 @@ export default function MiddleBracketBush ({getMeasures, prevValues}) {
 
     const [fields, setFields] = useState({
       middlebracket_bush: {
-        bracket_q1: "middlebracket_bush" in prevValues
+        bracket_q1: "middlebracket_bush" in prevValues && prevValues.middlebracket_bush !== null
         ? "bracket_q1" in prevValues.middlebracket_bush
           ? prevValues.middlebracket_bush.bracket_q1
           : ""
         : "",
-        bracket_q2: "middlebracket_bush" in prevValues
+        bracket_q2: "middlebracket_bush" in prevValues && prevValues.middlebracket_bush !== null
         ? "bracket_q2" in prevValues.middlebracket_bush
           ? prevValues.middlebracket_bush.bracket_q2
           : ""
         : "",
-        bracket_q3:  "middlebracket_bush" in prevValues
+        bracket_q3:  "middlebracket_bush" in prevValues && prevValues.middlebracket_bush !== null
         ? "bracket_q3" in prevValues.middlebracket_bush
           ? prevValues.middlebracket_bush.bracket_q3
           : ""
         : "",
-        bracket_q4:  "middlebracket_bush" in prevValues
+        bracket_q4:  "middlebracket_bush" in prevValues && prevValues.middlebracket_bush !== null
         ? "bracket_q4" in prevValues.middlebracket_bush
           ? prevValues.middlebracket_bush.bracket_q4
           : ""
         : "",
-        bracket_l1:  "middlebracket_bush" in prevValues
+        bracket_l1:  "middlebracket_bush" in prevValues && prevValues.middlebracket_bush !== null
         ? "bracket_l1" in prevValues.middlebracket_bush
           ? prevValues.middlebracket_bush.bracket_l1
           : ""
         : "",
-        bracket_l2:  "middlebracket_bush" in prevValues
+        bracket_l2:  "middlebracket_bush" in prevValues && prevValues.middlebracket_bush !== null
         ? "bracket_l2" in prevValues.middlebracket_bush
           ? prevValues.middlebracket_bush.bracket_l2
           : ""
         : "",
-        bracket_l3:  "middlebracket_bush" in prevValues
+        bracket_l3:  "middlebracket_bush" in prevValues && prevValues.middlebracket_bush !== null
         ? "bracket_l3" in prevValues.middlebracket_bush
           ? prevValues.middlebracket_bush.bracket_l3
           : ""
         : "",
-        bracket_full:  "middlebracket_bush" in prevValues
+        bracket_full:  "middlebracket_bush" in prevValues && prevValues.middlebracket_bush !== null
         ? "bracket_full" in prevValues.middlebracket_bush
           ? prevValues.middlebracket_bush.bracket_full
           : ""
@@ -135,7 +135,7 @@ export default function MiddleBracketBush ({getMeasures, prevValues}) {
         middlebracket_bush: { ...fields.middlebracket_bush },
         ...calculated,
       });
-    }, [calculated.calcRaw, fields.middlebracket_bush.bracket_full]);
+    }, [calculated.calcRaw, fields]);
     
     return (
         <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center ">

@@ -16,27 +16,27 @@ export default function BracketBush({ getMeasures, prevValues }) {
   const [fields, setFields] = useState({
     bracket_bush: {
       bigger_diameter:
-        "bracket_bush" in prevValues
+        "bracket_bush" in prevValues && prevValues.bracket_bush !== null
           ? "bigger_diameter" in prevValues.bracket_bush
             ? prevValues.bracket_bush.bigger_diameter
             : ""
           : "",
-      inner_diameter: "bracket_bush" in prevValues
+      inner_diameter: "bracket_bush" in prevValues && prevValues.bracket_bush !== null
       ? "inner_diameter" in prevValues.bracket_bush
         ? prevValues.bracket_bush.inner_diameter
         : ""
       : "",
-      body_diameter:  "bracket_bush" in prevValues
+      body_diameter:  "bracket_bush" in prevValues && prevValues.bracket_bush !== null
       ? "body_diameter" in prevValues.bracket_bush
         ? prevValues.bracket_bush.body_diameter
         : ""
       : "",
-      bush_length:  "bracket_bush" in prevValues
+      bush_length:  "bracket_bush" in prevValues && prevValues.bracket_bush !== null
       ? "bush_length" in prevValues.bracket_bush
         ? prevValues.bracket_bush.bush_length
         : ""
       : "",
-      bracket_length:  "bracket_bush" in prevValues
+      bracket_length:  "bracket_bush" in prevValues && prevValues.bracket_bush !== null
       ? "bracket_length" in prevValues.bracket_bush
         ? prevValues.bracket_bush.bracket_length
         : ""
@@ -114,7 +114,7 @@ export default function BracketBush({ getMeasures, prevValues }) {
       bracket_bush: { ...fields.bracket_bush },
       ...calculated,
     });
-  }, [calculated.calcRaw]);
+  }, [calculated.calcRaw, fields]);
   return (
     <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center ">
       <div className="space-y-2 lg:w-1/2">
