@@ -161,11 +161,13 @@ export default function CreateMake({ analyzes, customers, prevValues, type}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let data = {}
+    const Unitprice = calcRaws.values.totalPrice.split(" ");
     const  standartOptions = {
             "Customer_ID": calcRaws.values.account_id,
             "Analyze_ID" : calcRaws.values.analyze_Name,
             "unit_frequence" : calcRaws.values.unit_frequence,
-            "unit_price" : calcRaws.values.totalPrice,
+            "unit_price" : parseFloat(Unitprice[0]),
+            "currency" : Unitprice[1],
             "benefitPercent" : calcRaws.values.benefit,
             "model_price" : calcRaws.values.model_price,
             "model_firm" : calcRaws.values.model_firm,
@@ -246,7 +248,7 @@ export default function CreateMake({ analyzes, customers, prevValues, type}) {
         }
         break;
     } 
-    console.log(data);
+    
     
       try {
         const res = await axios({

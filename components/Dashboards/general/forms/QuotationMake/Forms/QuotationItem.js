@@ -146,12 +146,12 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
   }, [molding.validity,molding.values,fields, calculated])
   useEffect(() => {
     let sale = (parseFloat(calculated.totalCost) +  parseFloat(calculated.totalCost) * parseFloat(fields["quotation_item"]["benefit"]) / 100).toFixed(2)
-    let tCost = [{value : parseFloat(sale).toFixed(2), key : `${parseFloat(sale).toFixed(2)} ₺ `}, 
-    {value : (sale / parseFloat(usd)).toFixed(2), key : `${(sale / parseFloat(usd)).toFixed(2)} $ `},
-    {value : (sale / parseFloat(euro)).toFixed(2), key : `${(sale / parseFloat(euro)).toFixed(2)} € `},
-    {value : parseFloat(fields["quotation_item"]["alterPrice"]).toFixed(2), key : `${(parseFloat(fields["quotation_item"]["alterPrice"])).toFixed(2)} ₺ `},
-    {value : (parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(usd)).toFixed(2), key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(usd)).toFixed(2)} $ `},
-    {value : (parseFloat(fields["quotation_item"]["alterPrice"]) * parseFloat(euro)).toFixed(2), key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(euro)).toFixed(2)} € `},
+    let tCost = [{value : `${parseFloat(sale).toFixed(2)} ₺`, key : `${parseFloat(sale).toFixed(2)} ₺`}, 
+    {value : `${(sale / parseFloat(usd)).toFixed(2)} $`, key : `${(sale / parseFloat(usd)).toFixed(2)} $`},
+    {value : `${(sale / parseFloat(euro)).toFixed(2)} €`, key : `${(sale / parseFloat(euro)).toFixed(2)} €`},
+    {value : `${(parseFloat(fields["quotation_item"]["alterPrice"])).toFixed(2)} ₺`, key : `${(parseFloat(fields["quotation_item"]["alterPrice"])).toFixed(2)} ₺`},
+    {value : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(usd)).toFixed(2)} $`, key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(usd)).toFixed(2)} $`},
+    {value : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(euro)).toFixed(2)} €`, key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(euro)).toFixed(2)} €`},
   ]
     setFields((old) => {
       return {

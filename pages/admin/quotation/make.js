@@ -165,7 +165,7 @@ export default function QuotationMake({analyzes, customers, items}) {
                           </th>
                           <td className="px-6 py-4">{item.Customer_ID}</td>
                           <td className="px-6 py-4">
-                            {item.unit_price}
+                            {item.unit_price + " " +  item.currency } 
                           </td>
                           <td className="px-6 py-4">
                             {item.unit_frequence}
