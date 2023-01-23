@@ -1,6 +1,6 @@
 import ModalImage from "../../../ui/ModalImage";
 import { useState, useEffect } from "react";
-
+import Alert from "./Alert";
 export default function BracketBush({ getMeasures, prevValues }) {
   const calcWeigth = (A8, B8, C8, D8, E8) => {
     return (
@@ -44,6 +44,13 @@ export default function BracketBush({ getMeasures, prevValues }) {
     },
   });
 
+  const [warning, setWarning] = useState({
+    message : "",
+    validity : false,
+    clicked : []
+  });
+  
+
   const [calculated, setCalculated] = useState({
     calcRaw: "calcRaw" in prevValues ? prevValues.calcRaw : "",
   });
@@ -81,6 +88,20 @@ export default function BracketBush({ getMeasures, prevValues }) {
     return isValid;
   };
 
+  const toggleWarning = (e) => {
+    if(!warning.clicked.includes(e.target.id)){
+      setWarning((old) => {
+        let new_arr = old.clicked
+        new_arr.push(e.target.id)
+        return {
+          message : "Paylı/Paysız ölçü girişine dikkat ediniz",
+          validity : true,
+          clicked : new_arr
+        }
+      });
+    }
+  }
+
   //hooks
 
   useEffect(() => {
@@ -114,7 +135,26 @@ export default function BracketBush({ getMeasures, prevValues }) {
       bracket_bush: { ...fields.bracket_bush },
       ...calculated,
     });
+
+    if (parseFloat(calculated).calcRaw < 1) {
+      setWarning({
+        message : "Uyarı ! 1 KG. ALTI ÜRÜN !",
+        validity : true,
+      })
+    }
   }, [calculated.calcRaw, fields]);
+
+  useEffect(() => {
+    if(calculated.calcRaw < 1) {
+      setWarning((old) => {
+        return {
+          message : "1 KG. Altı Ürün",
+          validity : true,
+          clicked : old.clicked
+        }
+      })
+    }
+  }, [calculated.calcRaw])
   return (
     <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center ">
       <div className="space-y-2 lg:w-1/2">
@@ -134,10 +174,12 @@ export default function BracketBush({ getMeasures, prevValues }) {
           <input
             type="number"
             step={"any"}
+            id={"br1"}
             className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
             placeholder=""
             defaultValue={fields.bracket_bush.bigger_diameter}
             required
+            onClick={toggleWarning}
             onChange={(e) => {
               handleChange("bracket_bush", "bigger_diameter", e);
             }}
@@ -154,9 +196,11 @@ export default function BracketBush({ getMeasures, prevValues }) {
           <input
             type="number"
             step={"any"}
+            id={"br2"}
             className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
             placeholder=""
             required
+            onClick={toggleWarning}
             defaultValue={fields.bracket_bush.body_diameter}
             onChange={(e) => {
               handleChange("bracket_bush", "body_diameter", e);
@@ -174,9 +218,11 @@ export default function BracketBush({ getMeasures, prevValues }) {
           <input
             type="number"
             step={"any"}
+            id={"br3"}
             className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
             placeholder=""
             required
+            onClick={toggleWarning}
             defaultValue={fields.bracket_bush.bush_length}
             onChange={(e) => {
               handleChange("bracket_bush", "bush_length", e);
@@ -193,10 +239,12 @@ export default function BracketBush({ getMeasures, prevValues }) {
           <input
             type="number"
             step={"any"}
+            id={"br4"}
             className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
             placeholder=""
             defaultValue={fields.bracket_bush.bracket_length}
             required
+            onClick={toggleWarning}
             onChange={(e) => {
               handleChange("bracket_bush", "bracket_length", e);
             }}
@@ -214,7 +262,9 @@ export default function BracketBush({ getMeasures, prevValues }) {
             step={"any"}
             className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
             placeholder=""
+            id={"br5"}
             required
+            onClick={toggleWarning}
             defaultValue={fields.bracket_bush.inner_diameter}
             onChange={(e) => {
               handleChange("bracket_bush", "inner_diameter", e);
@@ -232,12 +282,7 @@ export default function BracketBush({ getMeasures, prevValues }) {
           <p className="font-poppins text-red-700">{calculated.calcRaw}</p>
         </div>
         <ModalImage image={"/bracketbush.png"} />
-        {/* <div className="flex flex-col">
-              <p className="font-poppins text-red-700">UYARI: PAYLI/PAYSIZ ÖLÇÜ GİRİŞİNE DİKKAT EDİNİZ !</p>
-            </div>
-            {calcs.calcW < 1 ? <div className="flex flex-col">
-              <p className="font-poppins text-red-700">UYARI: 1 kg. altı ÜRÜN</p>
-            </div>: "" } */}
+        <Alert setWarning={setWarning} message={warning.message} renderOpen={warning.validity} />
       </div>
     </div>
   );

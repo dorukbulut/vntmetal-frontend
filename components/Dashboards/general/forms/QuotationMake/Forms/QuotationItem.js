@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-export default function QuotationItem({ name, children, kgPrice, usd, euro, getCalcRaw, prevValues}){
+export default function QuotationItem({ name, children, kgPrice, usd, euro, getCalcRaw, prevValues, type}){
   //states
   const [fields, setFields] = useState({
     quotation_item: {
@@ -176,9 +176,12 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
 
   return (
     <div className="mt-10 lg:grid lg:place-items-center">
-      <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
+      {type === "update" ?<p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-yellow-600">
+         {name} Güncelle
+      </p> : <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
         Yeni {name}
-      </p>
+      </p> }
+      
       <div className="grid grid-cols-1 space-y-5 lg:grid lg:grid-cols-2 space-x-10 ">
         {childrenWithProps}
         <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">

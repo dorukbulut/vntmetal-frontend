@@ -388,12 +388,12 @@ export default function CreateMake({ analyzes, customers, prevValues, type}) {
 
                   {
                     activeStep == 1 ? (
-                      fields.quo_type.quo_type_name == 0 ? (<Contracted  TYPE={TYPE} prevValues={calcRaws} getCalcRaw={getCalcRaw} ANALYZE={ANALYZE} CUSTOMER={CUSTOMER} />) : (<CalculateRaw TYPE={TYPE} ANALYZE={ANALYZE} CUSTOMER={CUSTOMER} prevValues={calcRaws} customers={customers} analyzes={analyzes} getCalcRaw={getCalcRaw} />)
+                      fields.quo_type.quo_type_name == 0 ? (<Contracted type={type}  TYPE={TYPE} prevValues={calcRaws} getCalcRaw={getCalcRaw} ANALYZE={ANALYZE} CUSTOMER={CUSTOMER} />) : (<CalculateRaw TYPE={TYPE} ANALYZE={ANALYZE} CUSTOMER={CUSTOMER} prevValues={calcRaws} customers={customers} type={type} analyzes={analyzes} getCalcRaw={getCalcRaw} />)
                     ) : ("")
                   }
 
                   {
-                    activeStep == 2 ? <QuotationItem  getCalcRaw={getCalcRaw} euro={calcRaws.values.euro} usd={calcRaws.values.usd}  prevValues={calcRaws.values} kgPrice={calcRaws.values.kgPrice} name={calcRaws.values.type}> {TYPE_COMPS[calcRaws.values.type]} </QuotationItem> : ""
+                    activeStep == 2 ? <QuotationItem type={type}  getCalcRaw={getCalcRaw} euro={calcRaws.values.euro} usd={calcRaws.values.usd}  prevValues={calcRaws.values} kgPrice={calcRaws.values.kgPrice} name={calcRaws.values.type}> {TYPE_COMPS[calcRaws.values.type]} </QuotationItem> : ""
                   }
 
                   {

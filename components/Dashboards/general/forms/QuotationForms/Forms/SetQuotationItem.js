@@ -8,7 +8,6 @@ const [rowdata, setRowData] = useState([]);
 const [skipPageReset, setSkipPageReset] = useState(false);
 
   useEffect(() => {
-    console.log(fields);
     if(fields.options.Customer_ID !== '') {
       axios({
         method : "POST",

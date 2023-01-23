@@ -1,5 +1,6 @@
 import ModalImage from "../../../ui/ModalImage";
 import { useEffect, useState } from "react";
+import Alert from "./Alert";
 export default function DoubleBracketBush({ getMeasures, prevValues }) {
   const calcWeigth = (A8, B8, C8, D8, E8, F8, G8) => {
     return (
@@ -59,6 +60,12 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
     calcRaw: "calcRaw" in prevValues ? prevValues.calcRaw :"",
   });
 
+  const [warning, setWarning] = useState({
+    message : "",
+    validity : false,
+    clicked : []
+  });
+
   //handlers
   const handleChange = (field, area, e) => {
     setFields((old) => {
@@ -98,6 +105,21 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
     }
     return isValid;
   };
+
+
+  const toggleWarning = (e) => {
+    if(!warning.clicked.includes(e.target.id)){
+      setWarning((old) => {
+        let new_arr = old.clicked
+        new_arr.push(e.target.id)
+        return {
+          message : "Paylı/Paysız ölçü girişine dikkat ediniz",
+          validity : true,
+          clicked : new_arr
+        }
+      });
+    }
+  }
 
   //hooks
 
@@ -139,6 +161,18 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
     });
   }, [calculated.calcRaw, fields]);
 
+  useEffect(() => {
+    if(calculated.calcRaw < 1) {
+      setWarning((old) => {
+        return {
+          message : "1 KG. Altı Ürün",
+          validity : true,
+          clicked : old.clicked
+        }
+      })
+    }
+  }, [calculated.calcRaw])
+
   return (
     <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center ">
       <div className="space-y-2 lg:w-1/2">
@@ -160,6 +194,8 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
             step={"any"}
             className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
             placeholder=""
+            onClick={toggleWarning}
+            id={"dbr1"}
             required
             defaultValue={fields.doublebracket_bush.bigger_diameter}
             onChange={(e) => {
@@ -178,6 +214,8 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
           <input
             type="number"
             step={"any"}
+            id={"dbr2"}
+            onClick={toggleWarning}
             className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
             placeholder=""
             defaultValue={fields.doublebracket_bush.body_diameter}
@@ -197,8 +235,10 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
           <input
             type="number"
             step={"any"}
+            onClick={toggleWarning}
             className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
             placeholder=""
+            id={"dbr3"}
             required
             defaultValue={fields.doublebracket_bush.inner_diameter}
             onChange={(e) => {
@@ -217,6 +257,8 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
           <input
             type="number"
             step={"any"}
+            id={"dbr4"}
+            onClick={toggleWarning}
             className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
             placeholder=""
             defaultValue={fields.doublebracket_bush.bracket_l1}
@@ -236,6 +278,8 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
           <input
             type="number"
             step={"any"}
+            onClick={toggleWarning}
+            id={"dbr5"}
             className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
             placeholder=""
             defaultValue={fields.doublebracket_bush.bracket_l2}
@@ -256,8 +300,10 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
           <input
             type="number"
             step={"any"}
+            id={"dbr6"}
             className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
             placeholder=""
+            onClick={toggleWarning}
             defaultValue={fields.doublebracket_bush.bracket_l3}
             required
             onChange={(e) => {
@@ -275,8 +321,10 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
           <input
             type="number"
             step={"any"}
+            id={"dbr7"}
             className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
             placeholder=""
+            onClick={toggleWarning}
             defaultValue={fields.doublebracket_bush.bracket_full}
             required
             onChange={(e) => {
@@ -299,12 +347,7 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
         <ModalImage image={"/doublebracket.png"} />
       </div>
 
-      {/* <div className="flex flex-col">
-              <p className="font-poppins text-red-700">UYARI: PAYLI/PAYSIZ ÖLÇÜ GİRİŞİNE DİKKAT EDİNİZ !</p>
-            </div>
-            {calcs.calcW < 1 ? <div className="flex flex-col">
-              <p className="font-poppins text-red-700">UYARI: 1 kg. altı ÜRÜN</p>
-            </div>: "" } */}
+      <Alert setWarning={setWarning} message={warning.message} renderOpen={warning.validity} />
     </div>
   );
 }

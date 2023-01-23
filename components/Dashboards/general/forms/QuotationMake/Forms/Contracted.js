@@ -3,7 +3,7 @@ import { useRef, useEffect, useState } from "react";
 
 
 
-export default function Contracted ({CUSTOMER, TYPE ,ANALYZE,prevValues, getCalcRaw}) {
+export default function Contracted ({CUSTOMER, TYPE ,ANALYZE,prevValues, getCalcRaw, type}) {
 
     //state
 
@@ -82,9 +82,11 @@ export default function Contracted ({CUSTOMER, TYPE ,ANALYZE,prevValues, getCalc
 
     return (
         <div className="mt-10">
-                      <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
-                        Yeni Teklif
-                      </p>
+                      {type === "update" ? <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-yellow-600">
+        Teklifi Güncelle
+      </p> : <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
+        Yeni Teklif
+      </p> }
                       <form className="grid grid-cols-1 space-y-5 lg:grid lg:place-items-center ">
                         {/*Customer info*/}
                         <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
