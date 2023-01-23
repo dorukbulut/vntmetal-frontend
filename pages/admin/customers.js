@@ -38,7 +38,6 @@ export default function CustomersPage({ customerData }) {
   } , [page])
 
   useEffect(() => {
-    console.log(filters);
     if(filters) {
       axios({
         method : "GET",

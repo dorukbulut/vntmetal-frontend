@@ -42,23 +42,7 @@ const TYPE_COMPS = {
 
 const steps = ["Teklif Tipi Seç", "Teklif Hazırla", "Teklif Oluştur", "İşlemi Tamamla"];
 
-export default function CreateMake({ analyzes, customers, prevValues, type}) {
-
-  const CUSTOMER = customers.map((customer) => {
-    return {
-      key: customer.account_id,
-      value: customer.account_id,
-    };
-  });
-
-  const ANALYZE = analyzes.map((analyse) => {
-    return {
-      key: analyse.analyze_Name,
-      value: analyse.analyze_id,
-      TIN: analyse.analyze_coefTin,
-      COPPER: analyse.analyze_coefCopper,
-    };
-  });
+export default function CreateMake({prevValues, type}) {
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
@@ -142,7 +126,49 @@ export default function CreateMake({ analyzes, customers, prevValues, type}) {
      
   });
 
+  const [CUSTOMER, setCustomer ] = useState([]);
+  const [ANALYZE, setAnalyze ] = useState([]);
+
   
+
+  //hooks
+  React.useEffect(() => {
+    
+    axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND}/api/analyze/getAll`
+    ).then(res => {
+      if(res.status === 200) {
+        const temp = res.data.analyzes.map((analyse) => {
+          return {
+            key: analyse.analyze_Name,
+            value: analyse.analyze_id,
+            TIN: analyse.analyze_coefTin,
+            COPPER: analyse.analyze_coefCopper,
+          };
+        });
+
+        setAnalyze(temp);
+      }
+    })
+    
+  }, [])
+
+  React.useEffect(() => {
+    axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`
+    ).then(res => {
+      if (res.status === 200) {
+        const temp = res.data.customers.map((customer) => {
+          return {
+            key: customer.account_id,
+            value: customer.account_id,
+          };
+        });
+
+        setCustomer(temp);
+      }
+    })
+  }, [])
 
   //handlers
   const getCalcRaw = (validity, values) => {
@@ -390,7 +416,7 @@ export default function CreateMake({ analyzes, customers, prevValues, type}) {
 
                   {
                     activeStep == 1 ? (
-                      fields.quo_type.quo_type_name == 0 ? (<Contracted type={type}  TYPE={TYPE} prevValues={calcRaws} getCalcRaw={getCalcRaw} ANALYZE={ANALYZE} CUSTOMER={CUSTOMER} />) : (<CalculateRaw TYPE={TYPE} ANALYZE={ANALYZE} CUSTOMER={CUSTOMER} prevValues={calcRaws} customers={customers} type={type} analyzes={analyzes} getCalcRaw={getCalcRaw} />)
+                      fields.quo_type.quo_type_name == 0 ? (<Contracted type={type}  TYPE={TYPE} prevValues={calcRaws} getCalcRaw={getCalcRaw} ANALYZE={ANALYZE} CUSTOMER={CUSTOMER} />) : (<CalculateRaw TYPE={TYPE} ANALYZE={ANALYZE} CUSTOMER={CUSTOMER} prevValues={calcRaws} customers={CUSTOMER} type={type} analyzes={ANALYZE} getCalcRaw={getCalcRaw} />)
                     ) : ("")
                   }
 

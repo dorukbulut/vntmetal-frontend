@@ -11,7 +11,7 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
 
-export default function QuotationMake({analyzes, customers, items}) {
+export default function QuotationMake({items}) {
   // 
   const router = useRouter();
   const [filters, setFilters] = useState();
@@ -54,7 +54,7 @@ export default function QuotationMake({analyzes, customers, items}) {
         }
       })
       .catch(err => {
-        router.reload(window.location.pathname);
+        console.log(err);
       });
     }
     
@@ -83,7 +83,7 @@ export default function QuotationMake({analyzes, customers, items}) {
           Teklif Hazırlama
         </h2>
         <div className="relative flex overflow-x-auto shadow-md sm:rounded-lg p-5 space-x-5 items-center">
-          <CreateMake key={`${1021}+${new Date().getTime()}`} analyzes={analyzes} customers={customers} prevValues={{}} type={"create"}/>
+          <CreateMake key={`${1021}+${new Date().getTime()}`} prevValues={{}} type={"create"}/>
           <CreateAnalyze />
           <p className="text-sky-700 italic font-poppins tracking-widest">
             Filtrele
@@ -174,7 +174,7 @@ export default function QuotationMake({analyzes, customers, items}) {
                             {item.createdAt}
                           </td>
                           <td className="px-6 py-4 text-right">
-                            <CreateMake key={`${index}+${new Date().getTime()}`} analyzes={analyzes} prevValues={item} customers={customers} item={item} type={"update"}/>
+                            <CreateMake key={`${index}+${new Date().getTime()}`} prevValues={item} item={item} type={"update"}/>
                           </td>
                         </tr>)
                    })
@@ -207,21 +207,13 @@ export default function QuotationMake({analyzes, customers, items}) {
 export async function getServerSideProps(context) {
   try {
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/analyze/getAll`
-    );
-    const res2 = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`
-    );
-    const res3 = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/get-page/0`
     )
     
-    if (res.status === 200 && res2.status === 200 && res3.status === 200) {
+    if (res.status === 200) {
       return {
         props: {
-          analyzes: res.data.analyzes,
-          customers : res2.data.customers,
-          items: res3.data
+          items: res.data
         },
       };
     }
