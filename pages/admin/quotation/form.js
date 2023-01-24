@@ -9,7 +9,7 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import CreateQuotationForm from "../../../components/Dashboards/general/forms/QuotationForms/Forms/CreateQuotationForm";
 import UpdateQuotationForm from "../../../components/Dashboards/general/forms/QuotationForms/Forms/UpdateQuotationForm";
-
+import QuotationFormDisplay from "../../../components/Dashboards/general/ui/QuotationFormDisplay";
 export default function QuotationMake({customers, forms}) {
   const generate = (e) => {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/generate`, {method : "POST", headers: {
@@ -184,6 +184,9 @@ export default function QuotationMake({customers, forms}) {
                       İndir
                     </th>
                     <th scope="col" className="px-6 py-3">
+                      <span className="sr-only">Görüntüle</span>
+                    </th>
+                    <th scope="col" className="px-6 py-3">
                       <span className="sr-only">Düzenle</span>
                     </th>
                    
@@ -215,6 +218,9 @@ export default function QuotationMake({customers, forms}) {
                           </td>
                           <td className="px-6 py-4 text-right">
                            <button id={item.quotation_ID} onClick={generate} className="hover:underline">İndir</button>
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <QuotationFormDisplay values={item} />
                           </td>
                           <td className="px-6 py-4 text-right">
                             <UpdateQuotationForm customers={customers} item={item}/>

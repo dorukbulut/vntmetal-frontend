@@ -120,6 +120,8 @@ export default function UpdateQuotationForm({item}) {
         insurance_fee: 0,
         terminal_fee_entry: 0,
         import_fee: 0,
+        currencyVal: "",
+        currencyType : "",
         description : '',
     },
 
@@ -159,6 +161,8 @@ export default function UpdateQuotationForm({item}) {
         insurance_fee: 0,
         terminal_fee_entry: 0,
         import_fee: 0,
+        currencyVal: "",
+        currencyType : "",
         description : '',
     },
 
@@ -175,8 +179,6 @@ export default function UpdateQuotationForm({item}) {
 
 
   const [all, setAll] = useState([]);
-
-  const [grandTotal, setGrandTotal] = useState(0);
   const router = useRouter();
 
   
@@ -186,7 +188,6 @@ export default function UpdateQuotationForm({item}) {
     new_fields[field][area] = e.target.value
     setFields(new_fields);
     setSetting(fields.area.name)
-    console.log(fields);
     
   };
   
@@ -248,32 +249,61 @@ export default function UpdateQuotationForm({item}) {
       errors.delivery_type.name = ""
      }
 
+     //deliveryCurrency
+     if(check_fields.delivery_type.currencyType === '') {
+      isValid = false;
+      errors.delivery_type.currencyType = "Döviz Tipi boş bırakılamaz"
+     } else {
+      errors.delivery_type.currencyType = ""
+     }
+
+     //deliveryCurrency
+     if(check_fields.delivery_type.currencyVal === '') {
+      isValid = false;
+      errors.delivery_type.currencyVal = "Döviz Kuru boş bırakılamaz"
+     } else {
+      errors.delivery_type.currencyVal = ""
+     }
+
      //items!
-     if (all.length === 0 ) {
+     const undeF = all.filter(item => item!=undefined);
+     if (undeF.length === 0 ) {
       isValid = false
-      errors.all.all = "Teslimat Kalemleri ve Açıklamaları boş bırakalamaz !"
+      errors.all.all = "En az 1 adet ürün seçilmeli !"
      } else  {
         errors.all.all = ""
       }
     
       //every checked item
-    if(all.length !== 0) {
-      const check = all.filter(item => item!=undefined).map(item => {
-        if(item.description === "" || item.deliveryTime === "") return item
+    if(undeF.length !== 0) {
+      const check = undeF.map(item => {
+        if(item.description === "" || item.deliveryTime === "" ) return item
       }).filter(item => item!=undefined);
 
       if(check.length !== 0) {
         isValid = false
-        errors.all.all = "Teslimat Kalemleri ve Açıklamaları boş bırakalamaz !"
+        errors.all.all = "Ürün Açıklamaları ve Teslimat süreleri boş bırakılamaz!"
       }
 
       else {
+        const check = undeF.map(item => {
+          if(item.currency !== undeF[0].currency) return item
+        }).filter(item => item!=undefined);
+  
+        if(check.length !== 0) {
+          isValid = false
+          errors.all.currency = "Seçilen Ürünlerin para birimleri aynı olmalıdır !"
+        }
+        else {
+          if (check_fields.delivery_type.currencyType !== undeF[0].currency) {
+            isValid = false
+            errors.delivery_type.currencyType = "Teslimat Kuru, seçilen ürünlerin para birimleriyle aynı olmalıdır !"
+          }
+          errors.all.currency = ""
+        }
         errors.all.all = ""
       }
     }
-     
-
-     
     
      setCurrErrors(errors)
      return isValid
@@ -288,8 +318,7 @@ export default function UpdateQuotationForm({item}) {
         reference : item.reference,
         Customer_ID : Customer_ID.options.Customer_ID,
         grand_total : all.filter(item => item!=undefined).reduce((prev ,val) => {
-          console.log()
-          return prev + val.total_price
+          return prev + parseFloat((val.total_price).split(" ")[0])
         }, 0)
       },
 
@@ -458,6 +487,39 @@ export default function UpdateQuotationForm({item}) {
                 </div>
 
                 <div className="space-y-5 lg:grid lg:grid-cols-3 lg:place-items-center">
+                <div className="flex flex-col">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                    >
+                      Döviz Kuru (TL ise 1 Girininiz)
+                    </label>
+                    <input
+                      type="number"
+                      step={"any"}
+                      
+                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      placeholder=""
+                      required
+                      onChange={(e) => handleChange("delivery_type", "currencyVal", e)}
+                    />
+                  </div>
+                  <div className="flex flex-col space-y-3 ">
+                                <label
+                                  htmlFor="small-input"
+                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                                >
+                                  Döviz Tipi
+                                </label>
+                                <Dropdown
+                                  label="Teslimat"
+                                  field="delivery_type"
+                                  area="currencyType"
+                                  items={[{key : "₺", value: "₺"},{key:"$", value : "$"}, {key:"€", value : "€"}]}
+                                  fields={fields}
+                                  handleChange={handleChange}
+                                />
+                  </div>
                 <div className="flex flex-col space-y-3 ">
                                 <label
                                   htmlFor="small-input"

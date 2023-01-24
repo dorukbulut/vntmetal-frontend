@@ -126,6 +126,8 @@ export default function CreateQuotationForm({customers}) {
         insurance_fee: 0,
         terminal_fee_entry: 0,
         import_fee: 0,
+        currencyVal: "",
+        currencyType : "",
         description : '',
     },
 
@@ -165,6 +167,8 @@ export default function CreateQuotationForm({customers}) {
         insurance_fee: 0,
         terminal_fee_entry: 0,
         import_fee: 0,
+        currencyVal: "",
+        currencyType : "",
         description : '',
     },
 
@@ -181,8 +185,6 @@ export default function CreateQuotationForm({customers}) {
 
 
   const [all, setAll] = useState([]);
-
-  const [grandTotal, setGrandTotal] = useState(0);
   const router = useRouter();
 
   
@@ -192,7 +194,6 @@ export default function CreateQuotationForm({customers}) {
     new_fields[field][area] = e.target.value
     setFields(new_fields);
     setSetting(fields.area.name)
-    console.log(fields);
     
   };
   
@@ -254,6 +255,22 @@ export default function CreateQuotationForm({customers}) {
       errors.delivery_type.name = ""
      }
 
+     //deliveryCurrency
+     if(check_fields.delivery_type.currencyType === '') {
+      isValid = false;
+      errors.delivery_type.currencyType = "Döviz Tipi boş bırakılamaz"
+     } else {
+      errors.delivery_type.currencyType = ""
+     }
+
+     //deliveryCurrency
+     if(check_fields.delivery_type.currencyVal === '') {
+      isValid = false;
+      errors.delivery_type.currencyVal = "Döviz Kuru boş bırakılamaz"
+     } else {
+      errors.delivery_type.currencyVal = ""
+     }
+
      //items!
      const undeF = all.filter(item => item!=undefined);
      if (undeF.length === 0 ) {
@@ -284,12 +301,17 @@ export default function CreateQuotationForm({customers}) {
           errors.all.currency = "Seçilen Ürünlerin para birimleri aynı olmalıdır !"
         }
         else {
+          if (check_fields.delivery_type.currencyType !== undeF[0].currency) {
+            isValid = false
+            errors.delivery_type.currencyType = "Teslimat Kuru, seçilen ürünlerin para birimleriyle aynı olmalıdır !"
+          }
           errors.all.currency = ""
         }
         errors.all.all = ""
       }
     }
-     
+    
+
 
      
     
@@ -474,6 +496,39 @@ export default function CreateQuotationForm({customers}) {
                 </div>
 
                 <div className="space-y-5 lg:grid lg:grid-cols-3 lg:place-items-center">
+                <div className="flex flex-col">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                    >
+                      Döviz Kuru (TL ise 1 Girininiz)
+                    </label>
+                    <input
+                      type="number"
+                      step={"any"}
+                      
+                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      placeholder=""
+                      required
+                      onChange={(e) => handleChange("delivery_type", "currencyVal", e)}
+                    />
+                  </div>
+                  <div className="flex flex-col space-y-3 ">
+                                <label
+                                  htmlFor="small-input"
+                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                                >
+                                  Döviz Tipi
+                                </label>
+                                <Dropdown
+                                  label="Teslimat"
+                                  field="delivery_type"
+                                  area="currencyType"
+                                  items={[{key : "₺", value: "₺"},{key:"$", value : "$"}, {key:"€", value : "€"}]}
+                                  fields={fields}
+                                  handleChange={handleChange}
+                                />
+                  </div>
                 <div className="flex flex-col space-y-3 ">
                                 <label
                                   htmlFor="small-input"
@@ -706,7 +761,8 @@ export default function CreateQuotationForm({customers}) {
                         handleChange("delivery_type", "description", e)
                       }
                     />
-                  </div>
+            </div>
+           
            
 
                 </div>
