@@ -50,8 +50,6 @@ export default function QuotationMake({customers, forms}) {
   } , [page])
 
   useEffect(() => {
-    console.log(filters);
-    
     if(filters) {
       axios({
         method : "GET",

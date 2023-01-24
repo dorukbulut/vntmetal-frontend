@@ -255,25 +255,37 @@ export default function CreateQuotationForm({customers}) {
      }
 
      //items!
-     if (all.length === 0 ) {
+     const undeF = all.filter(item => item!=undefined);
+     if (undeF.length === 0 ) {
       isValid = false
-      errors.all.all = "Teslimat Kalemleri ve Açıklamaları boş bırakalamaz !"
+      errors.all.all = "En az 1 adet ürün seçilmeli !"
      } else  {
         errors.all.all = ""
       }
     
       //every checked item
-    if(all.length !== 0) {
-      const check = all.filter(item => item!=undefined).map(item => {
-        if(item.description === "" || item.deliveryTime === "") return item
+    if(undeF.length !== 0) {
+      const check = undeF.map(item => {
+        if(item.description === "" || item.deliveryTime === "" ) return item
       }).filter(item => item!=undefined);
 
       if(check.length !== 0) {
         isValid = false
-        errors.all.all = "Teslimat Kalemleri ve Açıklamaları boş bırakalamaz !"
+        errors.all.all = "Ürün Açıklamaları ve Teslimat süreleri boş bırakılamaz!"
       }
 
       else {
+        const check = undeF.map(item => {
+          if(item.currency !== undeF[0].currency) return item
+        }).filter(item => item!=undefined);
+  
+        if(check.length !== 0) {
+          isValid = false
+          errors.all.currency = "Seçilen Ürünlerin para birimleri aynı olmalıdır !"
+        }
+        else {
+          errors.all.currency = ""
+        }
         errors.all.all = ""
       }
     }
@@ -294,7 +306,7 @@ export default function CreateQuotationForm({customers}) {
         Customer_ID : Customer_ID.options.Customer_ID,
         grand_total : all.filter(item => item!=undefined).reduce((prev ,val) => {
           console.log()
-          return prev + val.total_price
+          return prev + parseFloat((val.total_price).split(" ")[0])
         }, 0)
       },
 
@@ -341,29 +353,7 @@ export default function CreateQuotationForm({customers}) {
     }
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-    
-  //   if (handleValidation()) {
-  //     try{
-        
-  //         if(res.status === 200) {
-  //           setSubmit(true);
-  //           setIsvalid(true);
-  //         } 
-  //     }
-  //     catch(err) {
-  //       setSubmit(false);
-  //       setCreateErr(true);
-  //     }
-      
-
-      
-      
-  //   } else {
-  //     setIsvalid(false);
-  //   }
-  // };
+  
   const toggleCreate = () => {
     setCreate(!create);
   };

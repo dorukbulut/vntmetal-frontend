@@ -47,9 +47,10 @@ const [skipPageReset, setSkipPageReset] = useState(false);
                     dimensions :  dim,
                     analysis  : item.analyze.analyze_Name,
                     qty : item.unit_frequence,
-                    unitprice : item.unit_price,
-                    total_price : parseFloat(item.unit_price) * parseInt(item.unit_frequence),
+                    unitprice : `${item.unit_price} ${item.currency}`,
+                    total_price : `${parseFloat(item.unit_price) * parseInt(item.unit_frequence)} ${item.currency}`,
                     deliveryTime : '',
+                    currency : item.currency,
                     checked : true,
                     
 

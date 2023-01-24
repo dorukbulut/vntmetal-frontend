@@ -336,29 +336,8 @@ export default function UpdateQuotationForm({item}) {
     }
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-    
-  //   if (handleValidation()) {
-  //     try{
-        
-  //         if(res.status === 200) {
-  //           setSubmit(true);
-  //           setIsvalid(true);
-  //         } 
-  //     }
-  //     catch(err) {
-  //       setSubmit(false);
-  //       setCreateErr(true);
-  //     }
-      
+ 
 
-      
-      
-  //   } else {
-  //     setIsvalid(false);
-  //   }
-  // };
   const toggleCreate = () => {
     setCreate(!create);
   };
