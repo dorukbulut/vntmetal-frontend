@@ -420,7 +420,7 @@ export default function UpdateQuotationForm({item}) {
                   <hr />
                 </div>
 
-                <div className="space-y-5 lg:grid lg:grid-cols-3 lg:items-end lg:gap-3 ">
+                <div className="space-y-5 lg:grid lg:grid-cols-2 lg:items-end lg:gap-3 ">
                 <div className="flex flex-col space-y-3 ">
                               <label
                                 htmlFor="small-input"
@@ -486,8 +486,60 @@ export default function UpdateQuotationForm({item}) {
                   <hr />
                 </div>
 
-                <div className="space-y-5 lg:grid lg:grid-cols-3 lg:place-items-center">
-                <div className="flex flex-col">
+                <div className="space-y-5 lg:space-x-10 lg:grid lg:grid-cols-3  lg:place-items-end">
+                <div className="flex flex-col lg:w-full lg:mr-1">
+                                <label
+                                  htmlFor="small-input"
+                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                                >
+                                  Teslimat Şekli *
+                                </label>
+                                <Dropdown
+                                  label="Teslimat"
+                                  field="area"
+                                  area="name"
+                                  items={[{key : "Yurt İçi", value: "intra"},{key:"Yurt Dışı", value : "extra"}]}
+                                  fields={fields}
+                                  handleChange={handleChange}
+                                />
+                  </div>
+                <div className="flex flex-col lg:w-full lg:pr-1">
+                                <label
+                                  htmlFor="small-input"
+                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                                >
+                                  Teslimat Tipi *
+                                </label>
+                                <Dropdown
+                                  label="Teslimat Tipi"
+                                  field="delivery_type"
+                                  area="name"
+                                  items={setting === "extra" ? INCOTERMS_EXTRA : INCOTERMS_INTRA }
+                                  fields={fields}
+                                  handleChange={handleChange}
+                                />
+                  </div>
+                  
+                
+
+                  <div className="flex flex-col lg:w-full ">
+                                <label
+                                  htmlFor="small-input"
+                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                                >
+                                  Döviz Tipi
+                                </label>
+                                <Dropdown
+                                  label="Döviz"
+                                  field="delivery_type"
+                                  area="currencyType"
+                                  items={[{key : "₺", value: "₺"},{key:"$", value : "$"}, {key:"€", value : "€"}]}
+                                  fields={fields}
+                                  handleChange={handleChange}
+                                />
+                  </div>
+
+                  <div className="flex flex-col lg:w-full lg:pr-2">
                     <label
                       htmlFor="small-input"
                       className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
@@ -504,65 +556,18 @@ export default function UpdateQuotationForm({item}) {
                       onChange={(e) => handleChange("delivery_type", "currencyVal", e)}
                     />
                   </div>
-                  <div className="flex flex-col space-y-3 ">
-                                <label
-                                  htmlFor="small-input"
-                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                                >
-                                  Döviz Tipi
-                                </label>
-                                <Dropdown
-                                  label="Teslimat"
-                                  field="delivery_type"
-                                  area="currencyType"
-                                  items={[{key : "₺", value: "₺"},{key:"$", value : "$"}, {key:"€", value : "€"}]}
-                                  fields={fields}
-                                  handleChange={handleChange}
-                                />
-                  </div>
-                <div className="flex flex-col space-y-3 ">
-                                <label
-                                  htmlFor="small-input"
-                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                                >
-                                  Teslimat Şekli *
-                                </label>
-                                <Dropdown
-                                  label="Teslimat"
-                                  field="area"
-                                  area="name"
-                                  items={[{key : "Yurt İçi", value: "intra"},{key:"Yurt Dışı", value : "extra"}]}
-                                  fields={fields}
-                                  handleChange={handleChange}
-                                />
-                  </div>
 
-                  <div className="flex flex-col space-y-3 ">
-                                <label
-                                  htmlFor="small-input"
-                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                                >
-                                  Teslimat Tipi *
-                                </label>
-                                <Dropdown
-                                  label="Teslimat Tipi"
-                                  field="delivery_type"
-                                  area="name"
-                                  items={setting === "extra" ? INCOTERMS_EXTRA : INCOTERMS_INTRA }
-                                  fields={fields}
-                                  handleChange={handleChange}
-                                />
-                  </div>
+                  
 
                  
                   
 
-                  <div className="flex flex-col">
+                  <div className="flex flex-col lg:w-full lg:pr-2">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
-                Paketleme *
+                Paketleme Ücreti*
               </label>
               <input
                 type="number"
@@ -575,7 +580,7 @@ export default function UpdateQuotationForm({item}) {
               />
                   </div>
 
-                  <div className="flex flex-col">
+                  <div className="flex flex-col lg:w-full lg:pr-2">
                     <label
                       htmlFor="small-input"
                       className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
@@ -592,12 +597,12 @@ export default function UpdateQuotationForm({item}) {
                       onChange={(e) => handleChange("delivery_type", "loading_fee", e)}
                     />
                   </div>
-                  {setting === 'extra' ? <div className="flex flex-col">
+                  {setting === 'extra' ? <div className="flex flex-col lg:w-full lg:pr-2">
                     <label
                       htmlFor="small-input"
                       className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
-                      Liman veya Belirlenen Yerde teslim *
+                      Liman veya Belirlenen Yerde teslim Ücreti *
                     </label>
                     <input
                       type="number"
@@ -610,12 +615,12 @@ export default function UpdateQuotationForm({item}) {
                     />
                   </div> : '' }
                   
-            {setting === "extra" ?  <div className="flex flex-col">
+            {setting === "extra" ?  <div className="flex flex-col lg:w-full lg:pr-2">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
-                İhracat Prosedürleri *
+                İhracat Prosedür Ücretleri *
               </label>
               <input
                 type="number"
@@ -628,12 +633,12 @@ export default function UpdateQuotationForm({item}) {
               />
             </div> : ''}   
            
-            {setting === "extra" ? <div className="flex flex-col">
+            {setting === "extra" ? <div className="flex flex-col lg:w-full lg:pr-2">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
-                Çıkış terminali ücretleri *
+                Çıkış terminali Ücretleri *
               </label>
               <input
                 type="number"
@@ -646,12 +651,12 @@ export default function UpdateQuotationForm({item}) {
               />
             </div> : ''}
             
-            {setting === "extra" ?  <div className="flex flex-col">
+            {setting === "extra" ?  <div className="flex flex-col lg:w-full lg:pr-2">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
-                Araca Yükleme *
+                Araca Yükleme Ücreti *
               </label>
               <input
                 type="number"
@@ -665,12 +670,12 @@ export default function UpdateQuotationForm({item}) {
             </div> : ''}
            
             
-            <div className="flex flex-col">
+            <div className="flex flex-col lg:w-full lg:pr-1">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
-                Taşıma masrafları *
+                Taşıma Ücreti *
               </label>
               <input
                 type="number"
@@ -682,12 +687,12 @@ export default function UpdateQuotationForm({item}) {
                 onChange={(e) => handleChange("delivery_type", "transport_fee", e)}
               />
             </div>
-            {setting === "extra" ? <div className="flex flex-col">
+            {setting === "extra" ? <div className="flex flex-col lg:w-full lg:pr-2">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
-                Sigorta *
+                Sigorta Ücreti*
               </label>
               <input
                 type="number"
@@ -700,7 +705,7 @@ export default function UpdateQuotationForm({item}) {
               />
             </div> : ''}
             
-            {setting === "extra" ? <div className="flex flex-col">
+            {setting === "extra" ? <div className="flex flex-col lg:w-full lg:pr-2">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
@@ -718,12 +723,12 @@ export default function UpdateQuotationForm({item}) {
               />
             </div> : ''}
             
-            {setting === "extra" ? <div className="flex flex-col">
+            {setting === "extra" ? <div className="flex flex-col lg:w-full lg:pr-2">
               <label
                 htmlFor="small-input"
                 className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
-                İthalat Prosedürleri *
+                İthalat Prosedür Ücretleri *
               </label>
               <input
                 type="number"
@@ -737,7 +742,7 @@ export default function UpdateQuotationForm({item}) {
             </div>: ''}
             
 
-            <div className="flex flex-col ">
+            <div className="flex flex-col lg:w-full lg:pr-1 ">
                     <label
                       htmlFor="small-input"
                       className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
@@ -752,7 +757,8 @@ export default function UpdateQuotationForm({item}) {
                         handleChange("delivery_type", "description", e)
                       }
                     />
-                  </div>
+            </div>
+           
            
 
                 </div>

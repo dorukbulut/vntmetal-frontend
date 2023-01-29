@@ -4,6 +4,7 @@ export default function QuotationFormDisplay({ values }) {
   const router = useRouter();
 
   const [create, setCreate] = useState(false);
+  
   const toggleCreate = () => {
     setCreate(!create);
   };
@@ -199,7 +200,7 @@ export default function QuotationFormDisplay({ values }) {
                 <td class="px-6 py-3"></td>
                 <td class="px-6 py-3"></td>
                 <th scope="row" class="px-6 py-3 text-base">Toplam Fiyat (EXW)</th>
-                <td class="px-6 py-3">{values.grand_total} {values.quotationItems[0].currency}</td>
+                <td class="px-6 py-3">{parseFloat(values.grand_total).toFixed(2)} {values.quotationItems[0].currency}</td>
             </tr>
         </tfoot>
                   </table>
@@ -227,7 +228,7 @@ export default function QuotationFormDisplay({ values }) {
                     {values.delivery_type.name}
                 </th>
                 <td class="px-6 py-4">
-                    {values.delivery_type.location}
+                    {values.delivery_type.description}
                 </td>
                 <td class="px-6 py-4 bg-gray-50 ">
                     {values.delivery_type.total} {values.delivery_type.currencyType}
@@ -241,7 +242,7 @@ export default function QuotationFormDisplay({ values }) {
             <tr class="font-semibold text-gray-900 ">
                 <td class="px-6 py-3"></td>
                 <th scope="row" class="px-6 py-3 text-base">Toplam Fiyat</th>
-                <td class="px-6 py-3">{parseFloat(values.delivery_type.total) + parseFloat(values.grand_total)} {values.delivery_type.currencyType}</td>
+                <td class="px-6 py-3">{(parseFloat(values.delivery_type.total) + parseFloat(values.grand_total)).toFixed(2)} {values.delivery_type.currencyType}</td>
             </tr>
         </tfoot>
     </table>
