@@ -167,7 +167,7 @@ export default function BracketBush({ getMeasures, prevValues }) {
         <div className="flex flex-col">
           <label
             htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
           >
             Büyük Çap * (Q1)
           </label>
@@ -189,7 +189,7 @@ export default function BracketBush({ getMeasures, prevValues }) {
         <div className="flex flex-col">
           <label
             htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
           >
             Body Çap * (Q3)
           </label>
@@ -211,7 +211,7 @@ export default function BracketBush({ getMeasures, prevValues }) {
         <div className="flex flex-col">
           <label
             htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
           >
             Flanş Boyu * (L1)
           </label>
@@ -232,7 +232,7 @@ export default function BracketBush({ getMeasures, prevValues }) {
         <div className="flex flex-col">
           <label
             htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
           >
             Boy * (L)
           </label>
@@ -253,7 +253,7 @@ export default function BracketBush({ getMeasures, prevValues }) {
         <div className="flex flex-col">
           <label
             htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
           >
             İç Çap * (Q2)
           </label>
@@ -275,7 +275,7 @@ export default function BracketBush({ getMeasures, prevValues }) {
         <div className="flex flex-col">
           <label
             htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
           >
             Hesaplanan Ağırlık
           </label>

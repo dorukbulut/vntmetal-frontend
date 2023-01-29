@@ -101,7 +101,7 @@ export default function Contracted ({CUSTOMER, TYPE ,ANALYZE,prevValues, getCalc
                             <div className="flex flex-col space-y-3 ">
                               <label
                                 htmlFor="small-input"
-                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                               >
                                 Cari Kod *
                               </label>
@@ -117,7 +117,7 @@ export default function Contracted ({CUSTOMER, TYPE ,ANALYZE,prevValues, getCalc
                             <div className="flex flex-col space-y-3">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Analiz *
               </label>
@@ -133,7 +133,7 @@ export default function Contracted ({CUSTOMER, TYPE ,ANALYZE,prevValues, getCalc
                             <div className="flex flex-col space-y-3">
                               <label
                                 htmlFor="small-input"
-                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                               >
                                 Ürün Tipi *
                               </label>
@@ -149,7 +149,7 @@ export default function Contracted ({CUSTOMER, TYPE ,ANALYZE,prevValues, getCalc
                             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Dolar Kuru *
               </label>
@@ -167,7 +167,7 @@ export default function Contracted ({CUSTOMER, TYPE ,ANALYZE,prevValues, getCalc
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Euro Kuru *
               </label>
@@ -185,7 +185,7 @@ export default function Contracted ({CUSTOMER, TYPE ,ANALYZE,prevValues, getCalc
                             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Döküm Kilogram Fiyatı*
               </label>

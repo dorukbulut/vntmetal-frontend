@@ -374,7 +374,7 @@ export default function UpdateQuotationForm({item}) {
     <div>
       <a
         onClick={toggleCreate}
-        className="hover:cursor-pointer font-medium text-text-fuchsia-500 dark:text-fuchsia-400-600 dark:text-text-fuchsia-500 dark:text-fuchsia-400-500 hover:underline"
+        className="hover:cursor-pointer font-medium text-text-fuchsia-500  hover:underline"
       >
         Düzenle
       </a>
@@ -424,7 +424,7 @@ export default function UpdateQuotationForm({item}) {
                 <div className="flex flex-col space-y-3 ">
                               <label
                                 htmlFor="small-input"
-                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                               >
                                 Cari Kod *
                               </label>
@@ -441,7 +441,7 @@ export default function UpdateQuotationForm({item}) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Müşteri Referans Numarası *
                     </label>
@@ -490,7 +490,7 @@ export default function UpdateQuotationForm({item}) {
                 <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Döviz Kuru (TL ise 1 Girininiz)
                     </label>
@@ -507,7 +507,7 @@ export default function UpdateQuotationForm({item}) {
                   <div className="flex flex-col space-y-3 ">
                                 <label
                                   htmlFor="small-input"
-                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                                 >
                                   Döviz Tipi
                                 </label>
@@ -523,7 +523,7 @@ export default function UpdateQuotationForm({item}) {
                 <div className="flex flex-col space-y-3 ">
                                 <label
                                   htmlFor="small-input"
-                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                                 >
                                   Teslimat Şekli *
                                 </label>
@@ -540,7 +540,7 @@ export default function UpdateQuotationForm({item}) {
                   <div className="flex flex-col space-y-3 ">
                                 <label
                                   htmlFor="small-input"
-                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                                 >
                                   Teslimat Tipi *
                                 </label>
@@ -560,7 +560,7 @@ export default function UpdateQuotationForm({item}) {
                   <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Paketleme *
               </label>
@@ -578,7 +578,7 @@ export default function UpdateQuotationForm({item}) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Yükleme Ücreti *
                     </label>
@@ -595,7 +595,7 @@ export default function UpdateQuotationForm({item}) {
                   {setting === 'extra' ? <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Liman veya Belirlenen Yerde teslim *
                     </label>
@@ -613,7 +613,7 @@ export default function UpdateQuotationForm({item}) {
             {setting === "extra" ?  <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 İhracat Prosedürleri *
               </label>
@@ -631,7 +631,7 @@ export default function UpdateQuotationForm({item}) {
             {setting === "extra" ? <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Çıkış terminali ücretleri *
               </label>
@@ -649,7 +649,7 @@ export default function UpdateQuotationForm({item}) {
             {setting === "extra" ?  <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Araca Yükleme *
               </label>
@@ -668,7 +668,7 @@ export default function UpdateQuotationForm({item}) {
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Taşıma masrafları *
               </label>
@@ -685,7 +685,7 @@ export default function UpdateQuotationForm({item}) {
             {setting === "extra" ? <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Sigorta *
               </label>
@@ -703,7 +703,7 @@ export default function UpdateQuotationForm({item}) {
             {setting === "extra" ? <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Varış Terminali Ücretleri *
               </label>
@@ -721,7 +721,7 @@ export default function UpdateQuotationForm({item}) {
             {setting === "extra" ? <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 İthalat Prosedürleri *
               </label>
@@ -740,7 +740,7 @@ export default function UpdateQuotationForm({item}) {
             <div className="flex flex-col ">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Açıklama
                     </label>
@@ -773,7 +773,7 @@ export default function UpdateQuotationForm({item}) {
                   <div className="flex flex-col ">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Geçerlilik Süresi
                     </label>
@@ -791,7 +791,7 @@ export default function UpdateQuotationForm({item}) {
                   <div className="flex flex-col ">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Incoterm Açıklama
                     </label>
@@ -808,7 +808,7 @@ export default function UpdateQuotationForm({item}) {
                   <div className="flex flex-col ">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Ödeme Şekli
                     </label>
@@ -825,7 +825,7 @@ export default function UpdateQuotationForm({item}) {
                   <div className="flex flex-col ">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Ekstra Açıklama
                     </label>
@@ -844,7 +844,7 @@ export default function UpdateQuotationForm({item}) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Hazırlayan *
                     </label>
@@ -863,7 +863,7 @@ export default function UpdateQuotationForm({item}) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Onaylayan *
                     </label>

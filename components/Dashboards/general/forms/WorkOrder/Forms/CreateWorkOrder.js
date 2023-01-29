@@ -277,7 +277,7 @@ export default function CreateWorkOrder({customers}) {
                 <div className="flex flex-col space-y-3 ">
                               <label
                                 htmlFor="small-input"
-                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                               >
                                 Cari Kod *
                               </label>
@@ -293,7 +293,7 @@ export default function CreateWorkOrder({customers}) {
                             <div className="flex flex-col space-y-3 ">
                               <label
                                 htmlFor="small-input"
-                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                               >
                                 Sipariş Onay Formu *
                               </label>
@@ -325,7 +325,7 @@ export default function CreateWorkOrder({customers}) {
                   <div className="flex flex-col ">
                   <label
                                 htmlFor="small-input"
-                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                               >
                                 Ürün Tipi
                               </label>
@@ -336,7 +336,7 @@ export default function CreateWorkOrder({customers}) {
                 <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Plaka Model Ölçüsü *
                     </label>
@@ -354,7 +354,7 @@ export default function CreateWorkOrder({customers}) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Dış Atölyede İşlenecek Ölçü *
                     </label>

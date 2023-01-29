@@ -305,7 +305,7 @@ export default function CreateMake({prevValues, type}) {
     <div>
       {type === "update" ? <a
         onClick={toggleCreate}
-        className="hover:cursor-pointer font-medium text-text-fuchsia-500 dark:text-fuchsia-400-600 dark:text-text-fuchsia-500 dark:text-fuchsia-400-500 hover:underline"
+        className="hover:cursor-pointer font-medium text-text-fuchsia-500  hover:underline"
       >
         Düzenle
       </a>: <button
@@ -394,7 +394,7 @@ export default function CreateMake({prevValues, type}) {
                           <div className="lg:w-96 space-y-5">
                             <label
                               htmlFor="small-input"
-                              className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                              className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                             >
                               Teklif Tipi *
                             </label>

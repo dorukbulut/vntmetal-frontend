@@ -195,7 +195,7 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Adet *
               </label>
@@ -215,7 +215,7 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Döküm Kilogram Fiyatı (₺)
               </label>
@@ -225,7 +225,7 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Döküm Fiyatı (₺)
               </label>
@@ -237,7 +237,7 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Model Fiyatı *
               </label>
@@ -257,7 +257,7 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Model Adet Fiyatı (₺)
               </label>
@@ -272,7 +272,7 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900"
               >
                 Model Firma Adı *
               </label>
@@ -292,7 +292,7 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 İşleme Fiyatı *
               </label>
@@ -312,7 +312,7 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 İşleme Firma Adı *
               </label>
@@ -332,7 +332,7 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Test Fiyatı *
               </label>
@@ -352,7 +352,7 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Maliyet (₺)
               </label>
@@ -364,7 +364,7 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Kar Oranı(yüzde) *
               </label>
@@ -386,7 +386,7 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Alternatif Fiyat *
               </label>
@@ -406,7 +406,7 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
             <div className="flex flex-col space-y-3">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Satış Fiyatı
               </label>

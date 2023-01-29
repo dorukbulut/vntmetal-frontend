@@ -182,7 +182,7 @@ export default function MiddleBracketBush ({getMeasures, prevValues}) {
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Q1 *
               </label>
@@ -205,7 +205,7 @@ export default function MiddleBracketBush ({getMeasures, prevValues}) {
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                  Q2 *
               </label>
@@ -227,7 +227,7 @@ export default function MiddleBracketBush ({getMeasures, prevValues}) {
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Q3 *
               </label>
@@ -250,7 +250,7 @@ export default function MiddleBracketBush ({getMeasures, prevValues}) {
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Q4 *
               </label>
@@ -272,7 +272,7 @@ export default function MiddleBracketBush ({getMeasures, prevValues}) {
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                  L1  *
               </label>
@@ -294,7 +294,7 @@ export default function MiddleBracketBush ({getMeasures, prevValues}) {
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Flanş Boyu L2  *
               </label>
@@ -317,7 +317,7 @@ export default function MiddleBracketBush ({getMeasures, prevValues}) {
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Ara Boy L3  *
               </label>
@@ -339,7 +339,7 @@ export default function MiddleBracketBush ({getMeasures, prevValues}) {
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Tam Boy L  *
               </label>
@@ -362,7 +362,7 @@ export default function MiddleBracketBush ({getMeasures, prevValues}) {
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Hesaplanan Ağırlık
               </label>

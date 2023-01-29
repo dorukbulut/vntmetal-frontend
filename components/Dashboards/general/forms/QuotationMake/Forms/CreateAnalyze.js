@@ -149,7 +149,7 @@ export default function CreateAnalyze() {
                   <div className="flex flex-col ">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Analiz İsmi *
                     </label>
@@ -167,7 +167,7 @@ export default function CreateAnalyze() {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Analiz Katsayısı Bakır *
                     </label>
@@ -186,7 +186,7 @@ export default function CreateAnalyze() {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Analiz Katsayısı Kalay *
                     </label>

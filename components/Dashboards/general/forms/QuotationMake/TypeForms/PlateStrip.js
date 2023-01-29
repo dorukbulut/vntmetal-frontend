@@ -132,7 +132,7 @@ export default function PlateStrip ({getMeasures, prevValues}) {
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 En  *
               </label>
@@ -156,7 +156,7 @@ export default function PlateStrip ({getMeasures, prevValues}) {
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                Boy *
               </label>
@@ -179,7 +179,7 @@ export default function PlateStrip ({getMeasures, prevValues}) {
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Kalınlık  *
               </label>
@@ -202,7 +202,7 @@ export default function PlateStrip ({getMeasures, prevValues}) {
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
               >
                 Hesaplanan Ağırlık
               </label>

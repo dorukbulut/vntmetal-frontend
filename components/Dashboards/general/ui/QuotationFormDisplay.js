@@ -11,7 +11,7 @@ export default function QuotationFormDisplay({ values }) {
     <div>
       <a
         onClick={toggleCreate}
-        className="hover:cursor-pointer font-medium text-text-fuchsia-500 dark:text-fuchsia-400-600 dark:text-text-fuchsia-500 dark:text-fuchsia-400-500 hover:underline"
+        className="hover:cursor-pointer font-medium text-text-fuchsia-500  hover:underline"
       >
         Görüntüle
       </a>
@@ -111,12 +111,12 @@ export default function QuotationFormDisplay({ values }) {
                 
 
                 <div class="relative overflow-x-auto shadow-lg sm:rounded-lg">
-                  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase dark:text-gray-400">
+                  <table class="w-full text-sm text-left text-gray-500 d">
+                    <thead class="text-xs text-gray-700 uppercase ">
                       <tr>
                         <th
                           scope="col"
-                          class="px-6 py-3 bg-gray-50 dark:bg-gray-800"
+                          class="px-6 py-3 bg-gray-50 "
                         >
                           Ürün
                         </th>
@@ -125,7 +125,7 @@ export default function QuotationFormDisplay({ values }) {
                         </th>
                         <th
                           scope="col"
-                          class="px-6 py-3 bg-gray-50 dark:bg-gray-800"
+                          class="px-6 py-3 bg-gray-50 "
                         >
                           Ölçü
                         </th>
@@ -171,15 +171,15 @@ export default function QuotationFormDisplay({ values }) {
               
                         }
                         return (
-                          <tr class="border-b border-gray-200 dark:border-gray-700">
+                          <tr class="border-b border-gray-200 ">
                             <th
                               scope="row"
-                              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800"
+                              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 "
                             >
                               {index + 1}
                             </th>
                             <td class="px-6 py-4">{item.description}</td>
-                            <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                            <td class="px-6 py-4 bg-gray-50 d">
                               {dim}
                             </td>
                             <td class="px-6 py-4">{item.analyze.analyze_Name}</td>
@@ -192,7 +192,7 @@ export default function QuotationFormDisplay({ values }) {
                       })}
                     </tbody>
                     <tfoot>
-            <tr class="font-semibold text-gray-900 dark:text-white">
+            <tr class="font-semibold text-gray-900 ">
                 <td class="px-6 py-3"></td>
                 <td class="px-6 py-3"></td>
                 <td class="px-6 py-3"></td>
@@ -206,30 +206,30 @@ export default function QuotationFormDisplay({ values }) {
                 </div>
 
                 <div class="relative overflow-x-auto shadow-lg sm:rounded-lg">
-    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase dark:text-gray-400">
+    <table class="w-full text-sm text-left text-gray-500 ">
+        <thead class="text-xs text-gray-700 uppercase ">
             <tr>
-                <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
+                <th scope="col" class="px-6 py-3 bg-gray-50 ">
                     Teslimat Şekli
                 </th>
                 <th scope="col" class="px-6 py-3">
                     Teslimat Açıklaması
                 </th>
-                <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
+                <th scope="col" class="px-6 py-3 bg-gray-50 ">
                     Teslimat Fiyatı
                 </th>
                 
             </tr>
         </thead>
         <tbody>
-            <tr class="border-b border-gray-200 dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+            <tr class="border-b border-gray-200 ">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 ">
                     {values.delivery_type.name}
                 </th>
                 <td class="px-6 py-4">
                     {values.delivery_type.location}
                 </td>
-                <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                <td class="px-6 py-4 bg-gray-50 ">
                     {values.delivery_type.total} {values.delivery_type.currencyType}
                 </td>
                 
@@ -238,7 +238,7 @@ export default function QuotationFormDisplay({ values }) {
         </tbody>
 
         <tfoot>
-            <tr class="font-semibold text-gray-900 dark:text-white">
+            <tr class="font-semibold text-gray-900 ">
                 <td class="px-6 py-3"></td>
                 <th scope="row" class="px-6 py-3 text-base">Toplam Fiyat</th>
                 <td class="px-6 py-3">{parseFloat(values.delivery_type.total) + parseFloat(values.grand_total)} {values.delivery_type.currencyType}</td>
@@ -248,10 +248,10 @@ export default function QuotationFormDisplay({ values }) {
                 </div>
 
                 <div class="relative overflow-x-auto shadow-lg sm:rounded-lg">
-    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-    <thead class="text-xs text-gray-700 uppercase dark:text-gray-400">
+    <table class="w-full text-sm text-left text-gray-500 ">
+    <thead class="text-xs text-gray-700 uppercase ">
             <tr>
-                <th scope="col" class="px-6 py-3 bg-gray-50 dark:bg-gray-800">
+                <th scope="col" class="px-6 py-3 bg-gray-50 ">
                     
                 </th>
                 <th scope="col" class="px-6 py-3">
@@ -262,41 +262,41 @@ export default function QuotationFormDisplay({ values }) {
             </tr>
         </thead>
         <tbody>
-            <tr class="border-b border-gray-200 dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+            <tr class="border-b border-gray-200 ">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 ">
                     Geçerlilik süresi
                 </th>
-                <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                <td class="px-6 py-4 bg-gray-50 ">
                     {values.validityOfOffer}
                 </td>
                 
             </tr>
 
-            <tr class="border-b border-gray-200 dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+            <tr class="border-b border-gray-200 ">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 ">
                     Teslimat Tipi
                 </th>
-                <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                <td class="px-6 py-4 bg-gray-50 ">
                     {values.IncotermType}
                 </td>
                 
             </tr>
 
-            <tr class="border-b border-gray-200 dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+            <tr class="border-b border-gray-200 ">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 ">
                     Ödeme Şekli
                 </th>
-                <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                <td class="px-6 py-4 bg-gray-50 ">
                     {values.PaymentTerms}
                 </td>
                 
             </tr>
 
-            <tr class="border-b border-gray-200 dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800">
+            <tr class="border-b border-gray-200 ">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 ">
                     Ekstra Detaylar
                 </th>
-                <td class="px-6 py-4 bg-gray-50 dark:bg-gray-800">
+                <td class="px-6 py-4 bg-gray-50 ">
                     {values.extraDetails}
                 </td>
                 

@@ -210,7 +210,7 @@ export default function UpdateCustomer({ customer }) {
           getCustomer();
           toggleCreate();
         }}
-        className="hover:cursor-pointer font-medium text-text-fuchsia-500 dark:text-fuchsia-400-600 dark:text-text-fuchsia-500 dark:text-fuchsia-400-500 hover:underline"
+        className="hover:cursor-pointer font-medium text-text-fuchsia-500  hover:underline"
       >
         Düzenle
       </a>
@@ -264,7 +264,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col ">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Cari Kod *
                     </label>
@@ -283,7 +283,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Cari Ünvan *
                     </label>
@@ -302,7 +302,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       İlgili Kişi *
                     </label>
@@ -321,7 +321,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       T.C Kimlik Numarası *
                     </label>
@@ -340,7 +340,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Telefon Numarası 1
                     </label>
@@ -358,7 +358,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Telefon Numarası 2
                     </label>
@@ -376,7 +376,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Fax Numarası
                     </label>
@@ -394,7 +394,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       E-Posta Adresi
                     </label>
@@ -411,7 +411,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Web Sitesi
                     </label>
@@ -429,7 +429,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Kep Adresi *
                     </label>
@@ -460,7 +460,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col ">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Vergi Numarası *
                     </label>
@@ -479,7 +479,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col ">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Vergi Dairesi *
                     </label>
@@ -498,7 +498,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col ">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Vergi Dairesi No *
                     </label>
@@ -529,7 +529,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Adres
                     </label>
@@ -547,7 +547,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Bina Numarası *
                     </label>
@@ -565,7 +565,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Bina ismi *
                     </label>
@@ -583,7 +583,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Kapı Numarası *
                     </label>
@@ -602,7 +602,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Kasaba *
                     </label>
@@ -621,7 +621,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Semt *
                     </label>
@@ -640,7 +640,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Şehir *
                     </label>
@@ -659,7 +659,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Ülke *
                     </label>
@@ -678,7 +678,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Adres No *
                     </label>
@@ -697,7 +697,7 @@ export default function UpdateCustomer({ customer }) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Posta Kodu *
                     </label>

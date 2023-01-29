@@ -305,7 +305,7 @@ export default function UpdateConfirmationForm({item}) {
     <div>
       <a
         onClick={toggleCreate}
-        className="hover:cursor-pointer font-medium text-text-fuchsia-500 dark:text-fuchsia-400-600 dark:text-text-fuchsia-500 dark:text-fuchsia-400-500 hover:underline"
+        className="hover:cursor-pointer font-medium text-text-fuchsia-500 "
       >
         Düzenle
       </a>
@@ -355,7 +355,7 @@ export default function UpdateConfirmationForm({item}) {
                 <div className="flex flex-col space-y-3 ">
                               <label
                                 htmlFor="small-input"
-                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                               >
                                 Cari Kod 
                               </label>
@@ -364,7 +364,7 @@ export default function UpdateConfirmationForm({item}) {
                             <div className="flex flex-col space-y-3 ">
                               <label
                                 htmlFor="small-input"
-                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                               >
                                 Teklif Formu 
                               </label>
@@ -373,7 +373,7 @@ export default function UpdateConfirmationForm({item}) {
                             <div className="flex flex-col space-y-3 ">
                               <label
                                 htmlFor="small-input"
-                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                               >
                                 Teklif Revizyon
                               </label>
@@ -382,7 +382,7 @@ export default function UpdateConfirmationForm({item}) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Müşteri Referans Numarası *
                     </label>
@@ -402,7 +402,7 @@ export default function UpdateConfirmationForm({item}) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Sipariş Tarihi *
                     </label>
@@ -422,7 +422,7 @@ export default function UpdateConfirmationForm({item}) {
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Planlanan Teslim Tarihi *
                     </label>
@@ -442,7 +442,7 @@ export default function UpdateConfirmationForm({item}) {
                   <div className="flex flex-col ">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Özel İstekler
                     </label>
@@ -489,7 +489,7 @@ export default function UpdateConfirmationForm({item}) {
                 <div className="flex flex-col lg:w-1/2 ">
                     <label
                       htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
                       Açıklama *
                     </label>
@@ -507,7 +507,7 @@ export default function UpdateConfirmationForm({item}) {
                   <div className="flex flex-col lg:w-1/2">
                     <label
                         htmlFor="small-input"
-                        className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 dark:text-gray-300"
+                        className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                       >
                         Sertifika
                       </label>

@@ -123,7 +123,7 @@ export default function QuotationMake({items}) {
           <div className="relative overflow-x-auto shadow-md  sm:rounded-lg">
             {quotItems.length !== 0 ? (
               <table className="w-full text-sm text-left text-gray-500 ">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
                   <tr>
                     <th scope="col" className="px-6 py-3">
                       ÜRÜN TİPİ
@@ -150,11 +150,11 @@ export default function QuotationMake({items}) {
                    quotItems.map((item, index) =>  {
                     return (<tr
                           key={index}
-                          className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                          className="bg-white border-b  hover:bg-gray-50 "
                         >
                           <th
                             scope="row"
-                            className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                            className="px-6 py-4 font-medium text-gray-900 "
                           >
                             {item.straight_bush ? "Düz Burç" : ""}
                             {item.plate_strip ? "Plaka" : ""}
