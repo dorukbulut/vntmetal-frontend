@@ -68,7 +68,7 @@ export default function QuotationMake({customers, forms}) {
         }
       })
       .catch(err => {
-        router.reload(window.location.pathname);
+        
       });
     }
     
@@ -97,7 +97,7 @@ export default function QuotationMake({customers, forms}) {
           Teklif Formu Hazırlama
         </h2>
         <div className="relative flex overflow-x-auto shadow-md sm:rounded-lg p-5 space-x-5 items-center">
-          <CreateQuotationForm customers={customers}/>
+          <CreateQuotationForm key={`${9012}+${new Date().getTime()}+qr2`} customers={customers}/>
           <p className="text-sky-700 italic font-poppins tracking-widest">
             Filtrele
           </p>
@@ -220,10 +220,10 @@ export default function QuotationMake({customers, forms}) {
                            <button id={item.quotation_ID} onClick={generate} className="hover:underline">İndir</button>
                           </td>
                           <td className="px-6 py-4 text-right">
-                            <QuotationFormDisplay values={item} />
+                            <QuotationFormDisplay key={`${index}+${new Date().getTime()}qr` } quotID={item.quotation_ID} />
                           </td>
                           <td className="px-6 py-4 text-right">
-                            <UpdateQuotationForm customers={customers} item={item}/>
+                            <UpdateQuotationForm key={`${index}+${new Date().getTime()}`} customers={customers} quotID={item.quotation_ID}/>
                           </td>
 
                           

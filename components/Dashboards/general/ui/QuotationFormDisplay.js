@@ -1,8 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-export default function QuotationFormDisplay({ values }) {
+import axios from "axios";
+export default function QuotationFormDisplay({ quotID }) {
   const router = useRouter();
-
+  const [values,setValues] = useState({});
+  const getValues = () => {
+    axios({
+      method : "POST",
+      data : {
+        quotation_ID : quotID,
+      },
+      withCredentials : true,
+      url : `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/get-quo`
+    })
+    .then(res => {
+      if (res.status === 200) {
+        setValues(res.data[0]);
+      }
+    })
+    .catch(err => console.log(err.message)); 
+  }
+  
   const [create, setCreate] = useState(false);
   
   const toggleCreate = () => {
@@ -11,7 +29,10 @@ export default function QuotationFormDisplay({ values }) {
   return (
     <div>
       <a
-        onClick={toggleCreate}
+        onClick={(e) => {
+          getValues();
+          toggleCreate();
+        }}
         className="hover:cursor-pointer font-medium text-text-fuchsia-500  hover:underline"
       >
         Görüntüle
@@ -48,7 +69,7 @@ export default function QuotationFormDisplay({ values }) {
             } flex flex-col space-y-10`}
           >
             <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-gray-600">
-              Teklif Formu : {`${values.reference}-REV-${values.revision}`}
+              Teklif Formu : {`${values?.reference}-REV-${values?.revision}`}
             </p>
             <div className="flex flex-col">
               <div className="flex flex-col gap-10">
@@ -60,7 +81,7 @@ export default function QuotationFormDisplay({ values }) {
                         Müşteri :{" "}
                         </p>
                         <p className="text-lg font-poppins">
-                        {values.customer.account_title}
+                        {values?.customer?.account_title}
                         </p>
                     </div>
 
@@ -69,7 +90,7 @@ export default function QuotationFormDisplay({ values }) {
                         İlgili Kişi :{" "}
                         </p>
                         <p className="text-lg font-poppins">
-                        {values.customer.account_related}
+                        {values?.customer?.account_related}
                         </p>
                     </div>
 
@@ -77,14 +98,14 @@ export default function QuotationFormDisplay({ values }) {
                         <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
                         Cari Kod :{" "}
                         </p>
-                        <p className="text-lg font-poppins">{values.Customer_ID}</p>
+                        <p className="text-lg font-poppins">{values?.Customer_ID}</p>
                     </div>
 
                     <div className="flex gap-2 items-center">
                         <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
                         Şirket :{" "}
                         </p>
-                        <p className="text-lg font-poppins">{values.company}</p>
+                        <p className="text-lg font-poppins">{values?.company}</p>
                     </div>
                     </div>
 
@@ -95,7 +116,7 @@ export default function QuotationFormDisplay({ values }) {
                         Tarih :{" "}
                         </p>
                         <p className="text-lg font-poppins">
-                        {`${values.day}-${values.month}-${values.year}`}
+                        {`${values?.day}-${values?.month}-${values?.year}`}
                         </p>
                     </div>
 
@@ -104,7 +125,7 @@ export default function QuotationFormDisplay({ values }) {
                         Müşteri Referans No. :{" "}
                         </p>
                         <p className="text-lg font-poppins">
-                        {values.customerInquiryNum}
+                        {values?.customerInquiryNum}
                         </p>
                     </div>
 
@@ -112,13 +133,13 @@ export default function QuotationFormDisplay({ values }) {
                         <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
                         Form Referans No. :{" "}
                         </p>
-                        <p className="text-lg font-poppins">{`${values.reference}-REV-${values.revision}`}</p>
+                        <p className="text-lg font-poppins">{`${values?.reference}-REV-${values?.revision}`}</p>
                     </div>
                     <div className="flex gap-2 items-center">
                         <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
                         Form Dili :{" "}
                         </p>
-                        <p className="text-lg font-poppins">{values.language === "English" ? "İngilizce" : "Türkçe"}</p>
+                        <p className="text-lg font-poppins">{values?.language === "English" ? "İngilizce" : "Türkçe"}</p>
                     </div>
                     </div>
                 </div>
@@ -165,7 +186,7 @@ export default function QuotationFormDisplay({ values }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {values.quotationItems.map((item, index) => {
+                      {values?.quotationItems?.map((item, index) => {
                         let dim = ""
             
                         if (item.straight_bush === null && item.plate_strip === null && item.doublebracket_bush === null && item.middlebracket_bush === null) {
@@ -213,7 +234,7 @@ export default function QuotationFormDisplay({ values }) {
                 <td className="px-6 py-3"></td>
                 <td className="px-6 py-3"></td>
                 <th scope="row" className="px-6 py-3 text-base">Toplam Fiyat (EXW)</th>
-                <td className="px-6 py-3">{parseFloat(values.grand_total).toFixed(2)} {values.quotationItems[0].currency}</td>
+                <td className="px-6 py-3">{parseFloat(values?.grand_total).toFixed(2)} {values?.delivery_type?.currencyType}</td>
             </tr>
         </tfoot>
                   </table>
@@ -238,13 +259,13 @@ export default function QuotationFormDisplay({ values }) {
         <tbody>
             <tr className="border-b border-gray-200 ">
                 <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 ">
-                    {values.delivery_type.name}
+                    {values?.delivery_type?.name}
                 </th>
                 <td className="px-6 py-4">
-                    {values.delivery_type.description}
+                    {values?.delivery_type?.description}
                 </td>
                 <td className="px-6 py-4 bg-gray-50 ">
-                    {values.delivery_type.total} {values.delivery_type.currencyType}
+                    {values?.delivery_type?.total} {values?.delivery_type?.currencyType}
                 </td>
                 
             </tr>
@@ -255,7 +276,7 @@ export default function QuotationFormDisplay({ values }) {
             <tr className="font-semibold text-gray-900 ">
                 <td className="px-6 py-3"></td>
                 <th scope="row" className="px-6 py-3 text-base">Toplam Fiyat</th>
-                <td className="px-6 py-3">{(parseFloat(values.delivery_type.total) + parseFloat(values.grand_total)).toFixed(2)} {values.delivery_type.currencyType}</td>
+                <td className="px-6 py-3">{(parseFloat(values?.delivery_type?.total) + parseFloat(values?.grand_total)).toFixed(2)} {values?.delivery_type?.currencyType}</td>
             </tr>
         </tfoot>
     </table>
@@ -281,7 +302,7 @@ export default function QuotationFormDisplay({ values }) {
                     Geçerlilik süresi
                 </th>
                 <td className="px-6 py-4 bg-gray-50 ">
-                    {values.validityOfOffer}
+                    {values?.validityOfOffer}
                 </td>
                 
             </tr>
@@ -291,7 +312,7 @@ export default function QuotationFormDisplay({ values }) {
                     Teslimat Tipi
                 </th>
                 <td className="px-6 py-4 bg-gray-50 ">
-                    {values.IncotermType}
+                    {values?.IncotermType}
                 </td>
                 
             </tr>
@@ -301,7 +322,7 @@ export default function QuotationFormDisplay({ values }) {
                     Ödeme Şekli
                 </th>
                 <td className="px-6 py-4 bg-gray-50 ">
-                    {values.PaymentTerms}
+                    {values?.PaymentTerms}
                 </td>
                 
             </tr>
@@ -311,7 +332,7 @@ export default function QuotationFormDisplay({ values }) {
                     Ekstra Detaylar
                 </th>
                 <td className="px-6 py-4 bg-gray-50 ">
-                    {values.extraDetails}
+                    {values?.extraDetails}
                 </td>
                 
             </tr>
@@ -328,7 +349,7 @@ export default function QuotationFormDisplay({ values }) {
                             Hazırlayan :{" "}
                             </p>
                             <p className="text-lg font-poppins">
-                            {values.preparedBy}
+                            {values?.preparedBy}
                             </p>
                         </div>
                     </div>
@@ -340,7 +361,7 @@ export default function QuotationFormDisplay({ values }) {
                             Onaylayan :{" "}
                             </p>
                             <p className="text-lg font-poppins">
-                            {values.approvedBy}
+                            {values?.approvedBy}
                             </p>
                         </div>
                     </div>

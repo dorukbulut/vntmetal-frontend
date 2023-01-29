@@ -88,23 +88,23 @@ const INCOTERMS_INTRA = [
 ]
 
 
-export default function UpdateQuotationForm({item}) {
+export default function UpdateQuotationForm({quotID}) {
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
   const [createErr, setCreateErr] = useState(false);
   const [fields, setFields] = useState({
     options : {
-      customerInquiryNum : item.customerInquiryNum,
-      grand_total : item.grand_total,
-      validityOfOffer : item.validityOfOffer,
-      IncotermType : item.IncotermType,
-      PaymentTerms: item.PaymentTerms,
-      extraDetails : item.extraDetails,
-      preparedBy : item.preparedBy,
-      approvedBy : item.approvedBy,
-      language : item.language,
-      company : item.company,
+      customerInquiryNum : "",
+      grand_total : "",
+      validityOfOffer : "",
+      IncotermType : "",
+      PaymentTerms: "",
+      extraDetails : "",
+      preparedBy : "",
+      approvedBy : "",
+      language : "",
+      company : "",
 
     },
     area : {
@@ -175,11 +175,68 @@ export default function UpdateQuotationForm({item}) {
 
   const [Customer_ID, setCustomer] = useState({
     options : {
-      Customer_ID : item.Customer_ID
+      Customer_ID : ""
     }
   })
   
-  
+  const getValues = () => {
+    axios({
+      method : "POST",
+      data : {
+        quotation_ID : quotID,
+      },
+      withCredentials : true,
+      url : `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/get-quo`
+    })
+    .then(res => {
+      if (res.status === 200) {
+        const item = res.data[0]
+        setFields({
+          options : {
+            customerInquiryNum : item.customerInquiryNum,
+            grand_total : item.grand_total,
+            validityOfOffer : item.validityOfOffer,
+            IncotermType : item.IncotermType,
+            PaymentTerms: item.PaymentTerms,
+            extraDetails : item.extraDetails,
+            preparedBy : item.preparedBy,
+            approvedBy : item.approvedBy,
+            language : item.language,
+            company : item.company,
+      
+          },
+          area : {
+            name : ''
+          },
+          delivery_type: {
+              name:  '',
+              package_fee: 0,
+              loading_fee: 0,
+              delivery_fee: 0,
+              export_fee: 0,
+              terminal_fee_exit: 0,
+              vehicleLoading_fee: 0,
+              transport_fee: 0,
+              insurance_fee: 0,
+              terminal_fee_entry: 0,
+              import_fee: 0,
+              currencyVal: "",
+              currencyType : "",
+              description : '',
+          },
+      
+          all : []
+        })
+
+        setCustomer({
+          options : {
+            Customer_ID : item.Customer_ID
+          }
+        });
+      }
+    })
+    .catch(err => console.log(err.message)); 
+  }
 
 
   const [all, setAll] = useState([]);
@@ -393,7 +450,10 @@ export default function UpdateQuotationForm({item}) {
   return (
     <div>
       <a
-        onClick={toggleCreate}
+        onClick={() => {
+          getValues();
+          toggleCreate();
+        }}
         className="hover:cursor-pointer font-medium text-text-fuchsia-500  hover:underline"
       >
         Düzenle
@@ -452,7 +512,7 @@ export default function UpdateQuotationForm({item}) {
                                 label="Cari Kod"
                                 field="options"
                                 area="Customer_ID"
-                                items={[{key : item.Customer_ID, value : item.Customer_ID}]}
+                                items={[{key : Customer_ID.options.Customer_ID, value : Customer_ID.options.Customer_ID}]}
                                 fields={Customer_ID}
                                 handleChange={handleChangeCustomer}
                               />
@@ -469,7 +529,7 @@ export default function UpdateQuotationForm({item}) {
                       type="text"
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      defaultValue={item.customerInquiryNum}
+                      defaultValue={fields.options.customerInquiryNum}
                       required
                       onChange={(e) =>
                         handleChange("options", "customerInquiryNum", e)
@@ -807,7 +867,7 @@ export default function UpdateQuotationForm({item}) {
                       type="text"
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      defaultValue={item.validityOfOffer}
+                      defaultValue={fields.options.validityOfOffer}
                       onChange={(e) =>
                         handleChange("options", "validityOfOffer", e)
                       }
@@ -825,7 +885,7 @@ export default function UpdateQuotationForm({item}) {
                       type="text"
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      defaultValue={item.IncotermType}
+                      defaultValue={fields.options.IncotermType}
                       onChange={(e) =>
                         handleChange("options", "IncotermType", e)
                       }
@@ -842,7 +902,7 @@ export default function UpdateQuotationForm({item}) {
                       type="text"
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      defaultValue={item.PaymentTerms}
+                      defaultValue={fields.options.PaymentTerms}
                       onChange={(e) =>
                         handleChange("options", "PaymentTerms", e)
                       }
@@ -859,7 +919,7 @@ export default function UpdateQuotationForm({item}) {
                       type="text"
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-full leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      defaultValue={item.extraDetails}
+                      defaultValue={fields.options.extraDetails}
                       onChange={(e) =>
                         handleChange("options", "extraDetails", e)
                       }
@@ -911,7 +971,7 @@ export default function UpdateQuotationForm({item}) {
                       type="text"
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      defaultValue={item.preparedBy}
+                      defaultValue={fields.options.preparedBy}
                       required
                       onChange={(e) =>
                         handleChange("options", "preparedBy", e)
@@ -930,7 +990,7 @@ export default function UpdateQuotationForm({item}) {
                       type="text"
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      defaultValue={item.approvedBy}
+                      defaultValue={fields.options.approvedBy}
                       required
                       onChange={(e) =>
                         handleChange("options", "approvedBy", e)
