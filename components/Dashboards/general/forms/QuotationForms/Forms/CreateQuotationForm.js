@@ -109,6 +109,8 @@ export default function CreateQuotationForm({customers}) {
       extraDetails : '',
       preparedBy : '',
       approvedBy : '',
+      language : '',
+      company : '',
 
     },
     area : {
@@ -150,6 +152,9 @@ export default function CreateQuotationForm({customers}) {
       extraDetails : '',
       preparedBy : '',
       approvedBy : '',
+      language : '',
+      company : ''
+
 
     },
     area : {
@@ -231,12 +236,30 @@ export default function CreateQuotationForm({customers}) {
       errors.Customer_ID.Customer_ID = ""
      }
 
+     
+
      //preparedBy
      if (check_fields.options.preparedBy === '') {
       isValid = false
       errors.options.preparedBy = "Hazırlayan Kişi Boş bırakılamaz !"
      } else  {
       errors.options.preparedBy = ""
+     }
+
+     //language
+     if (check_fields.options.language === '') {
+      isValid = false
+      errors.options.language = "Form Dili Boş bırakılamaz !"
+     } else  {
+      errors.options.language = ""
+     }
+
+     //company
+     if (check_fields.options.company === '') {
+      isValid = false
+      errors.options.company = "Şirket Boş bırakılamaz !"
+     } else  {
+      errors.options.company = ""
      }
 
      //approvedBy
@@ -850,6 +873,40 @@ export default function CreateQuotationForm({customers}) {
                       }
                       
                     />
+                  </div>
+
+                  <div className="flex flex-col lg:w-full lg:mr-1">
+                                <label
+                                  htmlFor="small-input"
+                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                                >
+                                  Form Dili *
+                                </label>
+                                <Dropdown
+                                  label="Dil"
+                                  field="options"
+                                  area="language"
+                                  items={[{key : "Türkçe", value: "Turkish"},{key:"İngilizce", value : "English"}]}
+                                  fields={fields}
+                                  handleChange={handleChange}
+                                />
+                  </div>
+
+                  <div className="flex flex-col lg:w-full lg:mr-1">
+                                <label
+                                  htmlFor="small-input"
+                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                                >
+                                  Şirket *
+                                </label>
+                                <Dropdown
+                                  label="Şirket"
+                                  field="options"
+                                  area="company"
+                                  items={[{key : "VNT", value: "VNT"},{key:"BILGESIN", value : "BILGESIN"}]}
+                                  fields={fields}
+                                  handleChange={handleChange}
+                                />
                   </div>
 
                   <div className="flex flex-col">

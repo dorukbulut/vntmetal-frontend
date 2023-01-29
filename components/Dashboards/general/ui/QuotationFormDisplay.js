@@ -79,6 +79,13 @@ export default function QuotationFormDisplay({ values }) {
                         </p>
                         <p className="text-lg font-poppins">{values.Customer_ID}</p>
                     </div>
+
+                    <div className="flex gap-2 items-center">
+                        <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
+                        Şirket :{" "}
+                        </p>
+                        <p className="text-lg font-poppins">{values.company}</p>
+                    </div>
                     </div>
 
                     <div className="flex flex-col gap-5 items-start lg:justify-self-start">
@@ -106,6 +113,12 @@ export default function QuotationFormDisplay({ values }) {
                         Form Referans No. :{" "}
                         </p>
                         <p className="text-lg font-poppins">{`${values.reference}-REV-${values.revision}`}</p>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                        <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
+                        Form Dili :{" "}
+                        </p>
+                        <p className="text-lg font-poppins">{values.language === "English" ? "İngilizce" : "Türkçe"}</p>
                     </div>
                     </div>
                 </div>
