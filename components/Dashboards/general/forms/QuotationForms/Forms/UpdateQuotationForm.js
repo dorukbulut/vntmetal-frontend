@@ -88,7 +88,7 @@ const INCOTERMS_INTRA = [
 ]
 
 
-export default function UpdateQuotationForm({quotID}) {
+export default function UpdateQuotationForm({quotID, customerID}) {
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
@@ -175,7 +175,7 @@ export default function UpdateQuotationForm({quotID}) {
 
   const [Customer_ID, setCustomer] = useState({
     options : {
-      Customer_ID : ""
+      Customer_ID : `${customerID}`
     }
   })
   
@@ -227,12 +227,6 @@ export default function UpdateQuotationForm({quotID}) {
       
           all : []
         })
-
-        setCustomer({
-          options : {
-            Customer_ID : item.Customer_ID
-          }
-        });
       }
     })
     .catch(err => console.log(err.message)); 

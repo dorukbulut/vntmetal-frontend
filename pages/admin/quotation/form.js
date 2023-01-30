@@ -220,10 +220,10 @@ export default function QuotationMake({customers, forms}) {
                            <button id={item.quotation_ID} onClick={generate} className="hover:underline">İndir</button>
                           </td>
                           <td className="px-6 py-4 text-right">
-                            <QuotationFormDisplay key={`${index}+${new Date().getTime()}qr` } quotID={item.quotation_ID} />
+                            <QuotationFormDisplay key={`${index}+${new Date().getTime()}qr` } quotID={item.quotation_ID}/>
                           </td>
                           <td className="px-6 py-4 text-right">
-                            <UpdateQuotationForm key={`${index}+${new Date().getTime()}`} customers={customers} quotID={item.quotation_ID}/>
+                            <UpdateQuotationForm key={`${index}+${new Date().getTime()}`} customerID={item.Customer_ID} quotID={item.quotation_ID}/>
                           </td>
 
                           
