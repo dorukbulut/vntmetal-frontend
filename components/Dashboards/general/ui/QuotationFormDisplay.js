@@ -3,26 +3,26 @@ import { useRouter } from "next/router";
 import axios from "axios";
 export default function QuotationFormDisplay({ quotID }) {
   const router = useRouter();
-  const [values,setValues] = useState({});
+  const [values, setValues] = useState({});
   const getValues = () => {
     axios({
-      method : "POST",
-      data : {
-        quotation_ID : quotID,
+      method: "POST",
+      data: {
+        quotation_ID: quotID,
       },
-      withCredentials : true,
-      url : `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/get-quo`
+      withCredentials: true,
+      url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/get-quo`,
     })
-    .then(res => {
-      if (res.status === 200) {
-        setValues(res.data[0]);
-      }
-    })
-    .catch(err => console.log(err.message)); 
-  }
-  
+      .then((res) => {
+        if (res.status === 200) {
+          setValues(res.data[0]);
+        }
+      })
+      .catch((err) => console.log(err.message));
+  };
+
   const [create, setCreate] = useState(false);
-  
+
   const toggleCreate = () => {
     setCreate(!create);
   };
@@ -74,94 +74,93 @@ export default function QuotationFormDisplay({ quotID }) {
             <div className="flex flex-col">
               <div className="flex flex-col gap-10">
                 <div className="flex flex-col gap-5 md:grid md:grid-cols-2 lg:gap-32 lg:grid lg:grid-cols-2 lg:items-end">
-                    <div className="flex flex-col gap-5  items-start lg:justify-self-end">
+                  <div className="flex flex-col gap-5  items-start lg:justify-self-end">
                     <div className="flex gap-2 items-center">
-                        <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
+                      <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
                         {" "}
                         Müşteri :{" "}
-                        </p>
-                        <p className="text-lg font-poppins">
+                      </p>
+                      <p className="text-lg font-poppins">
                         {values?.customer?.account_title}
-                        </p>
+                      </p>
                     </div>
 
                     <div className="flex gap-2 items-center">
-                        <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900">
+                      <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900">
                         İlgili Kişi :{" "}
-                        </p>
-                        <p className="text-lg font-poppins">
+                      </p>
+                      <p className="text-lg font-poppins">
                         {values?.customer?.account_related}
-                        </p>
+                      </p>
                     </div>
 
                     <div className="flex gap-2 items-center">
-                        <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
+                      <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
                         Cari Kod :{" "}
-                        </p>
-                        <p className="text-lg font-poppins">{values?.Customer_ID}</p>
+                      </p>
+                      <p className="text-lg font-poppins">
+                        {values?.Customer_ID}
+                      </p>
                     </div>
 
                     <div className="flex gap-2 items-center">
-                        <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
+                      <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
                         Şirket :{" "}
-                        </p>
-                        <p className="text-lg font-poppins">{values?.company}</p>
+                      </p>
+                      <p className="text-lg font-poppins">{values?.company}</p>
                     </div>
-                    </div>
+                  </div>
 
-                    <div className="flex flex-col gap-5 items-start lg:justify-self-start">
+                  <div className="flex flex-col gap-5 items-start lg:justify-self-start">
                     <div className="flex gap-2 items-center">
-                        <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
+                      <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
                         {" "}
                         Tarih :{" "}
-                        </p>
-                        <p className="text-lg font-poppins">
+                      </p>
+                      <p className="text-lg font-poppins">
                         {`${values?.day}-${values?.month}-${values?.year}`}
-                        </p>
+                      </p>
                     </div>
 
                     <div className="flex gap-2 items-center">
-                        <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900">
+                      <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900">
                         Müşteri Referans No. :{" "}
-                        </p>
-                        <p className="text-lg font-poppins">
+                      </p>
+                      <p className="text-lg font-poppins">
                         {values?.customerInquiryNum}
-                        </p>
+                      </p>
                     </div>
 
                     <div className="flex gap-2 items-center">
-                        <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
+                      <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
                         Form Referans No. :{" "}
-                        </p>
-                        <p className="text-lg font-poppins">{`${values?.reference}-REV-${values?.revision}`}</p>
+                      </p>
+                      <p className="text-lg font-poppins">{`${values?.reference}-REV-${values?.revision}`}</p>
                     </div>
                     <div className="flex gap-2 items-center">
-                        <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
+                      <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
                         Form Dili :{" "}
-                        </p>
-                        <p className="text-lg font-poppins">{values?.language === "English" ? "İngilizce" : "Türkçe"}</p>
+                      </p>
+                      <p className="text-lg font-poppins">
+                        {values?.language === "English"
+                          ? "İngilizce"
+                          : "Türkçe"}
+                      </p>
                     </div>
-                    </div>
+                  </div>
                 </div>
-                
 
                 <div className="relative overflow-x-auto shadow-lg sm:rounded-lg">
                   <table className="w-full text-sm text-left text-gray-500 d">
                     <thead className="text-xs text-gray-700 uppercase ">
                       <tr>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 bg-gray-50 "
-                        >
+                        <th scope="col" className="px-6 py-3 bg-gray-50 ">
                           Ürün
                         </th>
                         <th scope="col" className="px-6 py-3">
                           Açıklama
                         </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 bg-gray-50 "
-                        >
+                        <th scope="col" className="px-6 py-3 bg-gray-50 ">
                           Ölçü
                         </th>
                         <th scope="col" className="px-6 py-3">
@@ -187,23 +186,47 @@ export default function QuotationFormDisplay({ quotID }) {
                     </thead>
                     <tbody>
                       {values?.quotationItems?.map((item, index) => {
-                        let dim = ""
-            
-                        if (item.straight_bush === null && item.plate_strip === null && item.doublebracket_bush === null && item.middlebracket_bush === null) {
-                          dim = `${item.bracket_bush.bigger_diameter}*${item.bracket_bush.body_diameter}*${item.bracket_bush.inner_diameter}*${item.bracket_bush.bracket_length}*${item.bracket_bush.bush_length}`
-                          
-                        } if(item.plate_strip === null && item.bracket_bush === null && item.doublebracket_bush === null && item.middlebracket_bush === null) {
-                          
-                          dim = `${item.straight_bush.large_diameter}*${item.straight_bush.inner_diameter}*${item.straight_bush.bush_length}`
-                          
-                        } if(item.bracket_bush === null && item.straight_bush === null && item.doublebracket_bush === null && item.middlebracket_bush === null) {
-              
-                          dim = `${item.plate_strip.width}*${item.plate_strip["length"]}*${item.plate_strip.thickness}`
-                        } if (item.bracket_bush === null && item.straight_bush=== null && item.plate_strip=== null && item.middlebracket_bush === null){
-                          dim = `${item.doublebracket_bush.bigger_diameter}*${item.doublebracket_bush.body_diameter}*${item.doublebracket_bush.inner_diameter}*${item.doublebracket_bush.bracket_l1}*${item.doublebracket_bush.bracket_l2}*${item.doublebracket_bush.bracket_l3}*${item.doublebracket_bush.bracket_full}`
-                        } if (item.bracket_bush === null && item.straight_bush=== null && item.plate_strip=== null && item.doublebracket_bush === null){
-                          dim = `${item.middlebracket_bush.bracket_q1}*${item.middlebracket_bush.bracket_q2}*${item.middlebracket_bush.bracket_q3}*${item.middlebracket_bush.bracket_q4}*${item.middlebracket_bush.bracket_l1}*${item.middlebracket_bush.bracket_l2}*${item.middlebracket_bush.bracket_l3}*${item.middlebracket_bush.bracket_full}`
-              
+                        let dim = "";
+
+                        if (
+                          item.straight_bush === null &&
+                          item.plate_strip === null &&
+                          item.doublebracket_bush === null &&
+                          item.middlebracket_bush === null
+                        ) {
+                          dim = `${item.bracket_bush.bigger_diameter}*${item.bracket_bush.body_diameter}*${item.bracket_bush.inner_diameter}*${item.bracket_bush.bracket_length}*${item.bracket_bush.bush_length}`;
+                        }
+                        if (
+                          item.plate_strip === null &&
+                          item.bracket_bush === null &&
+                          item.doublebracket_bush === null &&
+                          item.middlebracket_bush === null
+                        ) {
+                          dim = `${item.straight_bush.large_diameter}*${item.straight_bush.inner_diameter}*${item.straight_bush.bush_length}`;
+                        }
+                        if (
+                          item.bracket_bush === null &&
+                          item.straight_bush === null &&
+                          item.doublebracket_bush === null &&
+                          item.middlebracket_bush === null
+                        ) {
+                          dim = `${item.plate_strip.width}*${item.plate_strip["length"]}*${item.plate_strip.thickness}`;
+                        }
+                        if (
+                          item.bracket_bush === null &&
+                          item.straight_bush === null &&
+                          item.plate_strip === null &&
+                          item.middlebracket_bush === null
+                        ) {
+                          dim = `${item.doublebracket_bush.bigger_diameter}*${item.doublebracket_bush.body_diameter}*${item.doublebracket_bush.inner_diameter}*${item.doublebracket_bush.bracket_l1}*${item.doublebracket_bush.bracket_l2}*${item.doublebracket_bush.bracket_l3}*${item.doublebracket_bush.bracket_full}`;
+                        }
+                        if (
+                          item.bracket_bush === null &&
+                          item.straight_bush === null &&
+                          item.plate_strip === null &&
+                          item.doublebracket_bush === null
+                        ) {
+                          dim = `${item.middlebracket_bush.bracket_q1}*${item.middlebracket_bush.bracket_q2}*${item.middlebracket_bush.bracket_q3}*${item.middlebracket_bush.bracket_q4}*${item.middlebracket_bush.bracket_l1}*${item.middlebracket_bush.bracket_l2}*${item.middlebracket_bush.bracket_l3}*${item.middlebracket_bush.bracket_full}`;
                         }
                         return (
                           <tr className="border-b border-gray-200 " key={index}>
@@ -214,159 +237,205 @@ export default function QuotationFormDisplay({ quotID }) {
                               {index + 1}
                             </th>
                             <td className="px-6 py-4">{item.description}</td>
-                            <td className="px-6 py-4 bg-gray-50 d">
-                              {dim}
+                            <td className="px-6 py-4 bg-gray-50 d">{dim}</td>
+                            <td className="px-6 py-4">
+                              {item.analyze.analyze_Name}
                             </td>
-                            <td className="px-6 py-4">{item.analyze.analyze_Name}</td>
                             <td className="px-6 py-4">{item.unit_frequence}</td>
-                            <td className="px-6 py-4">{item.unit_price} {item.currency}</td>
-                            <td className="px-6 py-4">{parseInt(item.unit_frequence) * parseFloat(item.unit_price)} {item.currency}</td>
+                            <td className="px-6 py-4">
+                              {item.unit_price} {item.currency}
+                            </td>
+                            <td className="px-6 py-4">
+                              {parseInt(item.unit_frequence) *
+                                parseFloat(item.unit_price)}{" "}
+                              {item.currency}
+                            </td>
                             <td className="px-6 py-4">{item.deliveryTime}</td>
                           </tr>
                         );
                       })}
                     </tbody>
                     <tfoot>
-            <tr className="font-semibold text-gray-900 ">
-                <td className="px-6 py-3"></td>
-                <td className="px-6 py-3"></td>
-                <td className="px-6 py-3"></td>
-                <td className="px-6 py-3"></td>
-                <td className="px-6 py-3"></td>
-                <th scope="row" className="px-6 py-3 text-base">Toplam Fiyat (EXW)</th>
-                <td className="px-6 py-3">{parseFloat(values?.grand_total).toFixed(2)} {values?.delivery_type?.currencyType}</td>
-            </tr>
-        </tfoot>
+                      <tr className="font-semibold text-gray-900 ">
+                        <td className="px-6 py-3"></td>
+                        <td className="px-6 py-3"></td>
+                        <td className="px-6 py-3"></td>
+                        <td className="px-6 py-3"></td>
+                        <td className="px-6 py-3"></td>
+                        <th scope="row" className="px-6 py-3 text-base">
+                          Toplam Fiyat (EXW)
+                        </th>
+                        <td className="px-6 py-3">
+                          {parseFloat(values?.grand_total).toFixed(2)}{" "}
+                          {values?.delivery_type?.currencyType}
+                        </td>
+                      </tr>
+                    </tfoot>
                   </table>
                 </div>
 
                 <div className="relative overflow-x-auto shadow-lg sm:rounded-lg">
-    <table className="w-full text-sm text-left text-gray-500 ">
-        <thead className="text-xs text-gray-700 uppercase ">
-            <tr>
-                <th scope="col" className="px-6 py-3 bg-gray-50 ">
-                    Teslimat Şekli
-                </th>
-                <th scope="col" className="px-6 py-3">
-                    Teslimat Açıklaması
-                </th>
-                <th scope="col" className="px-6 py-3 bg-gray-50 ">
-                    Teslimat Fiyatı
-                </th>
-                
-            </tr>
-        </thead>
-        <tbody>
-            <tr className="border-b border-gray-200 ">
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 ">
-                    {values?.delivery_type?.name}
-                </th>
-                <td className="px-6 py-4">
-                    {values?.delivery_type?.description}
-                </td>
-                <td className="px-6 py-4 bg-gray-50 ">
-                    {values?.delivery_type?.total} {values?.delivery_type?.currencyType}
-                </td>
-                
-            </tr>
-            
-        </tbody>
+                  <table className="w-full text-sm text-left text-gray-500 ">
+                    <thead className="text-xs text-gray-700 uppercase ">
+                      <tr>
+                        <th scope="col" className="px-6 py-3 bg-gray-50 ">
+                          Teslimat Şekli
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Teslimat Açıklaması
+                        </th>
+                        <th scope="col" className="px-6 py-3 bg-gray-50 ">
+                          Teslimat Fiyatı
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-gray-200 ">
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 "
+                        >
+                          {values?.delivery_type?.name}
+                        </th>
+                        <td className="px-6 py-4">
+                          {values?.delivery_type?.description}
+                        </td>
+                        <td className="px-6 py-4 bg-gray-50 ">
+                          {values?.delivery_type?.total}{" "}
+                          {values?.delivery_type?.currencyType}
+                        </td>
+                      </tr>
+                    </tbody>
 
-        <tfoot>
-            <tr className="font-semibold text-gray-900 ">
-                <td className="px-6 py-3"></td>
-                <th scope="row" className="px-6 py-3 text-base">Toplam Fiyat</th>
-                <td className="px-6 py-3">{(parseFloat(values?.delivery_type?.total) + parseFloat(values?.grand_total)).toFixed(2)} {values?.delivery_type?.currencyType}</td>
-            </tr>
-        </tfoot>
-    </table>
+                    <tfoot>
+                      <tr className="font-semibold text-gray-900 ">
+                        <td className="px-6 py-3"></td>
+                        <th scope="row" className="px-6 py-3 text-base">
+                          Toplam Fiyat
+                        </th>
+                        <td className="px-6 py-3">
+                          {(
+                            parseFloat(values?.delivery_type?.total) +
+                            parseFloat(values?.grand_total)
+                          ).toFixed(2)}{" "}
+                          {values?.delivery_type?.currencyType}
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
                 </div>
 
                 <div className="relative overflow-x-auto shadow-lg sm:rounded-lg">
-    <table className="w-full text-sm text-left text-gray-500 ">
-    <thead className="text-xs text-gray-700 uppercase ">
-            <tr>
-                <th scope="col" className="px-6 py-3 bg-gray-50 ">
-                    
-                </th>
-                <th scope="col" className="px-6 py-3">
-                    
-                </th>
-                
-                
-            </tr>
-        </thead>
-        <tbody>
-            <tr className="border-b border-gray-200 ">
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 ">
-                    Geçerlilik süresi
-                </th>
-                <td className="px-6 py-4 bg-gray-50 ">
-                    {values?.validityOfOffer}
-                </td>
-                
-            </tr>
+                  <table className="w-full text-sm text-left text-gray-500 ">
+                    <thead className="text-xs text-gray-700 uppercase ">
+                      <tr>
+                        <th scope="col" className="px-6 py-3 bg-gray-50 "></th>
+                        <th scope="col" className="px-6 py-3"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-gray-200 ">
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 "
+                        >
+                          Geçerlilik süresi
+                        </th>
+                        <td className="px-6 py-4 bg-gray-50 ">
+                          {values?.validityOfOffer}
+                        </td>
+                      </tr>
 
-            <tr className="border-b border-gray-200 ">
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 ">
-                    Teslimat Tipi
-                </th>
-                <td className="px-6 py-4 bg-gray-50 ">
-                    {values?.IncotermType}
-                </td>
-                
-            </tr>
+                      <tr className="border-b border-gray-200 ">
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 "
+                        >
+                          Teslimat Tipi
+                        </th>
+                        <td className="px-6 py-4 bg-gray-50 ">
+                          {values?.IncotermType}
+                        </td>
+                      </tr>
 
-            <tr className="border-b border-gray-200 ">
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 ">
-                    Ödeme Şekli
-                </th>
-                <td className="px-6 py-4 bg-gray-50 ">
-                    {values?.PaymentTerms}
-                </td>
-                
-            </tr>
+                      <tr className="border-b border-gray-200 ">
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 "
+                        >
+                          Ödeme Şekli
+                        </th>
+                        <td className="px-6 py-4 bg-gray-50 ">
+                          {values?.PaymentTerms}
+                        </td>
+                      </tr>
 
-            <tr className="border-b border-gray-200 ">
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 ">
-                    Ekstra Detaylar
-                </th>
-                <td className="px-6 py-4 bg-gray-50 ">
-                    {values?.extraDetails}
-                </td>
-                
-            </tr>
-            
-        </tbody>
-    </table>
+                      <tr className="border-b border-gray-200 ">
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 "
+                        >
+                          Ekstra Detaylar
+                        </th>
+                        <td className="px-6 py-4 bg-gray-50 ">
+                          {values?.extraDetails}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
 
                 <div className="flex flex-col gap-5 md:grid md:grid-cols-2 lg:gap-32 lg:grid lg:grid-cols-2 lg:items-end">
-                    <div className="flex flex-col gap-5  items-start lg:justify-self-end">
-                        <div className="flex gap-2 items-center">
-                            <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
-                            {" "}
-                            Hazırlayan :{" "}
-                            </p>
-                            <p className="text-lg font-poppins">
-                            {values?.preparedBy}
-                            </p>
-                        </div>
+                  <div className="flex flex-col gap-5  items-start lg:justify-self-end">
+                    <div className="flex gap-2 items-center">
+                      <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
+                        {" "}
+                        Hazırlayan :{" "}
+                      </p>
+                      <p className="text-lg font-poppins">
+                        {values?.preparedBy}
+                      </p>
                     </div>
+                  </div>
 
-                    <div className="flex flex-col gap-5 items-start lg:justify-self-start">
-                        <div className="flex gap-2 items-center">
-                            <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
-                            {" "}
-                            Onaylayan :{" "}
-                            </p>
-                            <p className="text-lg font-poppins">
-                            {values?.approvedBy}
-                            </p>
-                        </div>
+                  <div className="flex flex-col gap-5 items-start lg:justify-self-start">
+                    <div className="flex gap-2 items-center">
+                      <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
+                        {" "}
+                        Onaylayan :{" "}
+                      </p>
+                      <p className="text-lg font-poppins">
+                        {values?.approvedBy}
+                      </p>
                     </div>
+                  </div>
                 </div>
 
+                <div className="flex flex-col gap-5 md:grid md:grid-cols-2 lg:gap-32 lg:grid lg:grid-cols-2 lg:items-end">
+                  <div className="flex flex-col gap-5  items-start lg:justify-self-end">
+                    <div className="flex gap-2 items-center">
+                      <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
+                        {" "}
+                        Hazırlayan :{" "}
+                      </p>
+                      <p className="text-lg font-poppins">
+                        {values?.preparedBy}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-5 items-start lg:justify-self-start">
+                    <div className="flex gap-2 items-center">
+                      <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
+                        {" "}
+                        Onaylayan :{" "}
+                      </p>
+                      <p className="text-lg font-poppins">
+                        {values?.approvedBy}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
