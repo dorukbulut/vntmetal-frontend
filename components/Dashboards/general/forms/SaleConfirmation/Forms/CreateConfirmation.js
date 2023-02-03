@@ -25,6 +25,8 @@ export default function CreateConfirmationForm({ customers }) {
       deliveryDate: "",
       specialOffers: "",
       description: "",
+      company: "",
+      language: "",
     },
   });
 
@@ -36,6 +38,8 @@ export default function CreateConfirmationForm({ customers }) {
       specialOffers: "",
       description: "",
       item: "",
+      company: "",
+      language: "",
       Customer_ID: "",
       Quotation_ID: "",
       certificates: "",
@@ -246,6 +250,22 @@ export default function CreateConfirmationForm({ customers }) {
       errors.options.deliveryDate = "";
     }
 
+    //language
+    if (check_fields.options.language === "") {
+      isValid = false;
+      errors.options.language = "Form Dili Boş bırakılamaz !";
+    } else {
+      errors.options.language = "";
+    }
+
+    //company
+    if (check_fields.options.company === "") {
+      isValid = false;
+      errors.options.company = "Şirket Boş bırakılamaz !";
+    } else {
+      errors.options.company = "";
+    }
+
     //item
     if (selectedItem.length === 0) {
       isValid = false;
@@ -396,6 +416,45 @@ export default function CreateConfirmationForm({ customers }) {
                       handleChange={handleChangeQuo}
                     />
                   </div>
+                  <div className="flex flex-col lg:w-full lg:mr-1">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Form Dili *
+                    </label>
+                    <Dropdown
+                      label="Dil"
+                      field="options"
+                      area="language"
+                      items={[
+                        { key: "Türkçe", value: "Turkish" },
+                        { key: "İngilizce", value: "English" },
+                      ]}
+                      fields={fields}
+                      handleChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="flex flex-col lg:w-full lg:mr-1">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Şirket *
+                    </label>
+                    <Dropdown
+                      label="Şirket"
+                      field="options"
+                      area="company"
+                      items={[
+                        { key: "VNT", value: "VNT" },
+                        { key: "BILGESIN", value: "BILGESIN" },
+                      ]}
+                      fields={fields}
+                      handleChange={handleChange}
+                    />
+                  </div>
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
@@ -450,7 +509,7 @@ export default function CreateConfirmationForm({ customers }) {
                     />
                   </div>
 
-                  <div className="flex flex-col ">
+                  <div className="flex flex-col lg:col-span-2 ">
                     <label
                       htmlFor="small-input"
                       className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "

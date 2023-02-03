@@ -1,144 +1,165 @@
 import { useEffect, useState } from "react";
 import axios, { Axios } from "axios";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import Dropdown from "../../Common/Dropdown";
 import ItemSelect from "../../ItemSelect";
 import CheckMark from "../../CheckMark";
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
-
-
-export default function UpdateConfirmationForm({item}) {
-  
+export default function UpdateConfirmationForm({ item }) {
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
   const [createErr, setCreateErr] = useState(false);
   const [fields, setFields] = useState({
-    options : {
-      customerReference : item.customerReference,
-      OrderDate : item.OrderDate,
-      deliveryDate : item.deliveryDate,
-      specialOffers : item.specialOffers,
-      description : item.description,
-      
-    }
+    options: {
+      customerReference: item.customerReference,
+      OrderDate: item.OrderDate,
+      deliveryDate: item.deliveryDate,
+      specialOffers: item.specialOffers,
+      description: item.description,
+    },
   });
 
   const [currErrors, setCurrErrors] = useState({
-    options : {
-      customerReference : '',
-      OrderDate : '',
-      deliveryDate : '',
-      specialOffers : '',
-      description : '',
-      item : '',
-      Customer_ID : '',
-      Quotation_ID : '',
-      certificates :  '',
-    }
+    options: {
+      customerReference: "",
+      OrderDate: "",
+      deliveryDate: "",
+      specialOffers: "",
+      description: "",
+      item: "",
+      Customer_ID: "",
+      Quotation_ID: "",
+      certificates: "",
+    },
   });
 
-  
-  
-  
   const [Customer_ID, setCustomer] = useState({
-    options : {
-      Customer_ID : item.Customer_ID
-    }
-  })
-  
-  const [quotation, setQuotation] = useState(`${item.quotation_form.reference}`)
+    options: {
+      Customer_ID: item.Customer_ID,
+    },
+  });
+
+  const [quotation, setQuotation] = useState(
+    `${item.quotation_form.reference}`
+  );
   const [selectQuo, setSelectedQuo] = useState({
-    options : {
-        Quotation_ID : item.Quotation_ID
-      }
-  })
-  const [certificates, setCertificates] = useState(item.certificates.map(cert => cert.name));
+    options: {
+      Quotation_ID: item.Quotation_ID,
+    },
+  });
+  const [certificates, setCertificates] = useState(
+    item.certificates.map((cert) => cert.name)
+  );
   const [checkPack, setPackage] = useState(item.package);
   const [items, setItems] = useState([]);
-  const [selectedItem, setSelectedItem] = useState([])
+  const [selectedItem, setSelectedItem] = useState([]);
 
   useEffect(() => {
-    if (selectQuo.options.Quotation_ID !== '') {
+    if (selectQuo.options.Quotation_ID !== "") {
       axios({
-          method : "POST",
-          data : {
-              Quotation_ID : selectQuo.options.Quotation_ID
-          },
-          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/get-quo`,
-          withCredentials : true
+        method: "POST",
+        data: {
+          Quotation_ID: selectQuo.options.Quotation_ID,
+        },
+        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/get-quo`,
+        withCredentials: true,
       })
-      .then(res => {
-          setItems(res.data.map((item, key) => {
-            let dim = ""
-            let name = ""
-            
-          if (item.straight_bush === null && item.plate_strip === null && item.doublebracket_bush === null && item.middlebracket_bush === null) {
-            dim = `${item.bracket_bush.bigger_diameter}*${item.bracket_bush.body_diameter}*${item.bracket_bush.inner_diameter}*${item.bracket_bush.bracket_length}*${item.bracket_bush.bush_length}`
-            name = "Flanşlı Burç"     
-          } if(item.plate_strip === null && item.bracket_bush === null && item.doublebracket_bush === null && item.middlebracket_bush === null) {
-            
-            dim = `${item.straight_bush.large_diameter}*${item.straight_bush.inner_diameter}*${item.straight_bush.bush_length}`
-            name = "Düz Burç"
-            
-          } if(item.bracket_bush === null && item.straight_bush === null && item.doublebracket_bush === null && item.middlebracket_bush === null) {
+        .then((res) => {
+          setItems(
+            res.data.map((item, key) => {
+              let dim = "";
+              let name = "";
 
-            dim = `${item.plate_strip.width}*${item.plate_strip["length"]}*${item.plate_strip.thickness}`
-            name = "Plaka"
-          } if (item.bracket_bush === null && item.straight_bush=== null && item.plate_strip=== null && item.middlebracket_bush === null){
-            dim = `${item.doublebracket_bush.bigger_diameter}*${item.doublebracket_bush.body_diameter}*${item.doublebracket_bush.inner_diameter}*${item.doublebracket_bush.bracket_l1}*${item.doublebracket_bush.bracket_l2}*${item.doublebracket_bush.bracket_l3}*${item.doublebracket_bush.bracket_full}`
-            name = "Çift Flanşlı Burç"
-          } if (item.bracket_bush === null && item.straight_bush=== null && item.plate_strip=== null && item.doublebracket_bush === null){
-            dim = `${item.middlebracket_bush.bracket_q1}*${item.middlebracket_bush.bracket_q2}*${item.middlebracket_bush.bracket_q3}*${item.middlebracket_bush.bracket_q4}*${item.middlebracket_bush.bracket_l1}*${item.middlebracket_bush.bracket_l2}*${item.middlebracket_bush.bracket_l3}*${item.middlebracket_bush.bracket_full}`
-            name = "Ortadan Flanşlı Burç"
+              if (
+                item.straight_bush === null &&
+                item.plate_strip === null &&
+                item.doublebracket_bush === null &&
+                item.middlebracket_bush === null
+              ) {
+                dim = `${item.bracket_bush.bigger_diameter}*${item.bracket_bush.body_diameter}*${item.bracket_bush.inner_diameter}*${item.bracket_bush.bracket_length}*${item.bracket_bush.bush_length}`;
+                name = "Flanşlı Burç";
+              }
+              if (
+                item.plate_strip === null &&
+                item.bracket_bush === null &&
+                item.doublebracket_bush === null &&
+                item.middlebracket_bush === null
+              ) {
+                dim = `${item.straight_bush.large_diameter}*${item.straight_bush.inner_diameter}*${item.straight_bush.bush_length}`;
+                name = "Düz Burç";
+              }
+              if (
+                item.bracket_bush === null &&
+                item.straight_bush === null &&
+                item.doublebracket_bush === null &&
+                item.middlebracket_bush === null
+              ) {
+                dim = `${item.plate_strip.width}*${item.plate_strip["length"]}*${item.plate_strip.thickness}`;
+                name = "Plaka";
+              }
+              if (
+                item.bracket_bush === null &&
+                item.straight_bush === null &&
+                item.plate_strip === null &&
+                item.middlebracket_bush === null
+              ) {
+                dim = `${item.doublebracket_bush.bigger_diameter}*${item.doublebracket_bush.body_diameter}*${item.doublebracket_bush.inner_diameter}*${item.doublebracket_bush.bracket_l1}*${item.doublebracket_bush.bracket_l2}*${item.doublebracket_bush.bracket_l3}*${item.doublebracket_bush.bracket_full}`;
+                name = "Çift Flanşlı Burç";
+              }
+              if (
+                item.bracket_bush === null &&
+                item.straight_bush === null &&
+                item.plate_strip === null &&
+                item.doublebracket_bush === null
+              ) {
+                dim = `${item.middlebracket_bush.bracket_q1}*${item.middlebracket_bush.bracket_q2}*${item.middlebracket_bush.bracket_q3}*${item.middlebracket_bush.bracket_q4}*${item.middlebracket_bush.bracket_l1}*${item.middlebracket_bush.bracket_l2}*${item.middlebracket_bush.bracket_l3}*${item.middlebracket_bush.bracket_full}`;
+                name = "Ortadan Flanşlı Burç";
+              }
 
-          }
-
-          return {
-            "id": key + 1,
-            "item_id" : item.item_id,
-            "description": item.description,
-            "dimensions": dim,
-            "qty" : item.unit_frequence,
-            "name" : name,
-            "analysis" : item.analyze.analyze_Name,
-            "price" : item.unit_price
-
-          }
-        }))
-      })
-      .catch(err => console.log(err));
-  } else {
-    setItems([]);
-  }
+              return {
+                id: key + 1,
+                item_id: item.item_id,
+                description: item.description,
+                dimensions: dim,
+                qty: item.unit_frequence,
+                name: name,
+                analysis: item.analyze.analyze_Name,
+                price: `${item.unit_price} ${item.currency}`,
+              };
+            })
+          );
+        })
+        .catch((err) => console.log(err));
+    } else {
+      setItems([]);
+    }
   }, [selectQuo.options.Quotation_ID]);
 
-  useEffect(() =>  {
-    if (Customer_ID.options.Customer_ID !== '') {
-        axios({
-            method : "POST",
-            data : {
-                Customer_ID : Customer_ID.options.Customer_ID
-            },
-            url : `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/get`,
-            withCredentials : true
-        })
-        .then(res => {
-            let ITEMS = res.data.map(item => {
-                return {
-                    key : item.reference + "-REV" + item.revision,
-                    value : item.quotation_ID
-                }
-            });
+  useEffect(() => {
+    if (Customer_ID.options.Customer_ID !== "") {
+      axios({
+        method: "POST",
+        data: {
+          Customer_ID: Customer_ID.options.Customer_ID,
+        },
+        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/get`,
+        withCredentials: true,
+      })
+        .then((res) => {
+          let ITEMS = res.data.map((item) => {
+            return {
+              key: item.reference + "-REV" + item.revision,
+              value: item.quotation_ID,
+            };
+          });
 
-            setQuotations(ITEMS);
+          setQuotations(ITEMS);
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     }
-    
-    
   }, [Customer_ID.options.Customer_ID]);
 
   const handleChangeCustomer = (field, area, e) => {
@@ -146,158 +167,143 @@ export default function UpdateConfirmationForm({item}) {
       return {
         ...old,
         [field]: {
-          [area] : e.target.value
-        }
-      }
-    })
+          [area]: e.target.value,
+        },
+      };
+    });
 
     setSelectedQuo({
-      options : {
-        Quotation_ID : ''
-      }
-    })
-  }
+      options: {
+        Quotation_ID: "",
+      },
+    });
+  };
 
   const handleChangeQuo = (field, area, e) => {
     setSelectedQuo((old) => {
       return {
         ...old,
         [field]: {
-          [area] : e.target.value
-        }
-      }
-    })
+          [area]: e.target.value,
+        },
+      };
+    });
+  };
 
-    
-  }
-
-  
   const router = useRouter();
 
-  
-  
-
   const handleChange = (field, area, e) => {
-    let new_fields = fields
-    new_fields[field][area] = e.target.value
+    let new_fields = fields;
+    new_fields[field][area] = e.target.value;
     setFields(new_fields);
-    
   };
-  
+
   const handleValidation = () => {
     let check_fields = fields;
     let errors = currErrors;
     let isValid = true;
-     
-     //customerReference
-     if (check_fields.options.customerReference === '') {
-      isValid = false
-      errors.options.customerReference = "Müşteri Referans Numarası Boş bırakalamaz !"
-     } else  {
-      errors.options.customerReference = ""
-     }
 
-     //Customer_ID
-     if (Customer_ID.options.Customer_ID === '') {
-      isValid = false
-      errors.options.Customer_ID = "Müşteri Cari Kodu Boş bırakalamaz !"
-     } else  {
-      errors.options.Customer_ID = ""
-     }
+    //customerReference
+    if (check_fields.options.customerReference === "") {
+      isValid = false;
+      errors.options.customerReference =
+        "Müşteri Referans Numarası Boş bırakalamaz !";
+    } else {
+      errors.options.customerReference = "";
+    }
 
-     //Quotation_ID
-     if (selectQuo.options.Quotation_ID === '') {
-      isValid = false
-      errors.options.Quotation_ID = "Form Referans Numarası Boş bırakalamaz !"
-     } else  {
-      errors.options.Quotation_ID = ""
-     }
+    //Customer_ID
+    if (Customer_ID.options.Customer_ID === "") {
+      isValid = false;
+      errors.options.Customer_ID = "Müşteri Cari Kodu Boş bırakalamaz !";
+    } else {
+      errors.options.Customer_ID = "";
+    }
 
-     //OrderDate
-     if (check_fields.options.OrderDate === '') {
-      isValid = false
-      errors.options.OrderDate = "Sipariş Tarihi Boş bırakalamaz !"
-     } else  {
-      errors.options.OrderDate = ""
-     }
+    //Quotation_ID
+    if (selectQuo.options.Quotation_ID === "") {
+      isValid = false;
+      errors.options.Quotation_ID = "Form Referans Numarası Boş bırakalamaz !";
+    } else {
+      errors.options.Quotation_ID = "";
+    }
 
-     //deliveryDate
-     if (check_fields.options.deliveryDate === '') {
-      isValid = false
-      errors.options.deliveryDate = "Teslim Tarihi Boş bırakalamaz !"
-     } else  {
-      errors.options.deliveryDate = ""
-     }
+    //OrderDate
+    if (check_fields.options.OrderDate === "") {
+      isValid = false;
+      errors.options.OrderDate = "Sipariş Tarihi Boş bırakalamaz !";
+    } else {
+      errors.options.OrderDate = "";
+    }
 
-     //item
-     if (selectedItem.length === 0) {
-      isValid = false
-      errors.options.item = "En az bir adet ürün seçmelisiniz  !"
-     } else  {
-      errors.options.item = ""
-     }
+    //deliveryDate
+    if (check_fields.options.deliveryDate === "") {
+      isValid = false;
+      errors.options.deliveryDate = "Teslim Tarihi Boş bırakalamaz !";
+    } else {
+      errors.options.deliveryDate = "";
+    }
 
-     //item
-     if (certificates.length === 0) {
-      isValid = false
-      errors.options.certificates = "En az bir adet sertifika seçmelisiniz !"
-     } else  {
-      errors.options.certificates = ""
-     }
+    //item
+    if (selectedItem.length === 0) {
+      isValid = false;
+      errors.options.item = "En az bir adet ürün seçmelisiniz  !";
+    } else {
+      errors.options.item = "";
+    }
 
-     setCurrErrors(errors)
-     return isValid
+    //item
+    if (certificates.length === 0) {
+      isValid = false;
+      errors.options.certificates = "En az bir adet sertifika seçmelisiniz !";
+    } else {
+      errors.options.certificates = "";
+    }
+
+    setCurrErrors(errors);
+    return isValid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (handleValidation()) {  
+    if (handleValidation()) {
+      let data = {
+        options: {
+          ...fields.options,
+          Customer_ID: Customer_ID.options.Customer_ID,
+          Quotation_ID: selectQuo.options.Quotation_ID,
+          Item_ID: items[selectedItem[0] - 1].item_id,
+          package: checkPack,
+          reference: item.reference,
+        },
 
-    let data = {
-      options : {
-        ...fields.options,
-        Customer_ID : Customer_ID.options.Customer_ID,
-        Quotation_ID : selectQuo.options.Quotation_ID,
-        Item_ID : items[selectedItem[0] - 1].item_id,
-        package : checkPack,
-        reference : item.reference
-      },
+        cert_options: certificates.map((certificate) => {
+          return {
+            name: certificate,
+          };
+        }),
+      };
 
-      cert_options : certificates.map(certificate => {
-        return {
-          name : certificate
+      try {
+        const res = await axios({
+          method: "post",
+          data: data,
+          url: `${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/update`,
+          withCredentials: true,
+        });
+        if (res.status === 200) {
+          setSubmit(true);
+          setIsvalid(true);
         }
-      }),
-
-      
-      
-    }
-
-      try{
-        const res = await axios({ 
-          method : "post",
-          data: data , 
-          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/update`,
-          withCredentials : true});
-          if(res.status === 200) {
-            setSubmit(true);
-            setIsvalid(true);
-          } 
-      }
-      catch(err) {
+      } catch (err) {
         setSubmit(false);
         setCreateErr(true);
       }
-      
-
-      
-      
     } else {
       setIsvalid(false);
     }
   };
 
-  
   const toggleCreate = () => {
     setCreate(!create);
   };
@@ -323,8 +329,10 @@ export default function UpdateConfirmationForm({item}) {
             strokeWidth={1.5}
             stroke="currentColor"
             className="w-6 h-6 relative top-0 left-0 hover:cursor-pointer"
-            onClick={() => {toggleCreate() 
-              router.reload(window.location.pathname);}}
+            onClick={() => {
+              toggleCreate();
+              router.reload(window.location.pathname);
+            }}
           >
             <path
               strokeLinecap="round"
@@ -335,50 +343,52 @@ export default function UpdateConfirmationForm({item}) {
 
           <div
             className={`${
-              !submit && isValid && !createErr ? "visible scale-100" : "invisible scale-0 h-0"
+              !submit && isValid && !createErr
+                ? "visible scale-100"
+                : "invisible scale-0 h-0"
             } flex flex-col space-y-10`}
           >
             <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-yellow-600">
-               Sipariş Onay Formunu Güncelle
+              Sipariş Onay Formunu Güncelle
             </p>
             <form className="grid grid-cols-1 space-y-5 lg:grid-cols-1 ">
               {/*Customer info*/}
               <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
                 <div className="space-y-2 lg:w-1/2">
                   <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
-                     Form  Bilgileri
+                    Form Bilgileri
                   </p>
                   <hr />
                 </div>
 
                 <div className="space-y-5 lg:grid lg:grid-cols-3 lg:items-end lg:gap-3 ">
-                <div className="flex flex-col space-y-3 ">
-                              <label
-                                htmlFor="small-input"
-                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                              >
-                                Cari Kod 
-                              </label>
-                              <p>{Customer_ID.options.Customer_ID}</p>
-                            </div>
-                            <div className="flex flex-col space-y-3 ">
-                              <label
-                                htmlFor="small-input"
-                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                              >
-                                Teklif Formu 
-                              </label>
-                              <p>{quotation}</p>
-                            </div>
-                            <div className="flex flex-col space-y-3 ">
-                              <label
-                                htmlFor="small-input"
-                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                              >
-                                Teklif Revizyon
-                              </label>
-                              <p>REV {item.quotation_form.revision}</p>
-                            </div>
+                  <div className="flex flex-col space-y-3 ">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Cari Kod
+                    </label>
+                    <p>{Customer_ID.options.Customer_ID}</p>
+                  </div>
+                  <div className="flex flex-col space-y-3 ">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Teklif Formu
+                    </label>
+                    <p>{quotation}</p>
+                  </div>
+                  <div className="flex flex-col space-y-3 ">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Teklif Revizyon
+                    </label>
+                    <p>REV {item.quotation_form.revision}</p>
+                  </div>
                   <div className="flex flex-col">
                     <label
                       htmlFor="small-input"
@@ -393,9 +403,8 @@ export default function UpdateConfirmationForm({item}) {
                       required
                       defaultValue={fields.options.customerReference}
                       onChange={(e) => {
-                        handleChange("options", "customerReference", e)
+                        handleChange("options", "customerReference", e);
                       }}
-                      
                     />
                   </div>
 
@@ -415,7 +424,6 @@ export default function UpdateConfirmationForm({item}) {
                       onChange={(e) => {
                         handleChange("options", "OrderDate", e);
                       }}
-                      
                     />
                   </div>
 
@@ -433,9 +441,8 @@ export default function UpdateConfirmationForm({item}) {
                       required
                       defaultValue={fields.options.deliveryDate}
                       onChange={(e) => {
-                        handleChange("options", "deliveryDate", e)
+                        handleChange("options", "deliveryDate", e);
                       }}
-                      
                     />
                   </div>
 
@@ -456,10 +463,6 @@ export default function UpdateConfirmationForm({item}) {
                       }
                     />
                   </div>
-
-                  
-
-                  
                 </div>
               </div>
               <div className="m-0 space-y-7 lg:flex lg:flex-col lg:items-center">
@@ -472,7 +475,10 @@ export default function UpdateConfirmationForm({item}) {
 
                 <div className="space-y-5 lg:grid lg:place-items-center lg:w-4/5">
                   <div className="flex flex-col w-full h-full">
-                      <ItemSelect items={items} setSelectedItem={setSelectedItem} />
+                    <ItemSelect
+                      items={items}
+                      setSelectedItem={setSelectedItem}
+                    />
                   </div>
                 </div>
               </div>
@@ -486,7 +492,7 @@ export default function UpdateConfirmationForm({item}) {
                 </div>
 
                 <div className="space-y-5 lg:grid lg:place-items-center lg:w-full">
-                <div className="flex flex-col lg:w-1/2 ">
+                  <div className="flex flex-col lg:w-1/2 ">
                     <label
                       htmlFor="small-input"
                       className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
@@ -501,23 +507,33 @@ export default function UpdateConfirmationForm({item}) {
                       onChange={(e) => {
                         handleChange("options", "description", e);
                       }}
-                      
                     />
                   </div>
                   <div className="flex flex-col lg:w-1/2">
                     <label
-                        htmlFor="small-input"
-                        className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                      >
-                        Sertifika
-                      </label>
-                        <CheckMark setCertificates={setCertificates} defaultValues={item.certificates.map(cert => cert.name)} />          
-                    </div>
-
-                  <div className="flex flex-col ">
-                    <FormControlLabel control={<Checkbox defaultValue={checkPack} onClick={(e) => setPackage(e.target.checked)} defaultChecked />} label="Paketleme" />
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Sertifika
+                    </label>
+                    <CheckMark
+                      setCertificates={setCertificates}
+                      defaultValues={item.certificates.map((cert) => cert.name)}
+                    />
                   </div>
 
+                  <div className="flex flex-col ">
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          defaultValue={checkPack}
+                          onClick={(e) => setPackage(e.target.checked)}
+                          defaultChecked
+                        />
+                      }
+                      label="Paketleme"
+                    />
+                  </div>
                 </div>
               </div>
             </form>
@@ -530,7 +546,6 @@ export default function UpdateConfirmationForm({item}) {
                 onClick={(e) => {
                   handleSubmit(e);
                 }}
-                
               >
                 Güncelle
               </button>
@@ -580,7 +595,6 @@ export default function UpdateConfirmationForm({item}) {
                   toggleCreate();
                   setSubmit(false);
                   router.reload(window.location.pathname);
-                  
                 }}
                 className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >
@@ -597,11 +611,20 @@ export default function UpdateConfirmationForm({item}) {
             } mt-3 text-center transition duration-500 ease-out`}
           >
             <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-             
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 stroke-red-600">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-</svg>
-
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6 stroke-red-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                />
+              </svg>
             </div>
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               Eksik Bilgi girdiniz !
@@ -612,16 +635,20 @@ export default function UpdateConfirmationForm({item}) {
               </p>
 
               <div className="text-justify font-poppins italic w-full space-y-1">
-              {!submit && !isValid ? Object.entries(currErrors).map(heading => {
-                return Object.entries(heading[1]).map((err, index) => {
-                  if(err[1] !==0) {
-                    return <p key={index} className="text-sm text-red-600">{err[1]}</p>
-                  }
-                })
-              }) : ""}
+                {!submit && !isValid
+                  ? Object.entries(currErrors).map((heading) => {
+                      return Object.entries(heading[1]).map((err, index) => {
+                        if (err[1] !== 0) {
+                          return (
+                            <p key={index} className="text-sm text-red-600">
+                              {err[1]}
+                            </p>
+                          );
+                        }
+                      });
+                    })
+                  : ""}
               </div>
-              
-              
             </div>
             <div className="items-center px-4 py-3">
               <button
@@ -629,7 +656,6 @@ export default function UpdateConfirmationForm({item}) {
                 onClick={() => {
                   setSubmit(false);
                   setIsvalid(true);
-                  
                 }}
                 className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >
@@ -646,11 +672,20 @@ export default function UpdateConfirmationForm({item}) {
             } mt-3 text-center transition duration-500 ease-out`}
           >
             <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-             
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 stroke-red-600">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-</svg>
-
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6 stroke-red-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                />
+              </svg>
             </div>
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               Böyle bir müşteri zaten mecvut !
@@ -658,7 +693,7 @@ export default function UpdateConfirmationForm({item}) {
             <div className="mt-2 px-7 py-3">
               <p className="text-sm text-gray-500">
                 Lütfen formu kontrol edin!
-              </p>  
+              </p>
             </div>
             <div className="items-center px-4 py-3">
               <button
@@ -666,7 +701,6 @@ export default function UpdateConfirmationForm({item}) {
                 onClick={() => {
                   setSubmit(false);
                   setCreateErr(false);
-                  
                 }}
                 className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >
