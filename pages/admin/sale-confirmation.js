@@ -9,6 +9,7 @@ import CreateConfirmationForm from "../../components/Dashboards/general/forms/Sa
 import UpdateConfirmationForm from "../../components/Dashboards/general/forms/SaleConfirmation/Forms/UpdateConfirmation";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import SaleConfirmationDisplay from "../../components/Dashboards/general/ui/SaleConfirmationDisplay";
 
 export default function QuotationMake({ customers, confirmations }) {
   const generate = (e) => {
@@ -194,9 +195,14 @@ export default function QuotationMake({ customers, confirmations }) {
                     <th scope="col" className="px-6 py-3">
                       Revizyon
                     </th>
+
                     <th scope="col" className="px-6 py-3">
                       İndir
                     </th>
+                    <th scope="col" className="px-6 py-3">
+                      <span className="sr-only">Görüntüle</span>
+                    </th>
+
                     <th scope="col" className="px-6 py-3">
                       <span className="sr-only">Düzenle</span>
                     </th>
@@ -235,6 +241,11 @@ export default function QuotationMake({ customers, confirmations }) {
                           </button>
                         </td>
 
+                        <td className="px-6 py-4 text-right">
+                          <SaleConfirmationDisplay
+                            ConfirmationID={item.sale_ID}
+                          />
+                        </td>
                         <td className="px-6 py-4 text-right">
                           <UpdateConfirmationForm
                             key={`${index + 1}+${new Date().getTime()}`}
