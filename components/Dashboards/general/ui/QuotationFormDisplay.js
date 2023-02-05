@@ -410,32 +410,6 @@ export default function QuotationFormDisplay({ quotID }) {
                     </div>
                   </div>
                 </div>
-
-                <div className="flex flex-col gap-5 md:grid md:grid-cols-2 lg:gap-32 lg:grid lg:grid-cols-2 lg:items-end">
-                  <div className="flex flex-col gap-5  items-start lg:justify-self-end">
-                    <div className="flex gap-2 items-center">
-                      <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
-                        {" "}
-                        Hazırlayan :{" "}
-                      </p>
-                      <p className="text-lg font-poppins">
-                        {values?.preparedBy}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-5 items-start lg:justify-self-start">
-                    <div className="flex gap-2 items-center">
-                      <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
-                        {" "}
-                        Onaylayan :{" "}
-                      </p>
-                      <p className="text-lg font-poppins">
-                        {values?.approvedBy}
-                      </p>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
 
