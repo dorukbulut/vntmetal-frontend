@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import Transition from "../components/base/Transition";
 
 function Loading() {
   const router = useRouter();
@@ -24,11 +25,11 @@ function Loading() {
     loading && (
       <div
         role="status"
-        className="fixed flex justify-center items-center z-50 inset-0 bg-gray-800 bg-opacity-40 overflow-y-auto lg:p-10  h-full w-full transition duration-500 ease-in-out origin-center"
+        className="fixed backdrop-blur-lg flex justify-center items-center z-50 inset-0 bg-gray-500 bg-opacity-10 overflow-y-auto lg:p-10  h-full w-full transition duration-500 ease-in-out origin-center"
       >
         <svg
           aria-hidden="true"
-          className="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+          className="w-11 h-11 mr-2 text-gray-200 animate-spin  fill-gray-600"
           viewBox="0 0 100 101"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -54,10 +55,10 @@ export default function MyApp({ Component, pageProps }) {
         <title>DÖKÜM YÖNETİM SİSTEMİ</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <>
+      <Transition>
         <Loading />
         <Component {...pageProps} />
-      </>
+      </Transition>
     </div>
   );
 }

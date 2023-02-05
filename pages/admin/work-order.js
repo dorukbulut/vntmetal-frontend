@@ -1,25 +1,28 @@
 import Navbar from "../../components/Dashboards/general/ui/Navbar";
 import ProfileBar from "../../components/Dashboards/general/ui/ProfileBar";
 import BreadCrumbs from "../../components/Dashboards/general/ui/BreadCrumbs";
-import Footer from "../../components/base/Footer";
+
 import axios from "axios";
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import CreateWorkOrder from "../../components/Dashboards/general/forms/WorkOrder/Forms/CreateWorkOrder";
 import UpdateWorkOrder from "../../components/Dashboards/general/forms/WorkOrder/Forms/UpdateWorkOrder";
 
-
-export default function QuotationMake({customers, workOrders}) {
-    
+export default function QuotationMake({ customers, workOrders }) {
   const generate = (e) => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/generate`, {method : "POST", headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({id : e.target.id.split(",")[0], type :e.target.id.split(",")[1]}),}).then((response) => {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/generate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: e.target.id.split(",")[0],
+        type: e.target.id.split(",")[1],
+      }),
+    }).then((response) => {
       response.blob().then((blob) => {
-        
         let url = window.URL.createObjectURL(blob);
         let a = document.createElement("a");
         a.href = url;
@@ -27,7 +30,7 @@ export default function QuotationMake({customers, workOrders}) {
         a.click();
       });
     });
-  }
+  };
   const router = useRouter();
   const [filters, setFilters] = useState();
 
@@ -39,53 +42,61 @@ export default function QuotationMake({customers, workOrders}) {
   };
   useEffect(() => {
     axios({
-      method : "GET",
-      url : `${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/get-page/${parseInt(page) - 1}`,
-      withCredentials : true
+      method: "GET",
+      url: `${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/get-page/${
+        parseInt(page) - 1
+      }`,
+      withCredentials: true,
     })
-    .then(res => {
-      if (res.status === 200) {
-        setformItems(res.data.rows);
-      }
-    })
-    .catch(err => console.log(err));
-  } , [page])
-
-  useEffect(() => {
-    
-    if(filters) {
-      axios({
-        method : "GET",
-        url : `${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/filter`,
-        params : {
-          account : filters.account_id !== undefined && filters.account_id !== ''  ? filters.account_id : undefined,
-          workReference  :  filters.workReference !== undefined && filters.workReference !== '' ? filters.workReference.replaceAll(" ", "+") : undefined,
-          date : filters.date !== undefined && filters.date !== ''  ? filters.date : undefined,
-          saleReference  :  filters.saleReference !== undefined && filters.saleReference !== '' ? filters.saleReference.replaceAll(" ", "+") : undefined,
-        }
-  
-      })
-      .then(res => {
+      .then((res) => {
         if (res.status === 200) {
           setformItems(res.data.rows);
         }
       })
-      .catch(err => {
-        router.reload(window.location.pathname);
-      });
+      .catch((err) => console.log(err));
+  }, [page]);
+
+  useEffect(() => {
+    if (filters) {
+      axios({
+        method: "GET",
+        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/filter`,
+        params: {
+          account:
+            filters.account_id !== undefined && filters.account_id !== ""
+              ? filters.account_id
+              : undefined,
+          workReference:
+            filters.workReference !== undefined && filters.workReference !== ""
+              ? filters.workReference.replaceAll(" ", "+")
+              : undefined,
+          date:
+            filters.date !== undefined && filters.date !== ""
+              ? filters.date
+              : undefined,
+          saleReference:
+            filters.saleReference !== undefined && filters.saleReference !== ""
+              ? filters.saleReference.replaceAll(" ", "+")
+              : undefined,
+        },
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            setformItems(res.data.rows);
+          }
+        })
+        .catch((err) => {
+          router.reload(window.location.pathname);
+        });
     }
-    
-  }, [filters]) 
-  
-  
-  
+  }, [filters]);
 
   const handleFilters = (field, e) => {
-    setFilters(old => {
+    setFilters((old) => {
       return {
         ...old,
-        [field] : e.target.value
-      }
+        [field]: e.target.value,
+      };
     });
     console.log(filters);
     router.replace(router.asPath);
@@ -106,9 +117,9 @@ export default function QuotationMake({customers, workOrders}) {
             Filtrele
           </p>
           <div className="flex space-x-20">
-          <div className="flex flex-col space-y-3">
+            <div className="flex flex-col space-y-3">
               <p className="text-xs font-poppins font-medium italic text-sky-700">
-                İş Emri Referans  Numarası
+                İş Emri Referans Numarası
               </p>
               <div className="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease-soft">
                 <input
@@ -133,9 +144,6 @@ export default function QuotationMake({customers, workOrders}) {
               </div>
             </div>
 
-            
-
-            
             <div className="flex flex-col space-y-3">
               <p className="text-xs font-poppins font-medium italic text-sky-700">
                 Cari Kod
@@ -171,11 +179,11 @@ export default function QuotationMake({customers, workOrders}) {
               <table className="w-full text-sm text-left text-gray-500 ">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
                   <tr>
-                     <th scope="col" className="px-6 py-3">
-                        İş Emri Referans Numarası
+                    <th scope="col" className="px-6 py-3">
+                      İş Emri Referans Numarası
                     </th>
                     <th scope="col" className="px-6 py-3">
-                        Sipariş Referans Numarası
+                      Sipariş Referans Numarası
                     </th>
                     <th scope="col" className="px-6 py-3">
                       CARİ KOD
@@ -192,64 +200,87 @@ export default function QuotationMake({customers, workOrders}) {
                     <th scope="col" className="px-6 py-3">
                       <span className="sr-only">Düzenle</span>
                     </th>
-                   
                   </tr>
                 </thead>
                 <tbody>
-                {
-                   formItems.map((item, index) =>  {
-                    let type = ''
-        if (item.quotationItem.straight_bush === null && item.quotationItem.plate_strip === null && item.quotationItem.doublebracket_bush === null && item.quotationItem.middlebracket_bush === null) {
-           type = 'bracket_bush'
-          } if(item.quotationItem.plate_strip === null && item.quotationItem.bracket_bush === null && item.quotationItem.doublebracket_bush === null && item.quotationItem.middlebracket_bush === null) {
-            
-            type = 'straigth_bush'
-            
-          } if(item.quotationItem.bracket_bush === null && item.quotationItem.straight_bush === null && item.quotationItem.doublebracket_bush === null && item.quotationItem.middlebracket_bush === null) {
-            type = 'plate_strip'
-            
-          } if (item.quotationItem.bracket_bush === null && item.quotationItem.straight_bush=== null && item.quotationItem.plate_strip=== null && item.quotationItem.middlebracket_bush === null){
-            type = 'doublebracket_bush'
-          } if (item.quotationItem.bracket_bush === null && item.quotationItem.straight_bush=== null && item.quotationItem.plate_strip=== null && item.quotationItem.doublebracket_bush === null){
-            type = 'middlebracket_bush'
-
-          }
-                    return (<tr
-                          key={index}
-                          className="bg-white border-b "
+                  {formItems.map((item, index) => {
+                    let type = "";
+                    if (
+                      item.quotationItem.straight_bush === null &&
+                      item.quotationItem.plate_strip === null &&
+                      item.quotationItem.doublebracket_bush === null &&
+                      item.quotationItem.middlebracket_bush === null
+                    ) {
+                      type = "bracket_bush";
+                    }
+                    if (
+                      item.quotationItem.plate_strip === null &&
+                      item.quotationItem.bracket_bush === null &&
+                      item.quotationItem.doublebracket_bush === null &&
+                      item.quotationItem.middlebracket_bush === null
+                    ) {
+                      type = "straigth_bush";
+                    }
+                    if (
+                      item.quotationItem.bracket_bush === null &&
+                      item.quotationItem.straight_bush === null &&
+                      item.quotationItem.doublebracket_bush === null &&
+                      item.quotationItem.middlebracket_bush === null
+                    ) {
+                      type = "plate_strip";
+                    }
+                    if (
+                      item.quotationItem.bracket_bush === null &&
+                      item.quotationItem.straight_bush === null &&
+                      item.quotationItem.plate_strip === null &&
+                      item.quotationItem.middlebracket_bush === null
+                    ) {
+                      type = "doublebracket_bush";
+                    }
+                    if (
+                      item.quotationItem.bracket_bush === null &&
+                      item.quotationItem.straight_bush === null &&
+                      item.quotationItem.plate_strip === null &&
+                      item.quotationItem.doublebracket_bush === null
+                    ) {
+                      type = "middlebracket_bush";
+                    }
+                    return (
+                      <tr key={index} className="bg-white border-b ">
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                         >
-                          <th
-                            scope="row"
-                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                          {item.reference}
+                        </th>
+                        <td className="px-6 py-4">
+                          {item.sale_confirmation.reference}
+                        </td>
+
+                        <td className="px-6 py-4">{item.Customer_ID}</td>
+                        <td className="px-6 py-4">
+                          {item.day + "-" + item.month + "-" + item.year}
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          {item.revision}
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <button
+                            id={item.workorder_ID + "," + type}
+                            onClick={generate}
+                            className="hover:underline"
                           >
-                            {item.reference}
-                    
-                          </th>
-                          <td className="px-6 py-4">{item.sale_confirmation.reference}</td>
-                          
-                          <td className="px-6 py-4">
-                            {item.Customer_ID}
-                          </td>
-                          <td className="px-6 py-4">
-                          {item.day + "-" + item.month +  "-" + item.year}
-                          </td>
-                          <td className="px-6 py-4 text-right">
-                           {item.revision}
-                          </td>
-                          <td className="px-6 py-4 text-right">
-                          <button id={item.workorder_ID + "," + type} onClick={generate} className="hover:underline">İndir</button>
-                          </td>
+                            İndir
+                          </button>
+                        </td>
 
-                          <td className="px-6 py-4 text-right">
-                            <UpdateWorkOrder Workitem={item} />
-                          </td>
-
-                          
-                        </tr>)
-                   })
-                }
+                        <td className="px-6 py-4 text-right">
+                          <UpdateWorkOrder Workitem={item} />
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
-                
               </table>
             ) : (
               <div className="grid place-items-center p-5">
@@ -260,18 +291,23 @@ export default function QuotationMake({customers, workOrders}) {
             )}
           </div>
         </div>
-        
       </div>
       <div className="grid place-items-center mb-10">
-      {formItems.length !==0 ? <Stack spacing={2}>
-        <Pagination count={Math.ceil(workOrders.count / 6)} page={page} onChange={handlePageChange} />
-    </Stack> : <div></div>}
+        {formItems.length !== 0 ? (
+          <Stack spacing={2}>
+            <Pagination
+              count={Math.ceil(workOrders.count / 6)}
+              page={page}
+              onChange={handlePageChange}
+            />
+          </Stack>
+        ) : (
+          <div></div>
+        )}
       </div>
-      <Footer />
     </div>
   );
 }
-
 
 export async function getServerSideProps(context) {
   try {
@@ -280,14 +316,13 @@ export async function getServerSideProps(context) {
     );
 
     const res3 = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/get-page/0`
-      );
+      `${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/get-page/0`
+    );
     if (res2.status === 200 && res3.status === 200) {
       return {
         props: {
-          workOrders : res3.data,
-          customers : res2.data.customers,
-          
+          workOrders: res3.data,
+          customers: res2.data.customers,
         },
       };
     }

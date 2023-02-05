@@ -1,7 +1,6 @@
 import Navbar from "../../components/Dashboards/general/ui/Navbar";
 import ProfileBar from "../../components/Dashboards/general/ui/ProfileBar";
 import BreadCrumbs from "../../components/Dashboards/general/ui/BreadCrumbs";
-import Footer from "../../components/base/Footer";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
@@ -280,7 +279,6 @@ export default function QuotationMake({ customers, confirmations }) {
           <div></div>
         )}
       </div>
-      <Footer />
     </div>
   );
 }

@@ -1,23 +1,25 @@
 import Navbar from "../../../components/Dashboards/general/ui/Navbar";
 import ProfileBar from "../../../components/Dashboards/general/ui/ProfileBar";
 import BreadCrumbs from "../../../components/Dashboards/general/ui/BreadCrumbs";
-import Footer from "../../../components/base/Footer";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import CreateQuotationForm from "../../../components/Dashboards/general/forms/QuotationForms/Forms/CreateQuotationForm";
 import UpdateQuotationForm from "../../../components/Dashboards/general/forms/QuotationForms/Forms/UpdateQuotationForm";
 import QuotationFormDisplay from "../../../components/Dashboards/general/ui/QuotationFormDisplay";
-export default function QuotationMake({customers, forms}) {
+export default function QuotationMake({ customers, forms }) {
   const generate = (e) => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/generate`, {method : "POST", headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({id : e.target.id}),}).then((response) => {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/generate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: e.target.id }),
+    }).then((response) => {
       response.blob().then((blob) => {
-        console.log(blob)
+        console.log(blob);
         let url = window.URL.createObjectURL(blob);
         let a = document.createElement("a");
         a.href = url;
@@ -25,7 +27,7 @@ export default function QuotationMake({customers, forms}) {
         a.click();
       });
     });
-  }
+  };
   const router = useRouter();
   const [filters, setFilters] = useState();
 
@@ -37,52 +39,59 @@ export default function QuotationMake({customers, forms}) {
   };
   useEffect(() => {
     axios({
-      method : "GET",
-      url : `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/get-page/${parseInt(page) - 1}`,
-      withCredentials : true
+      method: "GET",
+      url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/get-page/${
+        parseInt(page) - 1
+      }`,
+      withCredentials: true,
     })
-    .then(res => {
-      if (res.status === 200) {
-        setformItems(res.data.rows);
-      }
-    })
-    .catch(err => console.log(err));
-  } , [page])
-
-  useEffect(() => {
-    if(filters) {
-      axios({
-        method : "GET",
-        url : `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/filter`,
-        params : {
-          account : filters.account_id !== undefined && filters.account_id !== ''  ? filters.account_id : undefined,
-          reference  :  filters.reference !== undefined && filters.reference !== '' ? filters.reference.replaceAll(" ", "+") : undefined,
-          date : filters.date !== undefined && filters.date !== ''  ? filters.date : undefined,
-          customer  :  filters.customer !== undefined && filters.customer !== '' ? filters.customer.replaceAll(" ", "+") : undefined,
-        }
-  
-      })
-      .then(res => {
+      .then((res) => {
         if (res.status === 200) {
           setformItems(res.data.rows);
         }
       })
-      .catch(err => {
-        
-      });
+      .catch((err) => console.log(err));
+  }, [page]);
+
+  useEffect(() => {
+    if (filters) {
+      axios({
+        method: "GET",
+        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/filter`,
+        params: {
+          account:
+            filters.account_id !== undefined && filters.account_id !== ""
+              ? filters.account_id
+              : undefined,
+          reference:
+            filters.reference !== undefined && filters.reference !== ""
+              ? filters.reference.replaceAll(" ", "+")
+              : undefined,
+          date:
+            filters.date !== undefined && filters.date !== ""
+              ? filters.date
+              : undefined,
+          customer:
+            filters.customer !== undefined && filters.customer !== ""
+              ? filters.customer.replaceAll(" ", "+")
+              : undefined,
+        },
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            setformItems(res.data.rows);
+          }
+        })
+        .catch((err) => {});
     }
-    
-  }, [filters]) 
-  
-  
-  
+  }, [filters]);
 
   const handleFilters = (field, e) => {
-    setFilters(old => {
+    setFilters((old) => {
       return {
         ...old,
-        [field] : e.target.value
-      }
+        [field]: e.target.value,
+      };
     });
     console.log(filters);
     router.replace(router.asPath);
@@ -97,7 +106,10 @@ export default function QuotationMake({customers, forms}) {
           Teklif Formu Hazırlama
         </h2>
         <div className="relative flex overflow-x-auto shadow-md sm:rounded-lg p-5 space-x-5 items-center">
-          <CreateQuotationForm key={`${9012}+${new Date().getTime()}+qr2`} customers={customers}/>
+          <CreateQuotationForm
+            key={`${9012}+${new Date().getTime()}+qr2`}
+            customers={customers}
+          />
           <p className="text-sky-700 italic font-poppins tracking-widest">
             Filtrele
           </p>
@@ -166,13 +178,13 @@ export default function QuotationMake({customers, forms}) {
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
                   <tr>
                     <th scope="col" className="px-6 py-3">
-                    Form Referans Numarası
+                      Form Referans Numarası
                     </th>
                     <th scope="col" className="px-6 py-3">
                       CARİ KOD
                     </th>
                     <th scope="col" className="px-6 py-3">
-                    Müşteri Referans Numarası  
+                      Müşteri Referans Numarası
                     </th>
                     <th scope="col" className="px-6 py-3">
                       Tarih
@@ -189,49 +201,53 @@ export default function QuotationMake({customers, forms}) {
                     <th scope="col" className="px-6 py-3">
                       <span className="sr-only">Düzenle</span>
                     </th>
-                   
                   </tr>
                 </thead>
                 <tbody>
-                {
-                   formItems.map((item, index) =>  {
-                    return (<tr
-                          key={index}
-                          className="bg-white border-b  hover:bg-gray-50 "
+                  {formItems.map((item, index) => {
+                    return (
+                      <tr
+                        key={index}
+                        className="bg-white border-b  hover:bg-gray-50 "
+                      >
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900  whitespace-nowrap"
                         >
-                          <th
-                            scope="row"
-                            className="px-6 py-4 font-medium text-gray-900  whitespace-nowrap"
+                          {item.reference}
+                        </th>
+                        <td className="px-6 py-4">{item.Customer_ID}</td>
+                        <td className="px-6 py-4">{item.customerInquiryNum}</td>
+                        <td className="px-6 py-4">
+                          {`${item.day}-${item.month}-${item.year}`}
+                        </td>
+                        <td className="px-6 py-4">{item.revision}</td>
+                        <td className="px-6 py-4 text-right">
+                          <button
+                            id={item.quotation_ID}
+                            onClick={generate}
+                            className="hover:underline"
                           >
-                            {item.reference}
-                    
-                          </th>
-                          <td className="px-6 py-4">{item.Customer_ID}</td>
-                          <td className="px-6 py-4">
-                            {item.customerInquiryNum}
-                          </td>
-                          <td className="px-6 py-4">
-                            {`${item.day}-${item.month}-${item.year}`}
-                          </td>
-                          <td className="px-6 py-4">
-                            {item.revision}
-                          </td>
-                          <td className="px-6 py-4 text-right">
-                           <button id={item.quotation_ID} onClick={generate} className="hover:underline">İndir</button>
-                          </td>
-                          <td className="px-6 py-4 text-right">
-                            <QuotationFormDisplay key={`${index}+${new Date().getTime()}qr` } quotID={item.quotation_ID}/>
-                          </td>
-                          <td className="px-6 py-4 text-right">
-                            <UpdateQuotationForm key={`${index}+${new Date().getTime()}`} customerID={item.Customer_ID} quotID={item.quotation_ID}/>
-                          </td>
-
-                          
-                        </tr>)
-                   })
-                }
+                            İndir
+                          </button>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <QuotationFormDisplay
+                            key={`${index}+${new Date().getTime()}qr`}
+                            quotID={item.quotation_ID}
+                          />
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <UpdateQuotationForm
+                            key={`${index}+${new Date().getTime()}`}
+                            customerID={item.Customer_ID}
+                            quotID={item.quotation_ID}
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
-                
               </table>
             ) : (
               <div className="grid place-items-center p-5">
@@ -242,37 +258,38 @@ export default function QuotationMake({customers, forms}) {
             )}
           </div>
         </div>
-        
       </div>
       <div className="grid place-items-center mb-10">
-      {formItems.length !==0 ? <Stack spacing={2}>
-        <Pagination count={Math.ceil(forms.count / 6)} page={page} onChange={handlePageChange} />
-    </Stack> : <div></div>}
+        {formItems.length !== 0 ? (
+          <Stack spacing={2}>
+            <Pagination
+              count={Math.ceil(forms.count / 6)}
+              page={page}
+              onChange={handlePageChange}
+            />
+          </Stack>
+        ) : (
+          <div></div>
+        )}
       </div>
-      <Footer />
     </div>
   );
 }
 
-
 export async function getServerSideProps(context) {
   try {
-   
     const res2 = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`
     );
     const r3 = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/get-page/0`
-    )
-    console.log(r3)
-    if (res2.status === 200 && r3.status === 200 ) {
+    );
+    console.log(r3);
+    if (res2.status === 200 && r3.status === 200) {
       return {
         props: {
-          
-          customers : res2.data.customers,
-          forms : r3.data
-          
-          
+          customers: res2.data.customers,
+          forms: r3.data,
         },
       };
     }

@@ -1,18 +1,17 @@
 import Navbar from "../../../components/Dashboards/general/ui/Navbar";
 import ProfileBar from "../../../components/Dashboards/general/ui/ProfileBar";
 import BreadCrumbs from "../../../components/Dashboards/general/ui/BreadCrumbs";
-import Footer from "../../../components/base/Footer";
+
 import CreateMake from "../../../components/Dashboards/general/forms/QuotationMake/Forms/CreateaMake";
 import CreateAnalyze from "../../../components/Dashboards/general/forms/QuotationMake/Forms/CreateAnalyze";
 import axios from "axios";
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
-
-export default function QuotationMake({items}) {
-  // 
+export default function QuotationMake({ items }) {
+  //
   const router = useRouter();
   const [filters, setFilters] = useState();
 
@@ -24,51 +23,57 @@ export default function QuotationMake({items}) {
   };
   useEffect(() => {
     axios({
-      method : "GET",
-      url : `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/get-page/${parseInt(page) - 1}`,
-      withCredentials : true
+      method: "GET",
+      url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/get-page/${
+        parseInt(page) - 1
+      }`,
+      withCredentials: true,
     })
-    .then(res => {
-      if (res.status === 200) {
-        setquotItems(res.data.rows);
-      }
-    })
-    .catch(err => console.log(err));
-  } , [page])
-
-  useEffect(() => {
-    if(filters) {
-      axios({
-        method : "GET",
-        url : `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/filter`,
-        params : {
-          account : filters.account_id !== undefined && filters.account_id !== ''  ? filters.account_id : undefined,
-          type  :  filters.type !== undefined && filters.type !== '' ? filters.type.replaceAll(" ", "+") : undefined,
-          date : filters.date !== undefined && filters.date !== ''  ? filters.date : undefined,
-        }
-  
-      })
-      .then(res => {
+      .then((res) => {
         if (res.status === 200) {
           setquotItems(res.data.rows);
         }
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch((err) => console.log(err));
+  }, [page]);
+
+  useEffect(() => {
+    if (filters) {
+      axios({
+        method: "GET",
+        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/filter`,
+        params: {
+          account:
+            filters.account_id !== undefined && filters.account_id !== ""
+              ? filters.account_id
+              : undefined,
+          type:
+            filters.type !== undefined && filters.type !== ""
+              ? filters.type.replaceAll(" ", "+")
+              : undefined,
+          date:
+            filters.date !== undefined && filters.date !== ""
+              ? filters.date
+              : undefined,
+        },
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            setquotItems(res.data.rows);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-    
-  }, [filters]) 
-  
-  
-  
+  }, [filters]);
 
   const handleFilters = (field, e) => {
-    setFilters(old => {
+    setFilters((old) => {
       return {
         ...old,
-        [field] : e.target.value
-      }
+        [field]: e.target.value,
+      };
     });
     console.log(filters);
     router.replace(router.asPath);
@@ -83,7 +88,11 @@ export default function QuotationMake({items}) {
           Teklif Hazırlama
         </h2>
         <div className="relative flex overflow-x-auto shadow-md sm:rounded-lg p-5 space-x-5 items-center">
-          <CreateMake key={`${1021}+${new Date().getTime()}`} prevValues={{}} type={"create"}/>
+          <CreateMake
+            key={`${1021}+${new Date().getTime()}`}
+            prevValues={{}}
+            type={"create"}
+          />
           <CreateAnalyze />
           <p className="text-sky-700 italic font-poppins tracking-widest">
             Filtrele
@@ -132,7 +141,7 @@ export default function QuotationMake({items}) {
                       CARİ KOD
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      SATIŞ FİYATI    
+                      SATIŞ FİYATI
                     </th>
                     <th scope="col" className="px-6 py-3">
                       ADET
@@ -146,41 +155,42 @@ export default function QuotationMake({items}) {
                   </tr>
                 </thead>
                 <tbody>
-                {
-                   quotItems.map((item, index) =>  {
-                    return (<tr
-                          key={index}
-                          className="bg-white border-b  hover:bg-gray-50 "
+                  {quotItems.map((item, index) => {
+                    return (
+                      <tr
+                        key={index}
+                        className="bg-white border-b  hover:bg-gray-50 "
+                      >
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900 "
                         >
-                          <th
-                            scope="row"
-                            className="px-6 py-4 font-medium text-gray-900 "
-                          >
-                            {item.straight_bush ? "Düz Burç" : ""}
-                            {item.plate_strip ? "Plaka" : ""}
-                            {item.bracket_bush ? "Flanşlı Burç" : ""}
-                            {item.middlebracket_bush ? "Ortadan Flanşlı Burç" : ""}
-                            {item.doublebracket_bush ? "Çift Flanşlı Burç" : ""}
-                    
-                          </th>
-                          <td className="px-6 py-4">{item.Customer_ID}</td>
-                          <td className="px-6 py-4">
-                            {item.unit_price + " " +  item.currency } 
-                          </td>
-                          <td className="px-6 py-4">
-                            {item.unit_frequence}
-                          </td>
-                          <td className="px-6 py-4">
-                            {item.createdAt}
-                          </td>
-                          <td className="px-6 py-4 text-right">
-                            <CreateMake key={`${index}+${new Date().getTime()}`} prevValues={item} item={item} type={"update"}/>
-                          </td>
-                        </tr>)
-                   })
-                }
+                          {item.straight_bush ? "Düz Burç" : ""}
+                          {item.plate_strip ? "Plaka" : ""}
+                          {item.bracket_bush ? "Flanşlı Burç" : ""}
+                          {item.middlebracket_bush
+                            ? "Ortadan Flanşlı Burç"
+                            : ""}
+                          {item.doublebracket_bush ? "Çift Flanşlı Burç" : ""}
+                        </th>
+                        <td className="px-6 py-4">{item.Customer_ID}</td>
+                        <td className="px-6 py-4">
+                          {item.unit_price + " " + item.currency}
+                        </td>
+                        <td className="px-6 py-4">{item.unit_frequence}</td>
+                        <td className="px-6 py-4">{item.createdAt}</td>
+                        <td className="px-6 py-4 text-right">
+                          <CreateMake
+                            key={`${index}+${new Date().getTime()}`}
+                            prevValues={item}
+                            item={item}
+                            type={"update"}
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
-                
               </table>
             ) : (
               <div className="grid place-items-center p-5">
@@ -191,29 +201,34 @@ export default function QuotationMake({items}) {
             )}
           </div>
         </div>
-        
       </div>
       <div className="grid place-items-center mb-10">
-      {quotItems.length !==0 ? <Stack spacing={2}>
-        <Pagination count={Math.ceil(items.count / 6)} page={page} onChange={handlePageChange} />
-    </Stack> : <div></div>}
+        {quotItems.length !== 0 ? (
+          <Stack spacing={2}>
+            <Pagination
+              count={Math.ceil(items.count / 6)}
+              page={page}
+              onChange={handlePageChange}
+            />
+          </Stack>
+        ) : (
+          <div></div>
+        )}
       </div>
-      <Footer />
     </div>
   );
 }
-
 
 export async function getServerSideProps(context) {
   try {
     const res = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/get-page/0`
-    )
-    
+    );
+
     if (res.status === 200) {
       return {
         props: {
-          items: res.data
+          items: res.data,
         },
       };
     }

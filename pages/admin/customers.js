@@ -1,18 +1,15 @@
 import Navbar from "../../components/Dashboards/general/ui/Navbar";
 import ProfileBar from "../../components/Dashboards/general/ui/ProfileBar";
 import BreadCrumbs from "../../components/Dashboards/general/ui/BreadCrumbs";
-import Footer from "../../components/base/Footer";
 import CreateCustomer from "../../components/Dashboards/general/forms/Customers/Forms/CreateCustomer";
 import axios from "axios";
 import UpdateCustomer from "../../components/Dashboards/general/forms/Customers/Forms/UpdateCustomer";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 export default function CustomersPage({ customerData }) {
-  
-
   const router = useRouter();
   const PER_PAGE = 3;
   const [filters, setFilters] = useState();
@@ -25,52 +22,63 @@ export default function CustomersPage({ customerData }) {
   };
   useEffect(() => {
     axios({
-      method : "GET",
-      url : `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/get-page/${parseInt(page) - 1}`,
-      withCredentials : true
+      method: "GET",
+      url: `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/get-page/${
+        parseInt(page) - 1
+      }`,
+      withCredentials: true,
     })
-    .then(res => {
-      if (res.status === 200) {
-        setCustomers(res.data.rows);
-      }
-    })
-    .catch(err => console.log(err));
-  } , [page])
-
-  useEffect(() => {
-    if(filters) {
-      axios({
-        method : "GET",
-        url : `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/filter`,
-        params : {
-          account : filters.account_id !== undefined && filters.account_id !== ''  ? filters.account_id : undefined,
-          title  :  filters.account_title !== undefined && filters.account_title !== '' ? filters.account_title.replaceAll(" ", "+") : undefined,
-          related : filters.account_related !== undefined &&  filters.account_related !== '' ? filters.account_related.replaceAll(" ", "+") : undefined,
-          country : filters.customer_country !== undefined &&  filters.customer_country !== '' ? filters.customer_country.replaceAll(" ", "+") : undefined
-        }
-  
-      })
-      .then(res => {
+      .then((res) => {
         if (res.status === 200) {
           setCustomers(res.data.rows);
         }
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch((err) => console.log(err));
+  }, [page]);
+
+  useEffect(() => {
+    if (filters) {
+      axios({
+        method: "GET",
+        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/filter`,
+        params: {
+          account:
+            filters.account_id !== undefined && filters.account_id !== ""
+              ? filters.account_id
+              : undefined,
+          title:
+            filters.account_title !== undefined && filters.account_title !== ""
+              ? filters.account_title.replaceAll(" ", "+")
+              : undefined,
+          related:
+            filters.account_related !== undefined &&
+            filters.account_related !== ""
+              ? filters.account_related.replaceAll(" ", "+")
+              : undefined,
+          country:
+            filters.customer_country !== undefined &&
+            filters.customer_country !== ""
+              ? filters.customer_country.replaceAll(" ", "+")
+              : undefined,
+        },
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            setCustomers(res.data.rows);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-    
-  }, [filters]) 
-  
-  
-  
+  }, [filters]);
 
   const handleFilters = (field, e) => {
-    setFilters(old => {
+    setFilters((old) => {
       return {
         ...old,
-        [field] : e.target.value
-      }
+        [field]: e.target.value,
+      };
     });
 
     router.replace(router.asPath);
@@ -154,29 +162,28 @@ export default function CustomersPage({ customerData }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {
-                  customers.map((customer, index) => {
-                      return (
-                        <tr
-                          key={index}
-                          className="bg-white border-b hover:bg-gray-50 "
+                  {customers.map((customer, index) => {
+                    return (
+                      <tr
+                        key={index}
+                        className="bg-white border-b hover:bg-gray-50 "
+                      >
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900  whitespace-nowrap"
                         >
-                          <th
-                            scope="row"
-                            className="px-6 py-4 font-medium text-gray-900  whitespace-nowrap"
-                          >
-                            {customer.account_title}
-                          </th>
-                          <td className="px-6 py-4">{customer.account_id}</td>
-                          <td className="px-6 py-4">
-                            {customer.account_related}
-                          </td>
-                          <td className="px-6 py-4 text-right">
-                            <UpdateCustomer customer={customer} />
-                          </td>
-                        </tr>
-                      );
-                    })}
+                          {customer.account_title}
+                        </th>
+                        <td className="px-6 py-4">{customer.account_id}</td>
+                        <td className="px-6 py-4">
+                          {customer.account_related}
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <UpdateCustomer customer={customer} />
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             ) : (
@@ -188,14 +195,20 @@ export default function CustomersPage({ customerData }) {
             )}
           </div>
         </div>
-        
       </div>
       <div className="grid place-items-center mb-10">
-        {customers.length !==0 ? <Stack spacing={2}>
-        <Pagination count={Math.ceil(customerData.count / 6)} page={page} onChange={handlePageChange} />
-    </Stack> : <div></div>}
+        {customers.length !== 0 ? (
+          <Stack spacing={2}>
+            <Pagination
+              count={Math.ceil(customerData.count / 6)}
+              page={page}
+              onChange={handlePageChange}
+            />
+          </Stack>
+        ) : (
+          <div></div>
+        )}
       </div>
-      <Footer />
     </div>
   );
 }
