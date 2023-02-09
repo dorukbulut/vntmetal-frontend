@@ -242,6 +242,7 @@ export default function QuotationMake({ customers, confirmations }) {
 
                         <td className="px-6 py-4 text-right">
                           <SaleConfirmationDisplay
+                            key={`${index + 2}+${new Date().getTime()}`}
                             ConfirmationID={item.sale_ID}
                           />
                         </td>
