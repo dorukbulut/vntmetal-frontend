@@ -23,7 +23,6 @@ export default function SaleConfirmationDisplay({ ConfirmationID }) {
       url: `${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/get-conf`,
     })
       .then((res) => {
-        console.log(res.data[0]);
         let temp = [];
         temp.push(res.data[0].quotationItem);
         let data = {

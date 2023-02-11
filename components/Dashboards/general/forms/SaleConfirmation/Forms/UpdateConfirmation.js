@@ -7,20 +7,21 @@ import CheckMark from "../../CheckMark";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 
-export default function UpdateConfirmationForm({ item }) {
+export default function UpdateConfirmationForm({ ConfirmationID }) {
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
   const [createErr, setCreateErr] = useState(false);
   const [fields, setFields] = useState({
     options: {
-      customerReference: item.customerReference,
-      OrderDate: item.OrderDate,
-      deliveryDate: item.deliveryDate,
-      specialOffers: item.specialOffers,
-      description: item.description,
-      company: item.company,
+      customerReference: "",
+      OrderDate: "",
+      deliveryDate: "",
+      specialOffers: "",
+      description: "",
+      company: "",
       language: "",
+      quotRevision: "",
     },
   });
 
@@ -42,22 +43,20 @@ export default function UpdateConfirmationForm({ item }) {
 
   const [Customer_ID, setCustomer] = useState({
     options: {
-      Customer_ID: item.Customer_ID,
+      Customer_ID: "",
     },
   });
 
-  const [quotation, setQuotation] = useState(
-    `${item.quotation_form.reference}`
-  );
+  const [quotations, setQuotations] = useState([]);
+
+  const [quotation, setQuotation] = useState("");
   const [selectQuo, setSelectedQuo] = useState({
     options: {
-      Quotation_ID: item.Quotation_ID,
+      Quotation_ID: "",
     },
   });
-  const [certificates, setCertificates] = useState(
-    item.certificates.map((cert) => cert.name)
-  );
-  const [checkPack, setPackage] = useState(item.package);
+  const [certificates, setCertificates] = useState([]);
+  const [checkPack, setPackage] = useState();
   const [items, setItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState([]);
 
@@ -165,7 +164,54 @@ export default function UpdateConfirmationForm({ item }) {
         .catch((err) => console.log(err));
     }
   }, [Customer_ID.options.Customer_ID]);
+  const getValues = () => {
+    axios({
+      method: "POST",
+      data: {
+        sale_ID: ConfirmationID,
+      },
+      withCredentials: true,
+      url: `${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/get-conf`,
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          const item = res.data[0];
+          setFields((old) => {
+            return {
+              ...old,
+              options: {
+                customerReference: item.customerReference,
+                OrderDate: item.OrderDate,
+                deliveryDate: item.deliveryDate,
+                specialOffers: item.specialOffers,
+                description: item.description,
+                company: item.company,
+                language: "",
+                quotRevision: item.quotation_form.revision,
+              },
+            };
+          });
 
+          setCustomer({
+            options: {
+              Customer_ID: item.Customer_ID,
+            },
+          });
+
+          setQuotation(`${item.quotation_form.reference}`);
+
+          setSelectedQuo({
+            options: {
+              Quotation_ID: item.Quotation_ID,
+            },
+          });
+          setCertificates(item.certificates.map((cert) => cert.name));
+
+          setPackage(item.package);
+        }
+      })
+      .catch((err) => console.log(err.message));
+  };
   const router = useRouter();
 
   const handleChange = (field, area, e) => {
@@ -302,7 +348,10 @@ export default function UpdateConfirmationForm({ item }) {
   return (
     <div>
       <a
-        onClick={toggleCreate}
+        onClick={() => {
+          getValues();
+          toggleCreate();
+        }}
         className="hover:cursor-pointer font-medium text-text-fuchsia-500 "
       >
         Düzenle
@@ -379,7 +428,7 @@ export default function UpdateConfirmationForm({ item }) {
                     >
                       Teklif Revizyon
                     </label>
-                    <p>REV {item.quotation_form.revision}</p>
+                    <p>REV {fields.options.quotRevision}</p>
                   </div>
                   <div className="flex flex-col">
                     <label
@@ -549,7 +598,7 @@ export default function UpdateConfirmationForm({ item }) {
                     </label>
                     <CheckMark
                       setCertificates={setCertificates}
-                      defaultValues={item.certificates.map((cert) => cert.name)}
+                      defaultValues={certificates}
                     />
                   </div>
 

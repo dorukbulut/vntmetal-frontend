@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { useRouter } from "next/router";
-
+import Link from "next/link";
 export default function Navbar() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -79,12 +79,11 @@ export default function Navbar() {
               />
             </svg>
 
-            <p
-              onClick={() => router.push("/admin")}
-              className="hover:cursor-pointer font-poppins text-xs lg:text-lg md:text-lg text-sky-700 tracking-widest"
-            >
-              VNT METAL DYS
-            </p>
+            <Link href={"/admin"} passHref>
+              <p className="hover:cursor-pointer font-poppins text-xs lg:text-lg md:text-lg text-sky-700 tracking-widest">
+                DYS
+              </p>
+            </Link>
             <hr />
           </div>
 
@@ -126,12 +125,12 @@ export default function Navbar() {
                   : "invisible transform scale-0 h-0"
               } transition duration-300 ease-in-out origin-top`}
             >
-              <p
-                onClick={() => router.push("/admin/customers")}
-                className=" hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md"
-              >
-                Müşterilerim
-              </p>
+              <Link href={"/admin/customers"} passHref>
+                <p className=" hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md">
+                  Müşterilerim
+                </p>
+              </Link>
+
               <div className="flex flex-col lg:text-xs text-xs mb-10 ">
                 <div className="flex items-center w-full">
                   <p
@@ -155,32 +154,28 @@ export default function Navbar() {
                       : "invisible transform scale-0 h-0"
                   } transition duration-300 ease-in-out origin-top`}
                 >
-                  <p
-                    onClick={() => router.push("/admin/quotation/make")}
-                    className="pl-10 hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md"
-                  >
-                    Teklif Hazırlama
-                  </p>
-                  <p
-                    onClick={() => router.push("/admin/quotation/form")}
-                    className="pl-10 hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md"
-                  >
-                    Teklif Formlarım
-                  </p>
+                  <Link href={"/admin/quotation/make"} passHref>
+                    <p className="pl-10 hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md">
+                      Teklif Hazırlama
+                    </p>
+                  </Link>
+                  <Link href={"/admin/quotation/form"} passHref>
+                    <p className="pl-10 hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md">
+                      Teklif Formlarım
+                    </p>
+                  </Link>
                 </div>
               </div>
-              <p
-                onClick={() => router.push("/admin/sale-confirmation")}
-                className="hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md"
-              >
-                Sipariş Formlarım
-              </p>
-              <p
-                onClick={() => router.push("/admin/work-order")}
-                className="hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md"
-              >
-                Iş Emirlerim
-              </p>
+              <Link href={"/admin/sale-confirmation"} passHref>
+                <p className="hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md">
+                  Sipariş Formlarım
+                </p>
+              </Link>
+              <Link href={"/admin/work-order"} passHref>
+                <p className="hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md">
+                  Iş Emirlerim
+                </p>
+              </Link>
             </div>
           </div>
         </div>

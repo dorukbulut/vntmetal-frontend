@@ -83,9 +83,7 @@ export default function QuotationMake({ customers, confirmations }) {
             setformItems(res.data.rows);
           }
         })
-        .catch((err) => {
-          router.reload(window.location.pathname);
-        });
+        .catch((err) => {});
     }
   }, [filters]);
 
@@ -220,9 +218,7 @@ export default function QuotationMake({ customers, confirmations }) {
                         <td className="px-6 py-4">
                           {item.quotation_form.reference}
                         </td>
-                        <td className="px-6 py-4">
-                          {item.customer.account_id}
-                        </td>
+                        <td className="px-6 py-4">{item.Customer_ID}</td>
                         <td className="px-6 py-4">{item.customerReference}</td>
                         <td className="px-6 py-4">
                           {item.day + "-" + item.month + "-" + item.year}
@@ -250,6 +246,8 @@ export default function QuotationMake({ customers, confirmations }) {
                           <UpdateConfirmationForm
                             key={`${index + 1}+${new Date().getTime()}`}
                             item={item}
+                            ConfirmationID={item.sale_ID}
+                            Revision={item.quotation_form.revision}
                           />
                         </td>
                       </tr>

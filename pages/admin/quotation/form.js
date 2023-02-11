@@ -19,7 +19,6 @@ export default function QuotationMake({ customers, forms }) {
       body: JSON.stringify({ id: e.target.id }),
     }).then((response) => {
       response.blob().then((blob) => {
-        console.log(blob);
         let url = window.URL.createObjectURL(blob);
         let a = document.createElement("a");
         a.href = url;
@@ -93,7 +92,6 @@ export default function QuotationMake({ customers, forms }) {
         [field]: e.target.value,
       };
     });
-    console.log(filters);
     router.replace(router.asPath);
   };
   return (
@@ -284,7 +282,6 @@ export async function getServerSideProps(context) {
     const r3 = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/get-page/0`
     );
-    console.log(r3);
     if (res2.status === 200 && r3.status === 200) {
       return {
         props: {

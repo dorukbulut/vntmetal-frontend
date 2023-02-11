@@ -67,9 +67,7 @@ export default function CustomersPage({ customerData }) {
             setCustomers(res.data.rows);
           }
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     }
   }, [filters]);
 

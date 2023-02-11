@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import Chip from '@mui/material/Chip';
+import * as React from "react";
+import { useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Chip from "@mui/material/Chip";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -20,14 +20,14 @@ const MenuProps = {
 };
 
 const names = [
-  'Radyasyon Ölçümü ',
-  'Hammade Giriş Kalite Kontrol',
-  'Tip 3.1',
-  'Ölçü Kontrol',
-  'NDT',
-  'UT',
-   'PT'
-  ];
+  "Radyasyon Ölçümü ",
+  "Hammade Giriş Kalite Kontrol",
+  "Tip 3.1",
+  "Ölçü Kontrol",
+  "NDT",
+  "UT",
+  "PT",
+];
 
 function getStyles(name, personName, theme) {
   return {
@@ -38,38 +38,39 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function MultipleSelectChip({setCertificates,defaultValues}) {
+export default function MultipleSelectChip({ setCertificates, defaultValues }) {
   const theme = useTheme();
   const [personName, setPersonName] = React.useState(defaultValues);
 
   React.useEffect(() => {
     setCertificates(personName);
-  }, [personName])
-  
+  }, [personName]);
+
+  React.useEffect(() => {
+    setPersonName(defaultValues);
+  }, [defaultValues]);
+
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
     setPersonName(
       // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(',') : value,
+      typeof value === "string" ? value.split(",") : value
     );
-
-    
   };
 
   return (
     <div>
-      <FormControl className='w-full'>
+      <FormControl className="w-full">
         <Select
-          
           id="demo-multiple-chip"
           multiple
           value={personName}
           onChange={handleChange}
           input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
           renderValue={(selected) => (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
               {selected.map((value) => (
                 <Chip key={value} label={value} />
               ))}
