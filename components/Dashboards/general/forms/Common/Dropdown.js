@@ -1,15 +1,28 @@
 import * as React from "react";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+import {
+  Box,
+  FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
+  ListSubheader,
+  TextField,
+  InputAdornment,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import { containsText } from "../../../../../utils/containsText";
 
 const DropDown = ({ label, items, handleChange, field, area, fields }) => {
   React.useEffect(() => {
     setSelected(fields[field][area]);
   }, [fields]);
   const [selected, setSelected] = React.useState(fields[field][area]);
+
+  const [searchText, setSearchText] = React.useState("");
+  const displayedOptions = React.useMemo(
+    () => items.filter((option) => containsText(`${option.key}`, searchText)),
+    [searchText]
+  );
   return (
     <div className="w-full">
       <FormControl className="w-full">
@@ -22,9 +35,36 @@ const DropDown = ({ label, items, handleChange, field, area, fields }) => {
 
             handleChange(field, area, e);
           }}
+          onClose={() => setSearchText("")}
+          // This prevents rendering empty string in Select's value
+          // if search text would exclude currently selected option.
+          renderValue={() => selected}
           required
         >
-          {items.map((item, index) => (
+          <ListSubheader>
+            <TextField
+              size="small"
+              // Autofocus on textfield
+              autoFocus
+              placeholder="Ara..."
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+              onChange={(e) => setSearchText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key !== "Escape") {
+                  // Prevents autoselecting item while typing (default Select behaviour)
+                  e.stopPropagation();
+                }
+              }}
+            />
+          </ListSubheader>
+          {displayedOptions.map((item, index) => (
             <MenuItem key={index} value={item.value}>
               {item.key}
             </MenuItem>

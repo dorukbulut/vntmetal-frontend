@@ -285,7 +285,7 @@ export default function QuotationMake({ customers, workOrders }) {
             ) : (
               <div className="grid place-items-center p-5">
                 <p className="italic font-poppins tracking-widest text-sm text-sky-700">
-                  Sipariş Onay Formu Bulunamadı
+                  İş Emri Bulunamadı
                 </p>
               </div>
             )}
