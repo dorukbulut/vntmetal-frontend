@@ -19,6 +19,8 @@ export default function UpdateConfirmationForm({ item }) {
       deliveryDate: item.deliveryDate,
       specialOffers: item.specialOffers,
       description: item.description,
+      company: item.company,
+      language: "",
     },
   });
 
@@ -33,6 +35,8 @@ export default function UpdateConfirmationForm({ item }) {
       Customer_ID: "",
       Quotation_ID: "",
       certificates: "",
+      company: "",
+      language: "",
     },
   });
 
@@ -162,34 +166,6 @@ export default function UpdateConfirmationForm({ item }) {
     }
   }, [Customer_ID.options.Customer_ID]);
 
-  const handleChangeCustomer = (field, area, e) => {
-    setCustomer((old) => {
-      return {
-        ...old,
-        [field]: {
-          [area]: e.target.value,
-        },
-      };
-    });
-
-    setSelectedQuo({
-      options: {
-        Quotation_ID: "",
-      },
-    });
-  };
-
-  const handleChangeQuo = (field, area, e) => {
-    setSelectedQuo((old) => {
-      return {
-        ...old,
-        [field]: {
-          [area]: e.target.value,
-        },
-      };
-    });
-  };
-
   const router = useRouter();
 
   const handleChange = (field, area, e) => {
@@ -234,6 +210,22 @@ export default function UpdateConfirmationForm({ item }) {
       errors.options.OrderDate = "Sipariş Tarihi Boş bırakalamaz !";
     } else {
       errors.options.OrderDate = "";
+    }
+
+    //language
+    if (check_fields.options.language === "") {
+      isValid = false;
+      errors.options.language = "Form Dili Boş bırakılamaz !";
+    } else {
+      errors.options.language = "";
+    }
+
+    //company
+    if (check_fields.options.company === "") {
+      isValid = false;
+      errors.options.company = "Şirket Boş bırakılamaz !";
+    } else {
+      errors.options.company = "";
     }
 
     //deliveryDate
@@ -443,6 +435,45 @@ export default function UpdateConfirmationForm({ item }) {
                       onChange={(e) => {
                         handleChange("options", "deliveryDate", e);
                       }}
+                    />
+                  </div>
+                  <div className="flex flex-col lg:w-full lg:mr-1">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Form Dili *
+                    </label>
+                    <Dropdown
+                      label="Dil"
+                      field="options"
+                      area="language"
+                      items={[
+                        { key: "Türkçe", value: "Turkish" },
+                        { key: "İngilizce", value: "English" },
+                      ]}
+                      fields={fields}
+                      handleChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="flex flex-col lg:w-full lg:mr-1">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Şirket *
+                    </label>
+                    <Dropdown
+                      label="Şirket"
+                      field="options"
+                      area="company"
+                      items={[
+                        { key: "VNT", value: "VNT" },
+                        { key: "BILGESIN", value: "BILGESIN" },
+                      ]}
+                      fields={fields}
+                      handleChange={handleChange}
                     />
                   </div>
 
