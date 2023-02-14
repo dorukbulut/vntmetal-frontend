@@ -1,113 +1,131 @@
 import { useEffect, useState } from "react";
 import axios, { Axios } from "axios";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import Dropdown from "../../Common/Dropdown";
 import ItemSelect from "../../ItemSelect";
 import CheckMark from "../../CheckMark";
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 
-
-
-export default function CreateWorkOrder({customers}) {
-    const CUSTOMER = customers.map((customer) => {
-        return {
-          key: customer.account_id,
-          value: customer.account_id,
-        };
-      });
+export default function CreateWorkOrder({ customers }) {
+  const CUSTOMER = customers.map((customer) => {
+    return {
+      key: customer.account_id,
+      value: customer.account_id,
+    };
+  });
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
   const [createErr, setCreateErr] = useState(false);
   const [fields, setFields] = useState({
-    options : {
-      Item_ID : '',
-      type : '',
-      plate_model_size : '',
-      treatment_size : ''
-    }
+    options: {
+      Item_ID: "",
+      type: "",
+      plate_model_size: "",
+      treatment_size: "",
+    },
   });
 
   const [currErrors, setCurrErrors] = useState({
-    options : {
-      Customer_ID : '',
-      sale_ID : '',
-    }
+    options: {
+      Customer_ID: "",
+      sale_ID: "",
+    },
   });
 
-  
-  
-  
   const [Customer_ID, setCustomer] = useState({
-    options : {
-      Customer_ID : ''
-    }
-  })
-  
+    options: {
+      Customer_ID: "",
+    },
+  });
+
   const [all, setAll] = useState([]);
-  const [confirmations, setConfirmations] = useState([])
+  const [confirmations, setConfirmations] = useState([]);
   const [selectConf, setSelectedConf] = useState({
-    options : {
-        sale_ID : ''
-      }
-  })
+    options: {
+      sale_ID: "",
+    },
+  });
 
-  const[typeName, setType] = useState('');
+  const [typeName, setType] = useState("");
   useEffect(() => {
-    if (selectConf.options.sale_ID !== ''){
-        const item = all.find(each => each.sale_ID === selectConf.options.sale_ID);
-        
-        let new_fields = fields
-        new_fields['options']['Item_ID'] = item.Item_ID
-        let type = ''
-        if (item.quotationItem.straight_bush === null && item.quotationItem.plate_strip === null && item.quotationItem.doublebracket_bush === null && item.quotationItem.middlebracket_bush === null) {
-           type = 'Flanşlı Burç'
-          } if(item.quotationItem.plate_strip === null && item.quotationItem.bracket_bush === null && item.quotationItem.doublebracket_bush === null && item.quotationItem.middlebracket_bush === null) {
-            
-            type = 'Düz Burç'
-            
-          } if(item.quotationItem.bracket_bush === null && item.quotationItem.straight_bush === null && item.quotationItem.doublebracket_bush === null && item.quotationItem.middlebracket_bush === null) {
-            type = 'Plaka'
-            
-          } if (item.quotationItem.bracket_bush === null && item.quotationItem.straight_bush=== null && item.quotationItem.plate_strip=== null && item.quotationItem.middlebracket_bush === null){
-            type = 'Çift Flanşlı Burç'
-          } if (item.quotationItem.bracket_bush === null && item.quotationItem.straight_bush=== null && item.quotationItem.plate_strip=== null && item.quotationItem.doublebracket_bush === null){
-            type = 'Ortadan Flanşlı Burç'
+    if (selectConf.options.sale_ID !== "") {
+      const item = all.find(
+        (each) => each.sale_ID === selectConf.options.sale_ID
+      );
 
-          }
-        setType(type);
-        setFields(new_fields);
-
-    } 
-  }, [selectConf.options.sale_ID])
-  
-  
-  useEffect(() =>  {
-    if (Customer_ID.options.Customer_ID !== '') {
-        axios({
-            method : "POST",
-            data : {
-                Customer_ID : Customer_ID.options.Customer_ID
-            },
-            url : `${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/get`,
-            withCredentials : true
-        })
-        .then(res => {
-            setAll(res.data);
-            let ITEMS = res.data.map(item => {
-                return {
-                    key : item.reference + "-REV" + item.revision,
-                    value :  item.sale_ID
-                }
-            });
-            
-            setConfirmations(ITEMS);
-        })
-        .catch(err => console.log(err));
+      let new_fields = fields;
+      new_fields["options"]["Item_ID"] = item.Item_ID;
+      let type = "";
+      if (
+        item.quotationItem.straight_bush === null &&
+        item.quotationItem.plate_strip === null &&
+        item.quotationItem.doublebracket_bush === null &&
+        item.quotationItem.middlebracket_bush === null
+      ) {
+        type = "Flanşlı Burç";
+      }
+      if (
+        item.quotationItem.plate_strip === null &&
+        item.quotationItem.bracket_bush === null &&
+        item.quotationItem.doublebracket_bush === null &&
+        item.quotationItem.middlebracket_bush === null
+      ) {
+        type = "Düz Burç";
+      }
+      if (
+        item.quotationItem.bracket_bush === null &&
+        item.quotationItem.straight_bush === null &&
+        item.quotationItem.doublebracket_bush === null &&
+        item.quotationItem.middlebracket_bush === null
+      ) {
+        type = "Plaka";
+      }
+      if (
+        item.quotationItem.bracket_bush === null &&
+        item.quotationItem.straight_bush === null &&
+        item.quotationItem.plate_strip === null &&
+        item.quotationItem.middlebracket_bush === null
+      ) {
+        type = "Çift Flanşlı Burç";
+      }
+      if (
+        item.quotationItem.bracket_bush === null &&
+        item.quotationItem.straight_bush === null &&
+        item.quotationItem.plate_strip === null &&
+        item.quotationItem.doublebracket_bush === null
+      ) {
+        type = "Ortadan Flanşlı Burç";
+      }
+      setType(type);
+      setFields(new_fields);
     }
-    
-    
+  }, [selectConf.options.sale_ID]);
+
+  useEffect(() => {
+    if (Customer_ID.options.Customer_ID !== "") {
+      axios({
+        method: "POST",
+        data: {
+          Customer_ID: Customer_ID.options.Customer_ID,
+        },
+        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/get`,
+        withCredentials: true,
+      })
+        .then((res) => {
+          setAll(res.data);
+          let ITEMS = res.data.map((item) => {
+            return {
+              key: item.reference + "-REV" + item.revision,
+              value: item.sale_ID,
+            };
+          });
+
+          setConfirmations(ITEMS);
+        })
+        .catch((err) => console.log(err));
+    }
   }, [Customer_ID.options.Customer_ID]);
 
   const handleChangeCustomer = (field, area, e) => {
@@ -115,110 +133,95 @@ export default function CreateWorkOrder({customers}) {
       return {
         ...old,
         [field]: {
-          [area] : e.target.value
-        }
-      }
-    })
+          [area]: e.target.value,
+        },
+      };
+    });
 
     setSelectedConf({
-      options : {
-        sale_ID : ''
-      }
-    })
-  }
+      options: {
+        sale_ID: "",
+      },
+    });
+  };
 
   const handleChangeQuo = (field, area, e) => {
     setSelectedConf((old) => {
       return {
         ...old,
         [field]: {
-          [area] : e.target.value
-        }
-      }
-    })
-  }
+          [area]: e.target.value,
+        },
+      };
+    });
+  };
 
-  
   const router = useRouter();
 
-  
-  
-
   const handleChange = (field, area, e) => {
-    let new_fields = fields
-    new_fields[field][area] = e.target.value
+    let new_fields = fields;
+    new_fields[field][area] = e.target.value;
     setFields(new_fields);
-    
   };
-  
+
   const handleValidation = () => {
     let check_fields = fields;
     let errors = currErrors;
     let isValid = true;
-     
-     //Customer_ID
-     if (Customer_ID.options.Customer_ID === '') {
-      isValid = false
-      errors.options.Customer_ID = "Müşteri Cari Kodu Boş bırakalamaz !"
-     } else  {
-      errors.options.Customer_ID = ""
-     }
 
-     //Quotation_ID
-     if (selectConf.options.sale_ID === '') {
-      isValid = false
-      errors.options.sale_ID = "Form Referans Numarası Boş bırakalamaz !"
-     } else  {
-      errors.options.sale_ID = ""
-     }
+    //Customer_ID
+    if (Customer_ID.options.Customer_ID === "") {
+      isValid = false;
+      errors.options.Customer_ID = "Müşteri Cari Kodu Boş bırakalamaz !";
+    } else {
+      errors.options.Customer_ID = "";
+    }
 
-     
-     setCurrErrors(errors)
-     return isValid
+    //Quotation_ID
+    if (selectConf.options.sale_ID === "") {
+      isValid = false;
+      errors.options.sale_ID = "Form Referans Numarası Boş bırakalamaz !";
+    } else {
+      errors.options.sale_ID = "";
+    }
+
+    setCurrErrors(errors);
+    return isValid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (handleValidation()) {  
+    if (handleValidation()) {
+      let data = {
+        options: {
+          Customer_ID: Customer_ID.options.Customer_ID,
+          Sale_ID: selectConf.options.sale_ID,
+          Item_ID: fields.options.Item_ID,
+          plate_model_size: fields.options.plate_model_size,
+          treatment_size: fields.options.treatment_size,
+        },
+      };
 
-    let data = {
-      options : {
-       
-        Customer_ID : Customer_ID.options.Customer_ID,
-        Sale_ID : selectConf.options.sale_ID,
-        Item_ID : fields.options.Item_ID,
-        plate_model_size : fields.options.plate_model_size,
-        treatment_size : fields.options.treatment_size,
-      },
-
-    }
-    
-
-      try{
-        const res = await axios({ 
-          method : "post",
-          data: data , 
-          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/create`,
-          withCredentials : true});
-          if(res.status === 200) {
-            setSubmit(true);
-            setIsvalid(true);
-          } 
-      }
-      catch(err) {
+      try {
+        const res = await axios({
+          method: "post",
+          data: data,
+          url: `${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/create`,
+          withCredentials: true,
+        });
+        if (res.status === 200) {
+          setSubmit(true);
+          setIsvalid(true);
+        }
+      } catch (err) {
         setSubmit(false);
         setCreateErr(true);
       }
-      
-
-      
-      
     } else {
       setIsvalid(false);
     }
   };
 
-  
   const toggleCreate = () => {
     setCreate(!create);
   };
@@ -229,7 +232,7 @@ export default function CreateWorkOrder({customers}) {
         type="button"
         onClick={toggleCreate}
       >
-        + İş Emri Oluştur 
+        + İş Emri Oluştur
       </button>
 
       <div
@@ -245,8 +248,10 @@ export default function CreateWorkOrder({customers}) {
             strokeWidth={1.5}
             stroke="currentColor"
             className="w-6 h-6 relative top-0 left-0 hover:cursor-pointer"
-            onClick={() => {toggleCreate() 
-              router.reload(window.location.pathname);}}
+            onClick={() => {
+              toggleCreate();
+              router.reload(window.location.pathname);
+            }}
           >
             <path
               strokeLinecap="round"
@@ -257,60 +262,76 @@ export default function CreateWorkOrder({customers}) {
 
           <div
             className={`${
-              !submit && isValid && !createErr ? "visible scale-100" : "invisible scale-0 h-0"
+              !submit && isValid && !createErr
+                ? "visible scale-100"
+                : "invisible scale-0 h-0"
             } flex flex-col space-y-10`}
           >
             <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
-              Yeni İş Emri 
+              Yeni İş Emri
             </p>
             <form className="grid grid-cols-1 space-y-5 lg:grid-cols-1 ">
               {/*Customer info*/}
               <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
                 <div className="space-y-2 lg:w-1/2">
                   <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
-                     Form  Bilgileri
+                    Form Bilgileri
                   </p>
                   <hr />
                 </div>
 
                 <div className="space-y-5 lg:grid lg:grid-cols-3 lg:items-end lg:gap-3 ">
-                <div className="flex flex-col space-y-3 ">
-                              <label
-                                htmlFor="small-input"
-                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                              >
-                                Cari Kod *
-                              </label>
-                              <Dropdown
-                                label="Cari Kod"
-                                field="options"
-                                area="Customer_ID"
-                                items={CUSTOMER}
-                                fields={Customer_ID}
-                                handleChange={handleChangeCustomer}
-                              />
-                            </div>
-                            <div className="flex flex-col space-y-3 ">
-                              <label
-                                htmlFor="small-input"
-                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                              >
-                                Sipariş Onay Formu *
-                              </label>
-                              <Dropdown
-                                label="Teklif Formu"
-                                field="options"
-                                area="sale_ID"
-                                items={confirmations}
-                                fields={selectConf}
-                                handleChange={handleChangeQuo}
-                              />
-                            </div>
-                 
-
-                  
-
-                  
+                  <div className="flex flex-col space-y-3 ">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Cari Kod *
+                    </label>
+                    <Dropdown
+                      label="Cari Kod"
+                      field="options"
+                      area="Customer_ID"
+                      items={CUSTOMER}
+                      fields={Customer_ID}
+                      handleChange={handleChangeCustomer}
+                    />
+                  </div>
+                  <div className="flex flex-col space-y-3 ">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Sipariş Onay Formu *
+                    </label>
+                    <Dropdown
+                      label="Teklif Formu"
+                      field="options"
+                      area="sale_ID"
+                      items={confirmations}
+                      fields={selectConf}
+                      handleChange={handleChangeQuo}
+                    />
+                  </div>
+                  <div className="flex flex-col lg:w-full lg:mr-1">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Şirket *
+                    </label>
+                    <Dropdown
+                      label="Şirket"
+                      field="options"
+                      area="company"
+                      items={[
+                        { key: "VNT", value: "VNT" },
+                        { key: "BILGESIN", value: "BILGESIN" },
+                      ]}
+                      fields={fields}
+                      handleChange={handleChange}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="m-0 space-y-7 lg:flex lg:flex-col lg:items-center">
@@ -323,53 +344,55 @@ export default function CreateWorkOrder({customers}) {
 
                 <div className="space-y-5 lg:grid lg:place-items-center lg:w-4/5">
                   <div className="flex flex-col ">
-                  <label
-                                htmlFor="small-input"
-                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                              >
-                                Ürün Tipi
-                              </label>
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Ürün Tipi
+                    </label>
                     <p>{typeName}</p>
                   </div>
                 </div>
-                {typeName === "Plaka" ? <div>
-                <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                    >
-                      Plaka Model Ölçüsü *
-                    </label>
-                    <input
-                      type="number"
-                      step={"any"}
-                      className="invalid:border-red-500  pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                      
-                      onChange={(e) =>
-                        handleChange("options", "plate_model_size", e)
-                      }
-                    />
+                {typeName === "Plaka" ? (
+                  <div>
+                    <div className="flex flex-col">
+                      <label
+                        htmlFor="small-input"
+                        className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                      >
+                        Plaka Model Ölçüsü *
+                      </label>
+                      <input
+                        type="number"
+                        step={"any"}
+                        className="invalid:border-red-500  pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                        placeholder=""
+                        onChange={(e) =>
+                          handleChange("options", "plate_model_size", e)
+                        }
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <label
+                        htmlFor="small-input"
+                        className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                      >
+                        Dış Atölyede İşlenecek Ölçü *
+                      </label>
+                      <input
+                        type="number"
+                        step={"any"}
+                        className="invalid:border-red-500  pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                        placeholder=""
+                        onChange={(e) =>
+                          handleChange("options", "treatment_size", e)
+                        }
+                      />
+                    </div>{" "}
                   </div>
-                  <div className="flex flex-col">
-                    <label
-                      htmlFor="small-input"
-                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                    >
-                      Dış Atölyede İşlenecek Ölçü *
-                    </label>
-                    <input
-                      type="number"
-                      step={"any"}
-                      className="invalid:border-red-500  pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                      placeholder=""
-                
-                      onChange={(e) =>
-                        handleChange("options", "treatment_size", e)
-                      }
-                    />
-                  </div> </div> : ''}
-                
+                ) : (
+                  ""
+                )}
               </div>
             </form>
 
@@ -381,7 +404,6 @@ export default function CreateWorkOrder({customers}) {
                 onClick={(e) => {
                   handleSubmit(e);
                 }}
-                
               >
                 Oluştur
               </button>
@@ -431,7 +453,6 @@ export default function CreateWorkOrder({customers}) {
                   toggleCreate();
                   setSubmit(false);
                   router.reload(window.location.pathname);
-                  
                 }}
                 className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >
@@ -448,11 +469,20 @@ export default function CreateWorkOrder({customers}) {
             } mt-3 text-center transition duration-500 ease-out`}
           >
             <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-             
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 stroke-red-600">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-</svg>
-
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6 stroke-red-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                />
+              </svg>
             </div>
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               Eksik Bilgi girdiniz !
@@ -463,16 +493,20 @@ export default function CreateWorkOrder({customers}) {
               </p>
 
               <div className="text-justify font-poppins italic w-full space-y-1">
-              {!submit && !isValid ? Object.entries(currErrors).map(heading => {
-                return Object.entries(heading[1]).map((err, index) => {
-                  if(err[1] !==0) {
-                    return <p key={index} className="text-sm text-red-600">{err[1]}</p>
-                  }
-                })
-              }) : ""}
+                {!submit && !isValid
+                  ? Object.entries(currErrors).map((heading) => {
+                      return Object.entries(heading[1]).map((err, index) => {
+                        if (err[1] !== 0) {
+                          return (
+                            <p key={index} className="text-sm text-red-600">
+                              {err[1]}
+                            </p>
+                          );
+                        }
+                      });
+                    })
+                  : ""}
               </div>
-              
-              
             </div>
             <div className="items-center px-4 py-3">
               <button
@@ -480,7 +514,6 @@ export default function CreateWorkOrder({customers}) {
                 onClick={() => {
                   setSubmit(false);
                   setIsvalid(true);
-                  
                 }}
                 className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >
@@ -497,11 +530,20 @@ export default function CreateWorkOrder({customers}) {
             } mt-3 text-center transition duration-500 ease-out`}
           >
             <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-             
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 stroke-red-600">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-</svg>
-
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6 stroke-red-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                />
+              </svg>
             </div>
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               Böyle bir müşteri zaten mecvut !
@@ -509,7 +551,7 @@ export default function CreateWorkOrder({customers}) {
             <div className="mt-2 px-7 py-3">
               <p className="text-sm text-gray-500">
                 Lütfen formu kontrol edin!
-              </p>  
+              </p>
             </div>
             <div className="items-center px-4 py-3">
               <button
@@ -517,7 +559,6 @@ export default function CreateWorkOrder({customers}) {
                 onClick={() => {
                   setSubmit(false);
                   setCreateErr(false);
-                  
                 }}
                 className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >

@@ -21,7 +21,7 @@ const DropDown = ({ label, items, handleChange, field, area, fields }) => {
   const [searchText, setSearchText] = React.useState("");
   const displayedOptions = React.useMemo(
     () => items.filter((option) => containsText(`${option.key}`, searchText)),
-    [searchText]
+    [searchText, items]
   );
   return (
     <div className="w-full">
@@ -38,7 +38,7 @@ const DropDown = ({ label, items, handleChange, field, area, fields }) => {
           onClose={() => setSearchText("")}
           // This prevents rendering empty string in Select's value
           // if search text would exclude currently selected option.
-          renderValue={() => selected}
+          //renderValue={() => selected}
           required
         >
           <ListSubheader>
