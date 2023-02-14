@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import CreateWorkOrder from "../../components/Dashboards/general/forms/WorkOrder/Forms/CreateWorkOrder";
 import UpdateWorkOrder from "../../components/Dashboards/general/forms/WorkOrder/Forms/UpdateWorkOrder";
-
+import WorkOrderDisplay from "../../components/Dashboards/general/ui/WorkOrderDisplay";
 export default function QuotationMake({ customers, workOrders }) {
   const generate = (e) => {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/generate`, {
@@ -198,6 +198,9 @@ export default function QuotationMake({ customers, workOrders }) {
                       İndir
                     </th>
                     <th scope="col" className="px-6 py-3">
+                      <span className="sr-only">Görüntüle</span>
+                    </th>
+                    <th scope="col" className="px-6 py-3">
                       <span className="sr-only">Düzenle</span>
                     </th>
                   </tr>
@@ -272,6 +275,10 @@ export default function QuotationMake({ customers, workOrders }) {
                           >
                             İndir
                           </button>
+                        </td>
+
+                        <td className="px-6 py-4 text-right">
+                          <WorkOrderDisplay WorkOrderID={item.workorder_ID} />
                         </td>
 
                         <td className="px-6 py-4 text-right">

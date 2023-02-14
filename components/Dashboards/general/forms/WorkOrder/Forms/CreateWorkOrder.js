@@ -24,6 +24,7 @@ export default function CreateWorkOrder({ customers }) {
       type: "",
       plate_model_size: "",
       treatment_size: "",
+      company: "",
     },
   });
 
@@ -31,6 +32,7 @@ export default function CreateWorkOrder({ customers }) {
     options: {
       Customer_ID: "",
       sale_ID: "",
+      company: "",
     },
   });
 
@@ -185,6 +187,14 @@ export default function CreateWorkOrder({ customers }) {
       errors.options.sale_ID = "";
     }
 
+    //language
+    if (check_fields.options.company === "") {
+      isValid = false;
+      errors.options.company = "Şirket Bilgisi boş bırakılamaz !";
+    } else {
+      errors.options.company = "";
+    }
+
     setCurrErrors(errors);
     return isValid;
   };
@@ -199,6 +209,7 @@ export default function CreateWorkOrder({ customers }) {
           Item_ID: fields.options.Item_ID,
           plate_model_size: fields.options.plate_model_size,
           treatment_size: fields.options.treatment_size,
+          company: fields.options.company,
         },
       };
 
