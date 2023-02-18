@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios, { Axios } from "axios";
 import { useRouter } from "next/router";
-export default function CreateAnalyze() {
+import DropDown from "../../Common/Dropdown";
+
+export default function UpdateAnalyze() {
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
   const [createErr, setCreateErr] = useState(false);
-
+  const [all, setAll] = useState([]);
   const router = useRouter();
 
   const [fields, setFields] = useState({
@@ -14,6 +16,7 @@ export default function CreateAnalyze() {
       analyze_Name: "",
       analyze_coefCopper: "",
       analyze_coefTin: "",
+      selected: "",
     },
   });
   const [currErrors, setErrors] = useState({
@@ -21,13 +24,20 @@ export default function CreateAnalyze() {
       analyze_Name: "",
       analyze_coefCopper: "",
       analyze_coefTin: "",
+      selected: "",
     },
   });
 
   const handleChange = (field, area, e) => {
-    let new_fields = fields;
-    new_fields[field][area] = e.target.value;
-    setFields(new_fields);
+    setFields((old) => {
+      return {
+        ...old,
+        [field]: {
+          ...old[field],
+          [area]: e.target.value,
+        },
+      };
+    });
   };
 
   const handleValidation = () => {
@@ -41,6 +51,15 @@ export default function CreateAnalyze() {
       errors["analyze"]["analyze_Name"] = "Analiz İsmi boş bırakılamaz !";
     } else {
       errors["analyze"]["analyze_Name"] = "";
+    }
+
+    // selected
+    if (check_fields["analyze"]["selected"] === "") {
+      isValid = false;
+      errors["analyze"]["selected"] =
+        "Güncellemek için en az 1 adet analiz seçmelisiniz !";
+    } else {
+      errors["analyze"]["selected"] = "";
     }
 
     //analyze_coefCopper
@@ -73,8 +92,15 @@ export default function CreateAnalyze() {
       try {
         const res = await axios({
           method: "post",
-          data: fields,
-          url: `${process.env.NEXT_PUBLIC_BACKEND}/api/analyze/create`,
+          data: {
+            analyze: {
+              analyze_Name: fields.analyze.analyze_Name,
+              analyze_coefCopper: fields.analyze.analyze_coefCopper,
+              analyze_coefTin: fields.analyze.analyze_coefTin,
+            },
+            analyze_id: fields.analyze.selected,
+          },
+          url: `${process.env.NEXT_PUBLIC_BACKEND}/api/analyze/update`,
           withCredentials: true,
         });
         if (res.status === 200) {
@@ -92,14 +118,65 @@ export default function CreateAnalyze() {
   const toggleCreate = () => {
     setCreate(!create);
   };
+
+  const getValues = () => {
+    axios({
+      method: "GET",
+      url: `${process.env.NEXT_PUBLIC_BACKEND}/api/analyze/getAll`,
+      withCredentials: true,
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          let all_values = res.data.analyzes.map((item) => {
+            return {
+              key: item.analyze_Name,
+              value: item.analyze_id,
+            };
+          });
+          setAll(all_values);
+        }
+      })
+      .catch((err) => console.log());
+  };
+  useEffect(() => {
+    if (fields.analyze.selected !== "") {
+      axios({
+        method: "POST",
+        data: {
+          analyze_id: fields.analyze.selected,
+        },
+        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/analyze/get`,
+        withCredentials: true,
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            let data = res.data.analyze[0];
+            setFields((old) => {
+              return {
+                analyze: {
+                  ...old.analyze,
+                  analyze_Name: data.analyze_Name,
+                  analyze_coefCopper: data.analyze_coefCopper,
+                  analyze_coefTin: data.analyze_coefTin,
+                },
+              };
+            });
+          }
+        })
+        .catch((e) => console.log(e.message));
+    }
+  }, [fields.analyze.selected]);
   return (
     <div>
       <button
         className="bg-yellow-600 w-32 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-2 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
         type="button"
-        onClick={toggleCreate}
+        onClick={() => {
+          getValues();
+          toggleCreate();
+        }}
       >
-        + Analiz Ekle
+        + Analiz Düzenle
       </button>
 
       <div
@@ -132,7 +209,7 @@ export default function CreateAnalyze() {
             } flex flex-col space-y-10 lg:items-center lg:justify-center`}
           >
             <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-yellow-600">
-              Yeni Analiz
+              Analiz Düzenle
             </p>
             <form className="grid grid-cols-1 space-y-5 lg:place-items-center ">
               {/*Customer info*/}
@@ -145,17 +222,34 @@ export default function CreateAnalyze() {
                 </div>
 
                 <div className="space-y-5 lg:grid lg:place-items-center lg:gap-3 ">
+                  <div className="flex flex-col lg:w-full md:w-full">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Analiz
+                    </label>
+                    <DropDown
+                      label="Analiz Seç"
+                      field="analyze"
+                      area="selected"
+                      fields={fields}
+                      items={all}
+                      handleChange={handleChange}
+                    />
+                  </div>
                   <div className="flex flex-col ">
                     <label
                       htmlFor="small-input"
                       className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
-                      Analiz İsmi *
+                      Yeni Analiz İsmi *
                     </label>
                     <input
                       type="text"
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
+                      defaultValue={fields.analyze.analyze_Name}
                       required
                       onChange={(e) =>
                         handleChange("analyze", "analyze_Name", e)
@@ -168,13 +262,14 @@ export default function CreateAnalyze() {
                       htmlFor="small-input"
                       className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
-                      Analiz Katsayısı Bakır *
+                      Yeni Analiz Katsayısı (Bakır) *
                     </label>
                     <input
                       type="number"
                       step={"any"}
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
+                      defaultValue={fields.analyze.analyze_coefCopper}
                       required
                       onChange={(e) =>
                         handleChange("analyze", "analyze_coefCopper", e)
@@ -187,11 +282,12 @@ export default function CreateAnalyze() {
                       htmlFor="small-input"
                       className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
-                      Analiz Katsayısı Kalay *
+                      Yeni Analiz Katsayısı (Kalay) *
                     </label>
                     <input
                       type="number"
                       step={"any"}
+                      defaultValue={fields.analyze.analyze_coefTin}
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100  relative  block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
                       required
@@ -207,11 +303,11 @@ export default function CreateAnalyze() {
             {/*Buttons*/}
             <div className="flex justify-end space-x-3">
               <button
-                className="bg-green-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                className="bg-yellow-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="submit"
                 onClick={handleSubmit}
               >
-                Oluştur
+                Güncelle
               </button>
               <button
                 className="bg-red-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
@@ -249,7 +345,7 @@ export default function CreateAnalyze() {
             </h3>
             <div className="mt-2 px-7 py-3">
               <p className="text-sm text-gray-500">
-                Analiz Başarıyla Kaydedildi!
+                Analiz Başarıyla Güncellendi!
               </p>
             </div>
             <div className="items-center px-4 py-3">

@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import UpdateAnalyze from "../../../components/Dashboards/general/forms/QuotationMake/Forms/UpdateAnalyze";
 
 export default function QuotationMake({ items }) {
   //
@@ -94,6 +95,7 @@ export default function QuotationMake({ items }) {
             type={"create"}
           />
           <CreateAnalyze />
+          <UpdateAnalyze />
           <p className="text-sky-700 italic font-poppins tracking-widest">
             Filtrele
           </p>
