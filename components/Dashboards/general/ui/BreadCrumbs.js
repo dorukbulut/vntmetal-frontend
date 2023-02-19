@@ -19,7 +19,7 @@ export default function BreadCrumbs() {
       <ol className="inline-flex items-center space-x-1 md:space-x-3">
         {allPaths.map((item, index) => {
           return (
-            <li>
+            <li key={index}>
               <div className="flex items-center">
                 <svg
                   className="w-6 h-6 text-gray-400"

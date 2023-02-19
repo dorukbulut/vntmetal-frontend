@@ -24,7 +24,7 @@ export default function WorkOrderDisplay({ WorkOrderID }) {
     })
       .then((res) => {
         if (res.status === 200) {
-          console.log(res.data);
+          setValues(res.data[0]);
         }
       })
       .catch((err) => console.log(err.message));
@@ -75,8 +75,7 @@ export default function WorkOrderDisplay({ WorkOrderID }) {
             } flex flex-col space-y-10`}
           >
             <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-gray-600">
-              Sipariş Onay Formu :{" "}
-              {`${values?.reference}-REV-${values?.revision}`}
+              İş Emri No : {`${values?.reference}-REV-${values?.revision}`}
             </p>
             <div className="flex flex-col">
               <div className="flex flex-col gap-10">
@@ -85,37 +84,37 @@ export default function WorkOrderDisplay({ WorkOrderID }) {
                     <div className="flex gap-2 items-center">
                       <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
                         {" "}
-                        Müşteri Adı ve Cari Kodu :{""}
+                        Miktar :{""}
                       </p>
-                      <p className="text-lg font-poppins">{`${values?.customer?.account_title}-${values?.Customer_ID}`}</p>
+                      <p className="text-lg font-poppins">{`${values?.quotationItem?.unit_frequence}`}</p>
                     </div>
                     <div className="flex gap-2 items-center">
                       <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
                         {" "}
-                        Teklif Tarihi :{""}
+                        Teslim Tarihi :{""}
                       </p>
                       <p className="text-lg font-poppins">
-                        {`${values?.quotation_form?.year}-${values?.quotation_form?.month}-${values?.quotation_form?.day}`}
-                      </p>
-                    </div>
-
-                    <div className="flex gap-2 items-center">
-                      <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
-                        {" "}
-                        Sipariş Tarihi :{""}
-                      </p>
-                      <p className="text-lg font-poppins">
-                        {`${values?.OrderDate}`}
+                        {`${values?.sale_confirmation?.deliveryDate}`}
                       </p>
                     </div>
 
                     <div className="flex gap-2 items-center">
                       <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
                         {" "}
-                        Şirket :{""}
+                        Analiz/Malzeme :{""}
                       </p>
                       <p className="text-lg font-poppins">
-                        {`${values?.company}`}
+                        {`${values?.quotationItem?.analyze?.analyze_Name}`}
+                      </p>
+                    </div>
+
+                    <div className="flex gap-2 items-center">
+                      <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
+                        {" "}
+                        Müşteri Referans No :{""}
+                      </p>
+                      <p className="text-lg font-poppins">
+                        {`${values?.sale_confirmation?.customerReference}`}
                       </p>
                     </div>
                   </div>
@@ -124,10 +123,10 @@ export default function WorkOrderDisplay({ WorkOrderID }) {
                     <div className="flex gap-2 items-center">
                       <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
                         {" "}
-                        Planlanan Teslim Tarihi :{""}
+                        Ürün Açıklaması :{""}
                       </p>
                       <p className="text-lg font-poppins">
-                        {`${values?.deliveryDate}`}
+                        {`${values?.sale_confirmation?.description}`}
                       </p>
                     </div>
 
@@ -137,182 +136,23 @@ export default function WorkOrderDisplay({ WorkOrderID }) {
                         Özel İstekler :{""}
                       </p>
                       <p className="text-lg font-poppins">
-                        {`${values?.specialOffers}`}
+                        {`${values?.sale_confirmation?.specialOffers}`}
                       </p>
                     </div>
 
                     <div className="flex gap-2 items-center">
                       <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
                         {" "}
-                        Müşteri Referans No. :{""}
+                        Tarih :{""}
                       </p>
                       <p className="text-lg font-poppins">
-                        {`${values?.customerReference}`}
-                      </p>
-                    </div>
-
-                    <div className="flex gap-2 items-center">
-                      <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
-                        {" "}
-                        Şirket :{""}
-                      </p>
-                      <p className="text-lg font-poppins">
-                        {`${
-                          values?.language === "English"
-                            ? "İngilizce"
-                            : "Türkçe"
-                        }`}
+                        {`${values?.day}-${values?.month}-${values?.year}`}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="relative overflow-x-auto shadow-lg sm:rounded-lg">
-                  <table className="w-full text-sm text-left text-gray-500 d">
-                    <thead className="text-xs text-gray-700 uppercase ">
-                      <tr>
-                        <th scope="col" className="px-6 py-3 bg-gray-50 ">
-                          Ürün
-                        </th>
-                        <th scope="col" className="px-6 py-3">
-                          Ürün Açıklaması
-                        </th>
-                        <th scope="col" className="px-6 py-3">
-                          Ölçü
-                        </th>
-                        <th scope="col" className="px-6 py-3 bg-gray-50 ">
-                          Miktar
-                        </th>
-                        <th scope="col" className="px-6 py-3">
-                          Hesaplanan Ağırlık
-                        </th>
-
-                        <th scope="col" className="px-6 py-3">
-                          Analiz
-                        </th>
-
-                        <th scope="col" className="px-6 py-3">
-                          Birim Fiyat
-                        </th>
-
-                        <th scope="col" className="px-6 py-3">
-                          Açıklama
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {values?.quotationItems?.map((item, index) => {
-                        let dim = "";
-                        let calc = 0;
-                        let type = "";
-                        if (
-                          item.straight_bush === null &&
-                          item.plate_strip === null &&
-                          item.doublebracket_bush === null &&
-                          item.middlebracket_bush === null
-                        ) {
-                          type = "Flanşlı Burç";
-                          dim = `${item.bracket_bush.bigger_diameter}*${item.bracket_bush.body_diameter}*${item.bracket_bush.inner_diameter}*${item.bracket_bush.bracket_length}*${item.bracket_bush.bush_length}`;
-                          calc = calcBracketBush(
-                            parseFloat(item.bracket_bush.bigger_diameter),
-                            parseFloat(item.bracket_bush.body_diameter),
-                            parseFloat(item.bracket_bush.inner_diameter),
-                            parseFloat(item.bracket_bush.bracket_length),
-                            parseFloat(item.bracket_bush.bush_length)
-                          );
-                        }
-                        if (
-                          item.plate_strip === null &&
-                          item.bracket_bush === null &&
-                          item.doublebracket_bush === null &&
-                          item.middlebracket_bush === null
-                        ) {
-                          type = "Düz Burç";
-                          calc = calcStraightBush(
-                            parseFloat(item.straight_bush.large_diameter),
-                            parseFloat(item.straight_bush.inner_diameter),
-                            parseFloat(item.straight_bush.bush_length)
-                          );
-                          dim = `${item.straight_bush.large_diameter}*${item.straight_bush.inner_diameter}*${item.straight_bush.bush_length}`;
-                        }
-                        if (
-                          item.bracket_bush === null &&
-                          item.straight_bush === null &&
-                          item.doublebracket_bush === null &&
-                          item.middlebracket_bush === null
-                        ) {
-                          type = "Plaka";
-                          calc = calcPlateStrip(
-                            parseFloat(item.plate_strip.width),
-                            parseFloat(item.plate_strip.thickness),
-                            parseFloat(item.plate_strip["length"])
-                          );
-                          dim = `${item.plate_strip.width}*${item.plate_strip["length"]}*${item.plate_strip.thickness}`;
-                        }
-                        if (
-                          item.bracket_bush === null &&
-                          item.straight_bush === null &&
-                          item.plate_strip === null &&
-                          item.middlebracket_bush === null
-                        ) {
-                          type = "Çift Flanşlı Burç";
-                          calc = calcDoubleBracketBush(
-                            parseFloat(item.doublebracket_bush.bigger_diameter),
-                            parseFloat(item.doublebracket_bush.body_diameter),
-                            parseFloat(item.doublebracket_bush.inner_diameter),
-                            parseFloat(item.doublebracket_bush.bracket_l1),
-                            parseFloat(item.doublebracket_bush.bracket_l2),
-                            parseFloat(item.doublebracket_bush.bracket_l3),
-                            parseFloat(item.doublebracket_bush.bracket_full)
-                          );
-                          dim = `${item.doublebracket_bush.bigger_diameter}*${item.doublebracket_bush.body_diameter}*${item.doublebracket_bush.inner_diameter}*${item.doublebracket_bush.bracket_l1}*${item.doublebracket_bush.bracket_l2}*${item.doublebracket_bush.bracket_l3}*${item.doublebracket_bush.bracket_full}`;
-                        }
-                        if (
-                          item.bracket_bush === null &&
-                          item.straight_bush === null &&
-                          item.plate_strip === null &&
-                          item.doublebracket_bush === null
-                        ) {
-                          type = "Ortadan Flanşlı Burç";
-                          calc = calcMiddleBracketBush(
-                            parseFloat(item.middlebracket_bush.bracket_q1),
-                            parseFloat(item.middlebracket_bush.bracket_q3),
-                            parseFloat(item.middlebracket_bush.bracket_q2),
-                            parseFloat(item.middlebracket_bush.bracket_q4),
-                            parseFloat(item.middlebracket_bush.bracket_l1),
-                            parseFloat(item.middlebracket_bush.bracket_l2),
-                            parseFloat(item.middlebracket_bush.bracket_l3),
-                            parseFloat(item.middlebracket_bush.bracket_full)
-                          );
-                          dim = `${item.middlebracket_bush.bracket_q1}*${item.middlebracket_bush.bracket_q2}*${item.middlebracket_bush.bracket_q3}*${item.middlebracket_bush.bracket_q4}*${item.middlebracket_bush.bracket_l1}*${item.middlebracket_bush.bracket_l2}*${item.middlebracket_bush.bracket_l3}*${item.middlebracket_bush.bracket_full}`;
-                        }
-                        return (
-                          <tr className="border-b border-gray-200 " key={index}>
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 "
-                            >
-                              {type}
-                            </th>
-                            <td className="px-6 py-4">{item.description}</td>
-                            <td className="px-6 py-4 bg-gray-50 d">{dim}</td>
-                            <td className="px-6 py-4">{item.unit_frequence}</td>
-                            <td className="px-6 py-4">
-                              {parseFloat(calc).toFixed(2)}
-                            </td>
-                            <td className="px-6 py-4">
-                              {item.analyze.analyze_Name}
-                            </td>
-                            <td className="px-6 py-4">
-                              {parseFloat(item.unit_price)} {item.currency}
-                            </td>
-                            <td className="px-6 py-4">{item.deliveryTime}</td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                <div className="relative overflow-x-auto shadow-lg sm:rounded-lg"></div>
 
                 <div className="relative overflow-x-auto shadow-lg sm:rounded-lg">
                   <table className="w-full text-sm text-left text-gray-500 ">
@@ -324,25 +164,36 @@ export default function WorkOrderDisplay({ WorkOrderID }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {values?.certificates?.map((item, index) => {
-                        return (
-                          <tr key={index} className="border-b border-gray-200 ">
-                            <td className="px-6 py-4 bg-gray-50 ">
-                              {item.name}
-                            </td>
-                          </tr>
-                        );
-                      })}
+                      {values?.sale_confirmation?.certificates?.map(
+                        (item, index) => {
+                          return (
+                            <tr
+                              key={index}
+                              className="border-b border-gray-200 "
+                            >
+                              <td className="px-6 py-4 bg-gray-50 ">
+                                {item.name}
+                              </td>
+                            </tr>
+                          );
+                        }
+                      )}
                     </tbody>
                   </table>
                 </div>
 
                 <div className="relative overflow-x-auto shadow-lg sm:rounded-lg">
-                  <table className="w-full text-sm text-left text-gray-500 ">
+                  <table className="w-full text-sm text-left text-gray-500 d">
                     <thead className="text-xs text-gray-700 uppercase ">
                       <tr>
                         <th scope="col" className="px-6 py-3 bg-gray-50 ">
-                          Teslim Şekli
+                          Nihai Ağırlık
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Dış Atölye/ İşlemeci Firma Adı
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Model Firma Adı
                         </th>
                         <th scope="col" className="px-6 py-3 bg-gray-50 ">
                           Paketleme
@@ -351,11 +202,19 @@ export default function WorkOrderDisplay({ WorkOrderID }) {
                     </thead>
                     <tbody>
                       <tr className="border-b border-gray-200 ">
-                        <td className="px-6 py-4 bg-gray-50 ">
-                          {values?.quotation_form?.delivery_type?.name}
+                        <td className="px-6 py-4">
+                          {values?.finalWeight === ""
+                            ? values?.finalWeight
+                            : "Girilmemiş"}
                         </td>
-                        <td className="px-6 py-4 bg-gray-50 ">
-                          {values?.package ? "Var" : "Yok"}
+                        <td className="px-6 py-4 bg-gray-50 d">
+                          {values?.quotationItem?.treatment_firm}
+                        </td>
+                        <td className="px-6 py-4">
+                          {values?.quotationItem?.model_firm}
+                        </td>
+                        <td className="px-6 py-4">
+                          {values?.sale_confirmation?.package ? "Var" : "Yok"}
                         </td>
                       </tr>
                     </tbody>

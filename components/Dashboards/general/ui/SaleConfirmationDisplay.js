@@ -321,6 +321,45 @@ export default function SaleConfirmationDisplay({ ConfirmationID }) {
                 </div>
 
                 <div className="relative overflow-x-auto shadow-lg sm:rounded-lg">
+                  <table className="w-full text-sm text-left text-gray-500 d">
+                    <thead className="text-xs text-gray-700 uppercase ">
+                      <tr>
+                        <th scope="col" className="px-6 py-3 bg-gray-50 ">
+                          Dış Atölye/ İşlemeci Firma Adı
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Dış Atölye/ İşlemeci Firma Fiyatı
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                          Model Firma Adı
+                        </th>
+                        <th scope="col" className="px-6 py-3 bg-gray-50 ">
+                          Model Firma Fiyat
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-gray-200 ">
+                        <td className="px-6 py-4">
+                          {values?.quotationItem?.treatment_firm}
+                        </td>
+                        <td className="px-6 py-4 bg-gray-50 d">
+                          {values?.quotationItem?.treatment_price}{" "}
+                          {values?.quotationItem?.currency}
+                        </td>
+                        <td className="px-6 py-4">
+                          {values?.quotationItem?.model_firm}
+                        </td>
+                        <td className="px-6 py-4">
+                          {values?.quotationItem?.model_price}{" "}
+                          {values?.quotationItem?.currency}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="relative overflow-x-auto shadow-lg sm:rounded-lg">
                   <table className="w-full text-sm text-left text-gray-500 ">
                     <thead className="text-xs text-gray-700 uppercase ">
                       <tr>
