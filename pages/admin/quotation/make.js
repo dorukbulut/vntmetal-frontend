@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import UpdateAnalyze from "../../../components/Dashboards/general/forms/QuotationMake/Forms/UpdateAnalyze";
+import { ITEM_TYPES } from "../../../utils/mappers";
 
 export default function QuotationMake({ items }) {
   //
@@ -167,13 +168,7 @@ export default function QuotationMake({ items }) {
                           scope="row"
                           className="px-6 py-4 font-medium text-gray-900 "
                         >
-                          {item.straight_bush ? "Düz Burç" : ""}
-                          {item.plate_strip ? "Plaka" : ""}
-                          {item.bracket_bush ? "Flanşlı Burç" : ""}
-                          {item.middlebracket_bush
-                            ? "Ortadan Flanşlı Burç"
-                            : ""}
-                          {item.doublebracket_bush ? "Çift Flanşlı Burç" : ""}
+                          {ITEM_TYPES[item.itemType]}
                         </th>
                         <td className="px-6 py-4">{item.Customer_ID}</td>
                         <td className="px-6 py-4">

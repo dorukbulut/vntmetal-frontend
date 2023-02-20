@@ -186,48 +186,6 @@ export default function QuotationFormDisplay({ quotID }) {
                     </thead>
                     <tbody>
                       {values?.quotationItems?.map((item, index) => {
-                        let dim = "";
-
-                        if (
-                          item.straight_bush === null &&
-                          item.plate_strip === null &&
-                          item.doublebracket_bush === null &&
-                          item.middlebracket_bush === null
-                        ) {
-                          dim = `${item.bracket_bush.bigger_diameter}*${item.bracket_bush.body_diameter}*${item.bracket_bush.inner_diameter}*${item.bracket_bush.bracket_length}*${item.bracket_bush.bush_length}`;
-                        }
-                        if (
-                          item.plate_strip === null &&
-                          item.bracket_bush === null &&
-                          item.doublebracket_bush === null &&
-                          item.middlebracket_bush === null
-                        ) {
-                          dim = `${item.straight_bush.large_diameter}*${item.straight_bush.inner_diameter}*${item.straight_bush.bush_length}`;
-                        }
-                        if (
-                          item.bracket_bush === null &&
-                          item.straight_bush === null &&
-                          item.doublebracket_bush === null &&
-                          item.middlebracket_bush === null
-                        ) {
-                          dim = `${item.plate_strip.width}*${item.plate_strip["length"]}*${item.plate_strip.thickness}`;
-                        }
-                        if (
-                          item.bracket_bush === null &&
-                          item.straight_bush === null &&
-                          item.plate_strip === null &&
-                          item.middlebracket_bush === null
-                        ) {
-                          dim = `${item.doublebracket_bush.bigger_diameter}*${item.doublebracket_bush.body_diameter}*${item.doublebracket_bush.inner_diameter}*${item.doublebracket_bush.bracket_l1}*${item.doublebracket_bush.bracket_l2}*${item.doublebracket_bush.bracket_l3}*${item.doublebracket_bush.bracket_full}`;
-                        }
-                        if (
-                          item.bracket_bush === null &&
-                          item.straight_bush === null &&
-                          item.plate_strip === null &&
-                          item.doublebracket_bush === null
-                        ) {
-                          dim = `${item.middlebracket_bush.bracket_q1}*${item.middlebracket_bush.bracket_q2}*${item.middlebracket_bush.bracket_q3}*${item.middlebracket_bush.bracket_q4}*${item.middlebracket_bush.bracket_l1}*${item.middlebracket_bush.bracket_l2}*${item.middlebracket_bush.bracket_l3}*${item.middlebracket_bush.bracket_full}`;
-                        }
                         return (
                           <tr className="border-b border-gray-200 " key={index}>
                             <th
@@ -237,7 +195,9 @@ export default function QuotationFormDisplay({ quotID }) {
                               {index + 1}
                             </th>
                             <td className="px-6 py-4">{item.description}</td>
-                            <td className="px-6 py-4 bg-gray-50 d">{dim}</td>
+                            <td className="px-6 py-4 bg-gray-50 d">
+                              {item.dimensions}
+                            </td>
                             <td className="px-6 py-4">
                               {item.analyze.analyze_Name}
                             </td>

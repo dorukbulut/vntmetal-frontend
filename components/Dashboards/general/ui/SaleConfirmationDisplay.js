@@ -1,12 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import {
-  calcBracketBush,
-  calcDoubleBracketBush,
-  calcPlateStrip,
-  calcStraightBush,
-  calcMiddleBracketBush,
-} from "../../../../utils/calcWeight";
+import { ITEM_TYPES } from "../../../../utils/mappers";
 import axios from "axios";
 
 export default function SaleConfirmationDisplay({ ConfirmationID }) {
@@ -208,103 +202,21 @@ export default function SaleConfirmationDisplay({ ConfirmationID }) {
                     </thead>
                     <tbody>
                       {values?.quotationItems?.map((item, index) => {
-                        let dim = "";
-                        let calc = 0;
-                        let type = "";
-                        if (
-                          item.straight_bush === null &&
-                          item.plate_strip === null &&
-                          item.doublebracket_bush === null &&
-                          item.middlebracket_bush === null
-                        ) {
-                          type = "Flanşlı Burç";
-                          dim = `${item.bracket_bush.bigger_diameter}*${item.bracket_bush.body_diameter}*${item.bracket_bush.inner_diameter}*${item.bracket_bush.bracket_length}*${item.bracket_bush.bush_length}`;
-                          calc = calcBracketBush(
-                            parseFloat(item.bracket_bush.bigger_diameter),
-                            parseFloat(item.bracket_bush.body_diameter),
-                            parseFloat(item.bracket_bush.inner_diameter),
-                            parseFloat(item.bracket_bush.bracket_length),
-                            parseFloat(item.bracket_bush.bush_length)
-                          );
-                        }
-                        if (
-                          item.plate_strip === null &&
-                          item.bracket_bush === null &&
-                          item.doublebracket_bush === null &&
-                          item.middlebracket_bush === null
-                        ) {
-                          type = "Düz Burç";
-                          calc = calcStraightBush(
-                            parseFloat(item.straight_bush.large_diameter),
-                            parseFloat(item.straight_bush.inner_diameter),
-                            parseFloat(item.straight_bush.bush_length)
-                          );
-                          dim = `${item.straight_bush.large_diameter}*${item.straight_bush.inner_diameter}*${item.straight_bush.bush_length}`;
-                        }
-                        if (
-                          item.bracket_bush === null &&
-                          item.straight_bush === null &&
-                          item.doublebracket_bush === null &&
-                          item.middlebracket_bush === null
-                        ) {
-                          type = "Plaka";
-                          calc = calcPlateStrip(
-                            parseFloat(item.plate_strip.width),
-                            parseFloat(item.plate_strip.thickness),
-                            parseFloat(item.plate_strip["length"])
-                          );
-                          dim = `${item.plate_strip.width}*${item.plate_strip["length"]}*${item.plate_strip.thickness}`;
-                        }
-                        if (
-                          item.bracket_bush === null &&
-                          item.straight_bush === null &&
-                          item.plate_strip === null &&
-                          item.middlebracket_bush === null
-                        ) {
-                          type = "Çift Flanşlı Burç";
-                          calc = calcDoubleBracketBush(
-                            parseFloat(item.doublebracket_bush.bigger_diameter),
-                            parseFloat(item.doublebracket_bush.body_diameter),
-                            parseFloat(item.doublebracket_bush.inner_diameter),
-                            parseFloat(item.doublebracket_bush.bracket_l1),
-                            parseFloat(item.doublebracket_bush.bracket_l2),
-                            parseFloat(item.doublebracket_bush.bracket_l3),
-                            parseFloat(item.doublebracket_bush.bracket_full)
-                          );
-                          dim = `${item.doublebracket_bush.bigger_diameter}*${item.doublebracket_bush.body_diameter}*${item.doublebracket_bush.inner_diameter}*${item.doublebracket_bush.bracket_l1}*${item.doublebracket_bush.bracket_l2}*${item.doublebracket_bush.bracket_l3}*${item.doublebracket_bush.bracket_full}`;
-                        }
-                        if (
-                          item.bracket_bush === null &&
-                          item.straight_bush === null &&
-                          item.plate_strip === null &&
-                          item.doublebracket_bush === null
-                        ) {
-                          type = "Ortadan Flanşlı Burç";
-                          calc = calcMiddleBracketBush(
-                            parseFloat(item.middlebracket_bush.bracket_q1),
-                            parseFloat(item.middlebracket_bush.bracket_q3),
-                            parseFloat(item.middlebracket_bush.bracket_q2),
-                            parseFloat(item.middlebracket_bush.bracket_q4),
-                            parseFloat(item.middlebracket_bush.bracket_l1),
-                            parseFloat(item.middlebracket_bush.bracket_l2),
-                            parseFloat(item.middlebracket_bush.bracket_l3),
-                            parseFloat(item.middlebracket_bush.bracket_full)
-                          );
-                          dim = `${item.middlebracket_bush.bracket_q1}*${item.middlebracket_bush.bracket_q2}*${item.middlebracket_bush.bracket_q3}*${item.middlebracket_bush.bracket_q4}*${item.middlebracket_bush.bracket_l1}*${item.middlebracket_bush.bracket_l2}*${item.middlebracket_bush.bracket_l3}*${item.middlebracket_bush.bracket_full}`;
-                        }
                         return (
                           <tr className="border-b border-gray-200 " key={index}>
                             <th
                               scope="row"
                               className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 "
                             >
-                              {type}
+                              {ITEM_TYPES[item.itemType]}
                             </th>
                             <td className="px-6 py-4">{item.description}</td>
-                            <td className="px-6 py-4 bg-gray-50 d">{dim}</td>
+                            <td className="px-6 py-4 bg-gray-50 d">
+                              {item.dimensions}
+                            </td>
                             <td className="px-6 py-4">{item.unit_frequence}</td>
                             <td className="px-6 py-4">
-                              {parseFloat(calc).toFixed(2)}
+                              {parseFloat(item.calcRaw).toFixed(2)}
                             </td>
                             <td className="px-6 py-4">
                               {item.analyze.analyze_Name}

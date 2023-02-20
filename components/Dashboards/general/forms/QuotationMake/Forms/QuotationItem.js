@@ -1,29 +1,43 @@
 import Dropdown from "../../Common/Dropdown";
 import React, { useEffect, useState } from "react";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-
-export default function QuotationItem({ name, children, kgPrice, usd, euro, getCalcRaw, prevValues, type}){
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { ITEM_TYPES } from "../../../../../../utils/mappers";
+export default function QuotationItem({
+  name,
+  children,
+  kgPrice,
+  usd,
+  euro,
+  getCalcRaw,
+  prevValues,
+  type,
+}) {
   //states
   const [fields, setFields] = useState({
     quotation_item: {
-      unit_frequence: "unit_frequence" in prevValues ? prevValues.unit_frequence : "",
+      unit_frequence:
+        "unit_frequence" in prevValues ? prevValues.unit_frequence : "",
       model_price: "model_price" in prevValues ? prevValues.model_price : "",
       model_firm: "model_firm" in prevValues ? prevValues.model_firm : "",
-      treatment_price: "treatment_price" in prevValues ? prevValues.treatment_price : "",
-      treatment_firm: "treatment_firm" in prevValues ? prevValues.treatment_firm : "",
+      treatment_price:
+        "treatment_price" in prevValues ? prevValues.treatment_price : "",
+      treatment_firm:
+        "treatment_firm" in prevValues ? prevValues.treatment_firm : "",
       test_price: "test_price" in prevValues ? prevValues.test_price : "",
       benefit: "benefit" in prevValues ? prevValues.benefit : "",
       alterPrice: "alterPrice" in prevValues ? prevValues.alterPrice : "",
-      totalSalePrice : "totalSalePrice" in prevValues ? prevValues.totalSalePrice : [],
-      totalPrice : "totalPrice" in prevValues ? prevValues.totalPrice : "",
+      totalSalePrice:
+        "totalSalePrice" in prevValues ? prevValues.totalSalePrice : [],
+      totalPrice: "totalPrice" in prevValues ? prevValues.totalPrice : "",
     },
   });
 
   const [calculated, setCalculated] = useState({
-    modelUnitPrice: "modelUnitPrice" in prevValues ? prevValues.modelUnitPrice : "",
+    modelUnitPrice:
+      "modelUnitPrice" in prevValues ? prevValues.modelUnitPrice : "",
     totalCost: "totalCost" in prevValues ? prevValues.totalCost : "",
   });
 
@@ -32,21 +46,20 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
     values: {},
   });
 
-  
   //handlers
 
   const getMeasures = (validity, values) => {
     setMolding((old) => {
       return {
         ...old,
-        "validity" : validity,
-        "values" : {
+        validity: validity,
+        values: {
           ...old.values,
-          ...values
-        } 
-      }
+          ...values,
+        },
+      };
     });
-  }
+  };
 
   const handleChange = (field, area, e) => {
     setFields((old) => {
@@ -66,7 +79,6 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
       isValid = false;
     }
     if (check_fields["quotation_item"]["model_price"] === "") {
-    
       isValid = false;
     }
     if (check_fields["quotation_item"]["model_firm"] === "") {
@@ -91,14 +103,11 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
       isValid = false;
     }
 
-
-    return isValid
-  }
-
-  
+    return isValid;
+  };
 
   //hooks
-  
+
   useEffect(() => {
     if (
       parseInt(fields.quotation_item.unit_frequence) !== 0 &&
@@ -118,14 +127,14 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
 
   useEffect(() => {
     setCalculated((old) => {
-      console.log()
+      console.log();
       return {
         ...old,
         totalCost: (
           parseFloat(calculated.modelUnitPrice) +
           parseFloat(fields.quotation_item.test_price) +
           parseFloat(fields.quotation_item.treatment_price) +
-          parseFloat((molding.values.calcRaw * kgPrice))
+          parseFloat(molding.values.calcRaw * kgPrice)
         ).toFixed(2),
       };
     });
@@ -137,33 +146,71 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
   ]);
   useEffect(() => {
     getCalcRaw(handleValidation() && molding.validity, {
-
       ...fields.quotation_item,
       ...calculated,
-      ...molding.values
-      
+      ...molding.values,
     });
-  }, [molding.validity,molding.values,fields, calculated])
+  }, [molding.validity, molding.values, fields, calculated]);
   useEffect(() => {
-    let sale = (parseFloat(calculated.totalCost) +  parseFloat(calculated.totalCost) * parseFloat(fields["quotation_item"]["benefit"]) / 100).toFixed(2)
-    let tCost = [{value : `${parseFloat(sale).toFixed(2)} ₺`, key : `${parseFloat(sale).toFixed(2)} ₺`}, 
-    {value : `${(sale / parseFloat(usd)).toFixed(2)} $`, key : `${(sale / parseFloat(usd)).toFixed(2)} $`},
-    {value : `${(sale / parseFloat(euro)).toFixed(2)} €`, key : `${(sale / parseFloat(euro)).toFixed(2)} €`},
-    {value : `${(parseFloat(fields["quotation_item"]["alterPrice"])).toFixed(2)} ₺`, key : `${(parseFloat(fields["quotation_item"]["alterPrice"])).toFixed(2)} ₺`},
-    {value : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(usd)).toFixed(2)} $`, key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(usd)).toFixed(2)} $`},
-    {value : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(euro)).toFixed(2)} €`, key : `${(parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(euro)).toFixed(2)} €`},
-  ]
+    let sale = (
+      parseFloat(calculated.totalCost) +
+      (parseFloat(calculated.totalCost) *
+        parseFloat(fields["quotation_item"]["benefit"])) /
+        100
+    ).toFixed(2);
+    let tCost = [
+      {
+        value: `${parseFloat(sale).toFixed(2)} ₺`,
+        key: `${parseFloat(sale).toFixed(2)} ₺`,
+      },
+      {
+        value: `${(sale / parseFloat(usd)).toFixed(2)} $`,
+        key: `${(sale / parseFloat(usd)).toFixed(2)} $`,
+      },
+      {
+        value: `${(sale / parseFloat(euro)).toFixed(2)} €`,
+        key: `${(sale / parseFloat(euro)).toFixed(2)} €`,
+      },
+      {
+        value: `${parseFloat(fields["quotation_item"]["alterPrice"]).toFixed(
+          2
+        )} ₺`,
+        key: `${parseFloat(fields["quotation_item"]["alterPrice"]).toFixed(
+          2
+        )} ₺`,
+      },
+      {
+        value: `${(
+          parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(usd)
+        ).toFixed(2)} $`,
+        key: `${(
+          parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(usd)
+        ).toFixed(2)} $`,
+      },
+      {
+        value: `${(
+          parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(euro)
+        ).toFixed(2)} €`,
+        key: `${(
+          parseFloat(fields["quotation_item"]["alterPrice"]) / parseFloat(euro)
+        ).toFixed(2)} €`,
+      },
+    ];
     setFields((old) => {
       return {
         ...old,
-        quotation_item : {
+        quotation_item: {
           ...old.quotation_item,
-          totalSalePrice : tCost,
-          totalPrice : ""
-        }
-      }
-    })
-  }, [fields.quotation_item.benefit, fields.quotation_item.alterPrice, calculated.totalCost])
+          totalSalePrice: tCost,
+          totalPrice: "",
+        },
+      };
+    });
+  }, [
+    fields.quotation_item.benefit,
+    fields.quotation_item.alterPrice,
+    calculated.totalCost,
+  ]);
   //utils
   const childrenWithProps = React.Children.map(children, (child) => {
     // Checking isValidElement is the safe way and avoids a
@@ -176,12 +223,16 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
 
   return (
     <div className="mt-10 lg:grid lg:place-items-center">
-      {type === "update" ?<p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-yellow-600">
-         {name} Güncelle
-      </p> : <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
-        Yeni {name}
-      </p> }
-      
+      {type === "update" ? (
+        <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-yellow-600">
+          {ITEM_TYPES[name]} Güncelle
+        </p>
+      ) : (
+        <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
+          Yeni {ITEM_TYPES[name]}
+        </p>
+      )}
+
       <div className="grid grid-cols-1 space-y-5 lg:grid lg:grid-cols-2 space-x-10 ">
         {childrenWithProps}
         <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
@@ -381,8 +432,6 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
               />
             </div>
 
-           
-
             <div className="flex flex-col">
               <label
                 htmlFor="small-input"
@@ -411,21 +460,27 @@ export default function QuotationItem({ name, children, kgPrice, usd, euro, getC
                 Satış Fiyatı
               </label>
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-      <InputLabel id="demo-select-small">Fiyat</InputLabel>
-      <Select
-        labelId="demo-select-small"
-        id="demo-select-small"
-        label="Fiyat"
-        displayEmpty
-        value={fields.quotation_item.totalPrice}
-        onChange={(e) => handleChange("quotation_item", "totalPrice", e)}
-      >
-        <MenuItem value="">Fiyat Seçiniz</MenuItem>
-        {fields.quotation_item.totalSalePrice.map((price, i)=> {
-          return  <MenuItem key={i} value={price.value}>{price.key}</MenuItem>
-        })}
-      </Select>
-    </FormControl>
+                <InputLabel id="demo-select-small">Fiyat</InputLabel>
+                <Select
+                  labelId="demo-select-small"
+                  id="demo-select-small"
+                  label="Fiyat"
+                  displayEmpty
+                  value={fields.quotation_item.totalPrice}
+                  onChange={(e) =>
+                    handleChange("quotation_item", "totalPrice", e)
+                  }
+                >
+                  <MenuItem value="">Fiyat Seçiniz</MenuItem>
+                  {fields.quotation_item.totalSalePrice.map((price, i) => {
+                    return (
+                      <MenuItem key={i} value={price.value}>
+                        {price.key}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState } from "react";
 import * as React from "react";
 import axios from "axios";
 import Box from "@mui/material/Box";
@@ -12,54 +12,31 @@ import Dropdown from "../../Common/Dropdown";
 import QuotationItem from "./QuotationItem";
 import CalculateRaw from "./CalcRaw";
 import Contracted from "./Contracted";
-import StrBush from "../TypeForms/StrBush";
-import PlateStrip from "../TypeForms/PlateStrip";
-import BracketBush from "../TypeForms/BracketBush"
-import DoubleBracketBush from "../TypeForms/DoubleBracketBush";
-import MiddleBracketBush from "../TypeForms/MiddleBracketBush";
 
+import {
+  steps,
+  TYPE,
+  QUOTYPE,
+  TYPE_COMPS,
+} from "../../../../../../utils/mappers";
 
-const TYPE = [
-  { key: "Düz Burç", value: "Düz Burç" },
-  { key: "Plaka", value: "Plaka" },
-  { key: "Flanşlı Burç", value: "Flanşlı Burç" },
-  { key: "Ortadan Flanşlı Burç", value: "Ortadan Flanşlı Burç" },
-  { key: "Çift Flanşlı Burç", value: "Çift Flanşlı Burç" },
-];
-const QUOTYPE = [
-  {key : "Anlaşmalı Teklif Hazırlama", value : "0"},
-  {key : "Hammade Üzerinden Teklif Hazırlama", value: "1"}
-]
-const TYPE_COMPS = {
-  "Düz Burç" : <StrBush />,
-  "Plaka" : <PlateStrip />,
-  "Flanşlı Burç" : <BracketBush />,
-  "Çift Flanşlı Burç": <DoubleBracketBush />,
-  "Ortadan Flanşlı Burç" : <MiddleBracketBush />
-}
-
-
-
-const steps = ["Teklif Tipi Seç", "Teklif Hazırla", "Teklif Oluştur", "İşlemi Tamamla"];
-
-export default function CreateMake({prevValues, type}) {
+export default function CreateMake({ prevValues, type }) {
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
   const [createErr, setCreateErr] = useState(false);
   const [activeStep, setActiveStep] = useState(type === "update" ? 2 : 0);
   const [skipped, setSkipped] = useState(new Set());
-  
+
   const router = useRouter();
 
   const [fields, setFields] = useState({
-    quo_type  :  {
-      quo_type_name : "type" in prevValues ? prevValues.type : ""
+    quo_type: {
+      quo_type_name: "type" in prevValues ? prevValues.type : "",
     },
   });
 
   const [canSkipStep1, setCanSkip1] = useState(false);
-  
 
   const isStepOptional = (step) => {
     return step === -1;
@@ -96,202 +73,205 @@ export default function CreateMake({prevValues, type}) {
     }
 
     return isValid;
-  }
+  };
   const handleChange = (field, area, e) => {
-    const new_fields = fields
-    new_fields[field][area] = e.target.value
+    const new_fields = fields;
+    new_fields[field][area] = e.target.value;
     setFields(new_fields);
 
-    setCanSkip1(handleValidation1()); 
-      
+    setCanSkip1(handleValidation1());
   };
 
-  // states 
+  // states
   const [calcRaws, setCalcRaws] = useState({
-    validity : false,
+    validity: false,
 
-    values  : type === "update" ?  {
-      ...prevValues,
-      "account_id" : "Customer_ID" in prevValues ? prevValues.Customer_ID : "",
-      "analyze_Name" : "Analyze_ID" in prevValues ?  prevValues.Analyze_ID: "",
-      "benefit"  : "benefitPercent" in prevValues ? prevValues.benefitPercent : "",
-      "alterPrice"  :  "alternativeSale_price" in prevValues ? prevValues.alternativeSale_price : "",
-      "LME" : "lmeCopper" in prevValues ? prevValues.lmeCopper : "",
-      "TINP" : "lmeTin" in prevValues ? prevValues.lmeTin : "",
-      "type" : prevValues.middlebracket_bush !== null ? "Ortadan Flanşlı Burç" :  prevValues.doublebracket_bush !==null ?
-      "Çift Flanşlı Burç" :  prevValues.bracket_bush !==null ? "Flanşlı Burç" : prevValues.straight_bush !== null  ? "Düz Burç" :
-      prevValues.plate_strip !== null ? "Plaka" : ""
-
-    } : {}
-     
+    values:
+      type === "update"
+        ? {
+            ...prevValues,
+            account_id:
+              "Customer_ID" in prevValues ? prevValues.Customer_ID : "",
+            analyze_Name:
+              "Analyze_ID" in prevValues ? prevValues.Analyze_ID : "",
+            benefit:
+              "benefitPercent" in prevValues ? prevValues.benefitPercent : "",
+            alterPrice:
+              "alternativeSale_price" in prevValues
+                ? prevValues.alternativeSale_price
+                : "",
+            LME: "lmeCopper" in prevValues ? prevValues.lmeCopper : "",
+            TINP: "lmeTin" in prevValues ? prevValues.lmeTin : "",
+            type: prevValues.itemType,
+          }
+        : {},
   });
 
-  const [CUSTOMER, setCustomer ] = useState([]);
-  const [ANALYZE, setAnalyze ] = useState([]);
-
-  
+  const [CUSTOMER, setCustomer] = useState([]);
+  const [ANALYZE, setAnalyze] = useState([]);
 
   //hooks
   React.useEffect(() => {
-    
-    axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/analyze/getAll`
-    ).then(res => {
-      if(res.status === 200) {
-        const temp = res.data.analyzes.map((analyse) => {
-          return {
-            key: analyse.analyze_Name,
-            value: analyse.analyze_id,
-            TIN: analyse.analyze_coefTin,
-            COPPER: analyse.analyze_coefCopper,
-          };
-        });
+    axios
+      .get(`${process.env.NEXT_PUBLIC_BACKEND}/api/analyze/getAll`)
+      .then((res) => {
+        if (res.status === 200) {
+          const temp = res.data.analyzes.map((analyse) => {
+            return {
+              key: analyse.analyze_Name,
+              value: analyse.analyze_id,
+              TIN: analyse.analyze_coefTin,
+              COPPER: analyse.analyze_coefCopper,
+            };
+          });
 
-        setAnalyze(temp);
-      }
-    })
-    
-  }, [])
+          setAnalyze(temp);
+        }
+      });
+  }, []);
 
   React.useEffect(() => {
-    axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`
-    ).then(res => {
-      if (res.status === 200) {
-        const temp = res.data.customers.map((customer) => {
-          return {
-            key: customer.account_id,
-            value: customer.account_id,
-          };
-        });
+    axios
+      .get(`${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`)
+      .then((res) => {
+        if (res.status === 200) {
+          const temp = res.data.customers.map((customer) => {
+            return {
+              key: customer.account_id,
+              value: customer.account_id,
+            };
+          });
 
-        setCustomer(temp);
-      }
-    })
-  }, [])
+          setCustomer(temp);
+        }
+      });
+  }, []);
 
   //handlers
   const getCalcRaw = (validity, values) => {
     setCalcRaws((old) => {
       return {
         ...old,
-        "validity" : validity,
-        "values" : {
+        validity: validity,
+        values: {
           ...old.values,
-          ...values
-        } 
-      }
+          ...values,
+        },
+      };
     });
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let data = {}
+    let data = {};
     const Unitprice = calcRaws.values.totalPrice.split(" ");
-    const  standartOptions = {
-            "Customer_ID": calcRaws.values.account_id,
-            "Analyze_ID" : calcRaws.values.analyze_Name,
-            "unit_frequence" : calcRaws.values.unit_frequence,
-            "unit_price" : parseFloat(Unitprice[0]),
-            "currency" : Unitprice[1],
-            "benefitPercent" : calcRaws.values.benefit,
-            "model_price" : calcRaws.values.model_price,
-            "model_firm" : calcRaws.values.model_firm,
-            "treatment_price" : calcRaws.values.treatment_price,
-            "test_price" : calcRaws.values.test_price,
-            "alternativeSale_price" : calcRaws.values.alterPrice,
-            "treatment_firm" : calcRaws.values.treatment_firm,
-            "euro" : calcRaws.values.euro,
-            "lmeCopper" : calcRaws.values.LME !== undefined || calcRaws.values.LME !== '' ? calcRaws.values.LME : 0  ,
-            "lmeTin": calcRaws.values.TINP !== undefined || calcRaws.values.TINP !== '' ? calcRaws.values.TINP : 0 ,
-            "type" : fields.quo_type.quo_type_name,
-            "kgPrice" : calcRaws.values.kgPrice,
-            "usd" : calcRaws.values.usd,
-    }
-    
+    const standartOptions = {
+      Customer_ID: calcRaws.values.account_id,
+      Analyze_ID: calcRaws.values.analyze_Name,
+      unit_frequence: calcRaws.values.unit_frequence,
+      unit_price: parseFloat(Unitprice[0]),
+      calcRaw: parseFloat(calcRaws.values.calcRaw).toFixed(2),
+      currency: Unitprice[1],
+      benefitPercent: calcRaws.values.benefit,
+      model_price: calcRaws.values.model_price,
+      model_firm: calcRaws.values.model_firm,
+      treatment_price: calcRaws.values.treatment_price,
+      test_price: calcRaws.values.test_price,
+      alternativeSale_price: calcRaws.values.alterPrice,
+      treatment_firm: calcRaws.values.treatment_firm,
+      euro: calcRaws.values.euro,
+      lmeCopper:
+        calcRaws.values.LME !== undefined || calcRaws.values.LME !== ""
+          ? calcRaws.values.LME
+          : 0,
+      lmeTin:
+        calcRaws.values.TINP !== undefined || calcRaws.values.TINP !== ""
+          ? calcRaws.values.TINP
+          : 0,
+      type: fields.quo_type.quo_type_name,
+      kgPrice: calcRaws.values.kgPrice,
+      usd: calcRaws.values.usd,
+      itemType: calcRaws.values.type,
+    };
+
     switch (calcRaws.values.type) {
-      case "Plaka":
+      case "plate_strip":
+        const plate_item = calcRaws.values.plate_strip;
         data = {
-          "options" : {
+          options: {
             ...standartOptions,
-            "plate_strip" : {
-              ...calcRaws.values.plate_strip
-            }
+            dimensions: `${plate_item.width}*${plate_item["length"]}*${plate_item.thickness}`,
+            plate_strip: {
+              ...plate_item,
+            },
           },
-
-          "type" : "plate_strip"
-        }
+        };
         break;
-      case "Düz Burç":
+      case "straight_bush":
+        const str_item = calcRaws.values.straight_bush;
         data = {
-          "options" : {
+          options: {
             ...standartOptions,
-            "straight_bush" : {
-               ...calcRaws.values.straight_bush
-            }
-              
+            dimensions: `${str_item.large_diameter}*${str_item.inner_diameter}*${str_item.bush_length}`,
+            straight_bush: {
+              ...str_item,
+            },
           },
-
-          "type" : "straight_bush"
-        }
+        };
         break;
-      case  "Flanşlı Burç":
+      case "bracket_bush":
+        let bracket_item = calcRaws.values.bracket_bush;
         data = {
-          "options" : {
+          options: {
             ...standartOptions,
-            "bracket_bush" : {
-              ...calcRaws.values.bracket_bush
-            }
+            dimensions: `${bracket_item.bigger_diameter}*${bracket_item.inner_diameter}*${bracket_item.body_diameter}*${bracket_item.bush_length}*${bracket_item.bracket_length}`,
+            bracket_bush: {
+              ...bracket_item,
+            },
           },
-
-          "type" : "bracket_bush"
-        }
+        };
         break;
-      case "Çift Flanşlı Burç":
+      case "double_bracket_bush":
+        const double_bracket = calcRaws.values.doublebracket_bush;
         data = {
-          "options" : {
+          options: {
             ...standartOptions,
-            "doublebracket_bush" : {
-              ...calcRaws.values.doublebracket_bush
-              
-            }
+            dimensions: `${double_bracket.bigger_diameter}*${double_bracket.inner_diameter}*${double_bracket.body_diameter}*${double_bracket.bracket_l1}*${double_bracket.bracket_l2}*${double_bracket.bracket_l3}*${double_bracket.bracket_full}`,
+            doublebracket_bush: {
+              ...double_bracket,
+            },
           },
-
-          "type" : "double_bracket_bush"
-        }
+        };
         break;
-      case "Ortadan Flanşlı Burç":
+      case "middle_bracket_bush":
+        const middle_bracket = calcRaws.values.middlebracket_bush;
         data = {
-          "options" : {
+          options: {
             ...standartOptions,
-            "middlebracket_bush" : {
-             ...calcRaws.values.middlebracket_bush
-              
-            }
+            dimensions: `${double_bracket.bigger_diameter}*${middle_bracket.bracket_q1}*${middle_bracket.bracket_q2}*${middle_bracket.bracket_q3}*${middle_bracket.bracket_q4}*${middle_bracket.bracket_l1}*${middle_bracket.bracket_l2}*${middle_bracket.bracket_l3}*${middle_bracket.bracket_full}`,
+            middlebracket_bush: {
+              ...middle_bracket,
+            },
           },
-
-          "type" : "middle_bracket_bush"
-        }
+        };
         break;
-    } 
-    
-    
-      try {
-        const res = await axios({
-          method: "post",
-          data: data,
-          url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/create`,
-          withCredentials: true,
-        });
-        if (res.status === 200) {
-          setSubmit(true);
-          setIsvalid(true);
-        }
-      } catch (err) {
-        setSubmit(false);
-        setCreateErr(true);
+    }
+
+    try {
+      const res = await axios({
+        method: "post",
+        data: data,
+        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/create`,
+        withCredentials: true,
+      });
+      if (res.status === 200) {
+        setSubmit(true);
+        setIsvalid(true);
       }
-    
+    } catch (err) {
+      setSubmit(false);
+      setCreateErr(true);
+    }
   };
   const toggleCreate = () => {
     setCreate(!create);
@@ -303,19 +283,22 @@ export default function CreateMake({prevValues, type}) {
   }, [prevValues]);
   return (
     <div>
-      {type === "update" ? <a
-        onClick={toggleCreate}
-        className="hover:cursor-pointer font-medium text-text-fuchsia-500  hover:underline"
-      >
-        Düzenle
-      </a>: <button
-        className="bg-green-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-        type="button"
-        onClick={toggleCreate}
-      >
-        + Teklif Hazırla
-      </button>}
-      
+      {type === "update" ? (
+        <a
+          onClick={toggleCreate}
+          className="hover:cursor-pointer font-medium text-text-fuchsia-500  hover:underline"
+        >
+          Düzenle
+        </a>
+      ) : (
+        <button
+          className="bg-green-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+          type="button"
+          onClick={toggleCreate}
+        >
+          + Teklif Hazırla
+        </button>
+      )}
 
       <div
         className={`${
@@ -330,8 +313,10 @@ export default function CreateMake({prevValues, type}) {
             strokeWidth={1.5}
             stroke="currentColor"
             className="w-6 h-6 relative top-0 left-0 hover:cursor-pointer"
-            onClick={() => {toggleCreate() 
-              router.reload(window.location.pathname);}}
+            onClick={() => {
+              toggleCreate();
+              router.reload(window.location.pathname);
+            }}
           >
             <path
               strokeLinecap="round"
@@ -414,19 +399,57 @@ export default function CreateMake({prevValues, type}) {
                     ""
                   )}
 
-                  {
-                    activeStep == 1 ? (
-                      fields.quo_type.quo_type_name == 0 ? (<Contracted type={type}  TYPE={TYPE} prevValues={calcRaws} getCalcRaw={getCalcRaw} ANALYZE={ANALYZE} CUSTOMER={CUSTOMER} />) : (<CalculateRaw TYPE={TYPE} ANALYZE={ANALYZE} CUSTOMER={CUSTOMER} prevValues={calcRaws} customers={CUSTOMER} type={type} analyzes={ANALYZE} getCalcRaw={getCalcRaw} />)
-                    ) : ("")
-                  }
+                  {activeStep == 1 ? (
+                    fields.quo_type.quo_type_name == 0 ? (
+                      <Contracted
+                        type={type}
+                        TYPE={TYPE}
+                        prevValues={calcRaws}
+                        getCalcRaw={getCalcRaw}
+                        ANALYZE={ANALYZE}
+                        CUSTOMER={CUSTOMER}
+                      />
+                    ) : (
+                      <CalculateRaw
+                        TYPE={TYPE}
+                        ANALYZE={ANALYZE}
+                        CUSTOMER={CUSTOMER}
+                        prevValues={calcRaws}
+                        customers={CUSTOMER}
+                        type={type}
+                        analyzes={ANALYZE}
+                        getCalcRaw={getCalcRaw}
+                      />
+                    )
+                  ) : (
+                    ""
+                  )}
 
-                  {
-                    activeStep == 2 ? <QuotationItem type={type}  getCalcRaw={getCalcRaw} euro={calcRaws.values.euro} usd={calcRaws.values.usd}  prevValues={calcRaws.values} kgPrice={calcRaws.values.kgPrice} name={calcRaws.values.type}> {TYPE_COMPS[calcRaws.values.type]} </QuotationItem> : ""
-                  }
+                  {activeStep == 2 ? (
+                    <QuotationItem
+                      type={type}
+                      getCalcRaw={getCalcRaw}
+                      euro={calcRaws.values.euro}
+                      usd={calcRaws.values.usd}
+                      prevValues={calcRaws.values}
+                      kgPrice={calcRaws.values.kgPrice}
+                      name={calcRaws.values.type}
+                    >
+                      {" "}
+                      {TYPE_COMPS[calcRaws.values.type]}{" "}
+                    </QuotationItem>
+                  ) : (
+                    ""
+                  )}
 
-                  {
-                    activeStep == 3 ? <p className="text-lg mt-10 leading-6 font-medium text-green-500 text-center">Bütün bilgiler başarıyla dolduruldu. Teklif Oluşturmak için Oluştur seçeneğine tıklayınız.</p>: ""
-                  }
+                  {activeStep == 3 ? (
+                    <p className="text-lg mt-10 leading-6 font-medium text-green-500 text-center">
+                      Bütün bilgiler başarıyla dolduruldu. Teklif Oluşturmak
+                      için Oluştur seçeneğine tıklayınız.
+                    </p>
+                  ) : (
+                    ""
+                  )}
 
                   <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
                     <Button
@@ -438,32 +461,48 @@ export default function CreateMake({prevValues, type}) {
                       Geri
                     </Button>
                     <Box sx={{ flex: "1 1 auto" }} />
-                    {
-                      activeStep === 0 ?  <Button disabled={!canSkipStep1} onClick={handleNext}>
-                      {"ileri"}
-                    </Button> : ''
-                    }
+                    {activeStep === 0 ? (
+                      <Button disabled={!canSkipStep1} onClick={handleNext}>
+                        {"ileri"}
+                      </Button>
+                    ) : (
+                      ""
+                    )}
 
-                    {
-                      activeStep === 1 ?  <Button disabled={!calcRaws.validity} onClick={handleNext}>
-                      { "ileri"}
-                    </Button> : ''
-                    }
-                    {
-                      activeStep === 2 ?  <Button disabled={!calcRaws.validity} onClick={handleNext}>
-                      {"ileri"}
-                    </Button> : ''
-                    }
+                    {activeStep === 1 ? (
+                      <Button
+                        disabled={!calcRaws.validity}
+                        onClick={handleNext}
+                      >
+                        {"ileri"}
+                      </Button>
+                    ) : (
+                      ""
+                    )}
+                    {activeStep === 2 ? (
+                      <Button
+                        disabled={!calcRaws.validity}
+                        onClick={handleNext}
+                      >
+                        {"ileri"}
+                      </Button>
+                    ) : (
+                      ""
+                    )}
 
-{
-                      activeStep === 3 ?  <Button disabled={false} onClick={async (e) => {
-                        await handleSubmit(e);
-                        handleNext(e);
-                      }}>
-                      {"Oluştur" }
-                    </Button> : ''
-                    }
-                   
+                    {activeStep === 3 ? (
+                      <Button
+                        disabled={false}
+                        onClick={async (e) => {
+                          await handleSubmit(e);
+                          handleNext(e);
+                        }}
+                      >
+                        {"Oluştur"}
+                      </Button>
+                    ) : (
+                      ""
+                    )}
                   </Box>
                 </React.Fragment>
               )}
