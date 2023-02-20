@@ -1,14 +1,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import {
-  calcBracketBush,
-  calcDoubleBracketBush,
-  calcPlateStrip,
-  calcStraightBush,
-  calcMiddleBracketBush,
-} from "../../../../utils/calcWeight";
 import axios from "axios";
-
+import { IMAGE_MAPPER, ITEM_TYPES } from "../../../../utils/mappers";
+import ModalImage from "./ModalImage";
 export default function WorkOrderDisplay({ WorkOrderID }) {
   const router = useRouter();
   const [create, setCreate] = useState(false);
@@ -123,6 +117,15 @@ export default function WorkOrderDisplay({ WorkOrderID }) {
                     <div className="flex gap-2 items-center">
                       <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
                         {" "}
+                        Ürün Tipi :{""}
+                      </p>
+                      <p className="text-lg font-poppins">
+                        {`${ITEM_TYPES[values?.quotationItem?.itemType]}`}
+                      </p>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                      <p className="text-md font-medium font-poppins italic text-sky-600 text-gray-900 ">
+                        {" "}
                         Ürün Açıklaması :{""}
                       </p>
                       <p className="text-lg font-poppins">
@@ -152,7 +155,13 @@ export default function WorkOrderDisplay({ WorkOrderID }) {
                   </div>
                 </div>
 
-                <div className="relative overflow-x-auto shadow-lg sm:rounded-lg"></div>
+                <div className="relative overflow-x-auto shadow-lg sm:rounded-lg ">
+                  <div className="flex flex-col items-center">
+                    <ModalImage
+                      image={IMAGE_MAPPER[values?.quotationItem?.itemType]}
+                    />
+                  </div>
+                </div>
 
                 <div className="relative overflow-x-auto shadow-lg sm:rounded-lg">
                   <table className="w-full text-sm text-left text-gray-500 ">

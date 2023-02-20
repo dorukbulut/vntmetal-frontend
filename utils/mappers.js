@@ -12,6 +12,14 @@ export const ITEM_TYPES = {
   middle_bracket_bush: "Ortadan Flanşlı Burç",
 };
 
+export const IMAGE_MAPPER = {
+  plate_strip: "/plate_strip.png",
+  straight_bush: "/straightbush.png",
+  bracket_bush: "/bracketbush.png",
+  double_bracket_bush: "/doublebracket.png",
+  middle_bracket_bush: "/middlebracket.png",
+};
+
 export const steps = [
   "Teklif Tipi Seç",
   "Teklif Hazırla",
