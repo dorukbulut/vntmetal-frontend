@@ -110,7 +110,7 @@ export default function QuotationMake({ customers, workOrders }) {
         </h2>
         <div className="relative flex overflow-x-auto shadow-md sm:rounded-lg p-5 space-x-5 items-center">
           {/*Create Button*/}
-          <CreateWorkOrder customers={customers} />
+          <CreateWorkOrder key={12002} customers={customers} />
           <p className="text-sky-700 italic font-poppins tracking-widest">
             Filtrele
           </p>
@@ -276,11 +276,17 @@ export default function QuotationMake({ customers, workOrders }) {
                         </td>
 
                         <td className="px-6 py-4 text-right">
-                          <WorkOrderDisplay WorkOrderID={item.workorder_ID} />
+                          <WorkOrderDisplay
+                            key={`${index + 3}+${new Date().getTime()}`}
+                            WorkOrderID={item.workorder_ID}
+                          />
                         </td>
 
                         <td className="px-6 py-4 text-right">
-                          <UpdateWorkOrder Workitem={item} />
+                          <UpdateWorkOrder
+                            key={`${index + 4}+${new Date().getTime()}`}
+                            Workitem={item}
+                          />
                         </td>
                       </tr>
                     );
