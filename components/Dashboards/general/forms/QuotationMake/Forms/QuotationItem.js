@@ -238,7 +238,7 @@ export default function QuotationItem({
         <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
           <div className="space-y-2 lg:w-1/2">
             <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
-              {name} Oluştur
+              {ITEM_TYPES[name]} Oluştur
             </p>
             <hr />
           </div>

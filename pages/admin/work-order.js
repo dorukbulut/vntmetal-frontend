@@ -85,9 +85,7 @@ export default function QuotationMake({ customers, workOrders }) {
             setformItems(res.data.rows);
           }
         })
-        .catch((err) => {
-          router.reload(window.location.pathname);
-        });
+        .catch((err) => {});
     }
   }, [filters]);
 
