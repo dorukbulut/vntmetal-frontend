@@ -42,23 +42,18 @@ export default function CustomersPage({ customerData }) {
         method: "GET",
         url: `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/filter`,
         params: {
-          account:
+          account_id:
             filters.account_id !== undefined && filters.account_id !== ""
               ? filters.account_id
               : undefined,
-          title:
+          account_title:
             filters.account_title !== undefined && filters.account_title !== ""
               ? filters.account_title.replaceAll(" ", "+")
               : undefined,
-          related:
+          account_related:
             filters.account_related !== undefined &&
             filters.account_related !== ""
               ? filters.account_related.replaceAll(" ", "+")
-              : undefined,
-          country:
-            filters.customer_country !== undefined &&
-            filters.customer_country !== ""
-              ? filters.customer_country.replaceAll(" ", "+")
               : undefined,
         },
       })
