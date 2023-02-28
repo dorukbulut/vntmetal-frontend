@@ -45,15 +45,11 @@ export default function QuotationMake({ items }) {
         method: "GET",
         url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/filter`,
         params: {
-          account:
+          Customer_ID:
             filters.account_id !== undefined && filters.account_id !== ""
               ? filters.account_id
               : undefined,
-          type:
-            filters.type !== undefined && filters.type !== ""
-              ? filters.type.replaceAll(" ", "+")
-              : undefined,
-          date:
+          createdAt:
             filters.date !== undefined && filters.date !== ""
               ? filters.date
               : undefined,
