@@ -205,47 +205,6 @@ export default function QuotationMake({ customers, workOrders }) {
                 </thead>
                 <tbody>
                   {formItems.map((item, index) => {
-                    let type = "";
-                    if (
-                      item.quotationItem.straight_bush === null &&
-                      item.quotationItem.plate_strip === null &&
-                      item.quotationItem.doublebracket_bush === null &&
-                      item.quotationItem.middlebracket_bush === null
-                    ) {
-                      type = "bracket_bush";
-                    }
-                    if (
-                      item.quotationItem.plate_strip === null &&
-                      item.quotationItem.bracket_bush === null &&
-                      item.quotationItem.doublebracket_bush === null &&
-                      item.quotationItem.middlebracket_bush === null
-                    ) {
-                      type = "straigth_bush";
-                    }
-                    if (
-                      item.quotationItem.bracket_bush === null &&
-                      item.quotationItem.straight_bush === null &&
-                      item.quotationItem.doublebracket_bush === null &&
-                      item.quotationItem.middlebracket_bush === null
-                    ) {
-                      type = "plate_strip";
-                    }
-                    if (
-                      item.quotationItem.bracket_bush === null &&
-                      item.quotationItem.straight_bush === null &&
-                      item.quotationItem.plate_strip === null &&
-                      item.quotationItem.middlebracket_bush === null
-                    ) {
-                      type = "doublebracket_bush";
-                    }
-                    if (
-                      item.quotationItem.bracket_bush === null &&
-                      item.quotationItem.straight_bush === null &&
-                      item.quotationItem.plate_strip === null &&
-                      item.quotationItem.doublebracket_bush === null
-                    ) {
-                      type = "middlebracket_bush";
-                    }
                     return (
                       <tr key={index} className="bg-white border-b ">
                         <th
@@ -267,7 +226,11 @@ export default function QuotationMake({ customers, workOrders }) {
                         </td>
                         <td className="px-6 py-4 text-right">
                           <button
-                            id={item.workorder_ID + "," + type}
+                            id={
+                              item.workorder_ID +
+                              "," +
+                              item.quotationItem.itemType
+                            }
                             onClick={generate}
                             className="hover:underline"
                           >

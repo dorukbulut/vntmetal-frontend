@@ -13,7 +13,7 @@ export const ITEM_TYPES = {
 };
 
 export const IMAGE_MAPPER = {
-  plate_strip: "/plate_strip.png",
+  plate_strip: "/platestrip.png",
   straight_bush: "/straightbush.png",
   bracket_bush: "/bracketbush.png",
   doublebracket_bush: "/doublebracket.png",
