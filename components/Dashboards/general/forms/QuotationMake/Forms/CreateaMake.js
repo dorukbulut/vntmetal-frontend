@@ -231,7 +231,7 @@ export default function CreateMake({ prevValues, type }) {
           },
         };
         break;
-      case "double_bracket_bush":
+      case "doublebracket_bush":
         const double_bracket = calcRaws.values.doublebracket_bush;
         data = {
           options: {
@@ -243,7 +243,7 @@ export default function CreateMake({ prevValues, type }) {
           },
         };
         break;
-      case "middle_bracket_bush":
+      case "middlebracket_bush":
         const middle_bracket = calcRaws.values.middlebracket_bush;
         data = {
           options: {

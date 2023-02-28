@@ -1,215 +1,198 @@
 import { useEffect, useState } from "react";
 import axios, { Axios } from "axios";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import Dropdown from "../../Common/Dropdown";
 import SetItem from "./SetQuotationItem";
 import { useStepContext } from "@mui/material";
 
 const INCOTERMS_EXTRA = [
   {
-    key : "EXW",
-    value : "EXW",
-
+    key: "EXW",
+    value: "EXW",
   },
   {
-    key : "FCA",
-    value : "FCA",
-
+    key: "FCA",
+    value: "FCA",
   },
   {
-    key : "FAS",
-    value : "FAS",
-
+    key: "FAS",
+    value: "FAS",
   },
   {
-    key : "FOB",
-    value : "FOB",
-
+    key: "FOB",
+    value: "FOB",
   },
   {
-    key : "CFR",
-    value : "CFR",
-
+    key: "CFR",
+    value: "CFR",
   },
   {
-    key : "CIF",
-    value : "CIF",
-
+    key: "CIF",
+    value: "CIF",
   },
   {
-    key : "CPT",
-    value : "CPT",
-
+    key: "CPT",
+    value: "CPT",
   },
   {
-    key : "CIP",
-    value : "CIP",
-
+    key: "CIP",
+    value: "CIP",
   },
   {
-    key : "DAP",
-    value : "DAP",
-
+    key: "DAP",
+    value: "DAP",
   },
   {
-    key : "DPU",
-    value : "DPU",
-
+    key: "DPU",
+    value: "DPU",
   },
   {
-    key : "DDP",
-    value : "DDP",
-
+    key: "DDP",
+    value: "DDP",
   },
-]
+];
 
 const INCOTERMS_INTRA = [
   {
-    key : "VNTFT",
-    value : "VNTFT",
-
+    key: "VNTFT",
+    value: "VNTFT",
   },
   {
-    key : "MT",
-    value : "MT",
-
+    key: "MT",
+    value: "MT",
   },
   {
-    key : "ARAS",
-    value : "ARAS",
-
+    key: "ARAS",
+    value: "ARAS",
   },
 
   {
-    key : "UPS",
-    value : "UPS",
-
+    key: "UPS",
+    value: "UPS",
   },
-]
+];
 
-
-export default function UpdateQuotationForm({quotID, customerID}) {
+export default function UpdateQuotationForm({ quotID, customerID }) {
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [isValid, setIsvalid] = useState(true);
   const [createErr, setCreateErr] = useState(false);
   const [fields, setFields] = useState({
-    options : {
-      customerInquiryNum : "",
-      grand_total : "",
-      validityOfOffer : "",
-      IncotermType : "",
+    options: {
+      customerInquiryNum: "",
+      grand_total: "",
+      validityOfOffer: "",
+      IncotermType: "",
       PaymentTerms: "",
-      extraDetails : "",
-      preparedBy : "",
-      approvedBy : "",
-      language : "",
-      company : "",
-
+      extraDetails: "",
+      preparedBy: "",
+      approvedBy: "",
+      language: "",
+      company: "",
+      reference: "",
     },
-    area : {
-      name : ''
+    area: {
+      name: "",
     },
     delivery_type: {
-        name:  '',
-        package_fee: 0,
-        loading_fee: 0,
-        delivery_fee: 0,
-        export_fee: 0,
-        terminal_fee_exit: 0,
-        vehicleLoading_fee: 0,
-        transport_fee: 0,
-        insurance_fee: 0,
-        terminal_fee_entry: 0,
-        import_fee: 0,
-        currencyVal: "",
-        currencyType : "",
-        description : '',
+      name: "",
+      package_fee: 0,
+      loading_fee: 0,
+      delivery_fee: 0,
+      export_fee: 0,
+      terminal_fee_exit: 0,
+      vehicleLoading_fee: 0,
+      transport_fee: 0,
+      insurance_fee: 0,
+      terminal_fee_entry: 0,
+      import_fee: 0,
+      currencyVal: "",
+      currencyType: "",
+      description: "",
     },
 
-    all : []
+    all: [],
   });
 
   const [currErrors, setCurrErrors] = useState({
-    Customer_ID : {
-      Customer_ID  : ''
+    Customer_ID: {
+      Customer_ID: "",
     },
-    all : {
-      all : '',
+    all: {
+      all: "",
     },
-    options : {
-      customerInquiryNum : '',
-      grand_total : '',
-      validityOfOffer : '',
-      IncotermType : '',
-      PaymentTerms: '',
-      extraDetails : '',
-      preparedBy : '',
-      approvedBy : '',
-      company : '',
-      language : ''
-
+    options: {
+      customerInquiryNum: "",
+      grand_total: "",
+      validityOfOffer: "",
+      IncotermType: "",
+      PaymentTerms: "",
+      extraDetails: "",
+      preparedBy: "",
+      approvedBy: "",
+      company: "",
+      language: "",
     },
-    area : {
-      name : ''
+    area: {
+      name: "",
     },
     delivery_type: {
-        name:  '',
-        package_fee: 0,
-        loading_fee: 0,
-        delivery_fee: 0,
-        export_fee: 0,
-        terminal_fee_exit: 0,
-        vehicleLoading_fee: 0,
-        transport_fee: 0,
-        insurance_fee: 0,
-        terminal_fee_entry: 0,
-        import_fee: 0,
-        currencyVal: "",
-        currencyType : "",
-        description : '',
+      name: "",
+      package_fee: 0,
+      loading_fee: 0,
+      delivery_fee: 0,
+      export_fee: 0,
+      terminal_fee_exit: 0,
+      vehicleLoading_fee: 0,
+      transport_fee: 0,
+      insurance_fee: 0,
+      terminal_fee_entry: 0,
+      import_fee: 0,
+      currencyVal: "",
+      currencyType: "",
+      description: "",
     },
-
-    
   });
 
   const [Customer_ID, setCustomer] = useState({
-    options : {
-      Customer_ID : `${customerID}`
-    }
-  })
-  
+    options: {
+      Customer_ID: `${customerID}`,
+      Quotation_ID: `${quotID}`,
+    },
+  });
+
   const getValues = () => {
     axios({
-      method : "POST",
-      data : {
-        quotation_ID : quotID,
+      method: "POST",
+      data: {
+        quotation_ID: quotID,
       },
-      withCredentials : true,
-      url : `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/get-quo`
+      withCredentials: true,
+      url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/get-quo`,
     })
-    .then(res => {
-      if (res.status === 200) {
-        const item = res.data[0]
-        setFields({
-          options : {
-            customerInquiryNum : item.customerInquiryNum,
-            grand_total : item.grand_total,
-            validityOfOffer : item.validityOfOffer,
-            IncotermType : item.IncotermType,
-            PaymentTerms: item.PaymentTerms,
-            extraDetails : item.extraDetails,
-            preparedBy : item.preparedBy,
-            approvedBy : item.approvedBy,
-            language : item.language,
-            company : item.company,
-      
-          },
-          area : {
-            name : ''
-          },
-          delivery_type: {
-              name:  '',
+      .then((res) => {
+        if (res.status === 200) {
+          const item = res.data[0];
+
+          setFields({
+            options: {
+              customerInquiryNum: item.customerInquiryNum,
+              grand_total: item.grand_total,
+              validityOfOffer: item.validityOfOffer,
+              IncotermType: item.IncotermType,
+              PaymentTerms: item.PaymentTerms,
+              extraDetails: item.extraDetails,
+              preparedBy: item.preparedBy,
+              approvedBy: item.approvedBy,
+              language: item.language,
+              company: item.company,
+              reference: item.reference,
+            },
+            area: {
+              name: "",
+            },
+            delivery_type: {
+              name: "",
               package_fee: 0,
               loading_fee: 0,
               delivery_fee: 0,
@@ -221,222 +204,224 @@ export default function UpdateQuotationForm({quotID, customerID}) {
               terminal_fee_entry: 0,
               import_fee: 0,
               currencyVal: "",
-              currencyType : "",
-              description : '',
-          },
-      
-          all : []
-        })
-      }
-    })
-    .catch(err => console.log(err.message)); 
-  }
+              currencyType: "",
+              description: "",
+            },
 
+            all: [],
+          });
+        }
+      })
+      .catch((err) => console.log(err.message));
+  };
 
   const [all, setAll] = useState([]);
   const router = useRouter();
 
-  
-  const [setting, setSetting] = useState('');
+  const [setting, setSetting] = useState("");
   const handleChange = (field, area, e) => {
-    let new_fields = fields
-    new_fields[field][area] = e.target.value
+    let new_fields = fields;
+    new_fields[field][area] = e.target.value;
     setFields(new_fields);
-    setSetting(fields.area.name)
-    
+    setSetting(fields.area.name);
   };
-  
 
   const handleChangeCustomer = (field, area, e) => {
     setCustomer((old) => {
       return {
         ...old,
         [field]: {
-          [area] : e.target.value
-        }
-      }
-    })
-  }
+          [area]: e.target.value,
+        },
+      };
+    });
+  };
 
-  
   const handleValidation = () => {
     let check_fields = fields;
     let errors = currErrors;
     let isValid = true;
-     
-     //customerInquiery
-     if (check_fields.options.customerInquiryNum === '') {
-      isValid = false
-      errors.options.customerInquiryNum = "Müşteri Referans Numarası Boş bırakalamaz !"
-     } else  {
-      errors.options.customerInquiryNum = ""
-     }
 
-     //account_id
-     if (Customer_ID.options.Customer_ID === '') {
-      isValid = false
-      errors.Customer_ID.Customer_ID = "Müşteri Cari Kodu Boş bırakalamaz !"
-     } else  {
-      errors.Customer_ID.Customer_ID = ""
-     }
-
-     //preparedBy
-     if (check_fields.options.preparedBy === '') {
-      isValid = false
-      errors.options.preparedBy = "Hazırlayan Kişi Boş bırakılamaz !"
-     } else  {
-      errors.options.preparedBy = ""
-     }
-
-     //language
-     if (check_fields.options.language === '') {
-      isValid = false
-      errors.options.language = "Form Dili Boş bırakılamaz !"
-     } else  {
-      errors.options.language = ""
-     }
-
-     //company
-     if (check_fields.options.company === '') {
-      isValid = false
-      errors.options.company = "Şirket Boş bırakılamaz !"
-     } else  {
-      errors.options.company = ""
-     }
-
-     //approvedBy
-     if (check_fields.options.approvedBy === '') {
-      isValid = false
-      errors.options.approvedBy = "Onaylayan Kişi Boş bırakılamaz !"
-     } else  {
-      errors.options.approvedBy = ""
-     }
-
-     //delivery_type name !
-     if (check_fields.delivery_type.name === '') {
-      isValid = false
-      errors.delivery_type.name = "Teslimat Şekli boş bırakalamaz !"
-     } else  {
-      errors.delivery_type.name = ""
-     }
-
-     //deliveryCurrency
-     if(check_fields.delivery_type.currencyType === '') {
+    //customerInquiery
+    if (check_fields.options.customerInquiryNum === "") {
       isValid = false;
-      errors.delivery_type.currencyType = "Döviz Tipi boş bırakılamaz"
-     } else {
-      errors.delivery_type.currencyType = ""
-     }
+      errors.options.customerInquiryNum =
+        "Müşteri Referans Numarası Boş bırakalamaz !";
+    } else {
+      errors.options.customerInquiryNum = "";
+    }
 
-     //deliveryCurrency
-     if(check_fields.delivery_type.currencyVal === '') {
+    //account_id
+    if (Customer_ID.options.Customer_ID === "") {
       isValid = false;
-      errors.delivery_type.currencyVal = "Döviz Kuru boş bırakılamaz"
-     } else {
-      errors.delivery_type.currencyVal = ""
-     }
+      errors.Customer_ID.Customer_ID = "Müşteri Cari Kodu Boş bırakalamaz !";
+    } else {
+      errors.Customer_ID.Customer_ID = "";
+    }
 
-     //items!
-     const undeF = all.filter(item => item!=undefined);
-     if (undeF.length === 0 ) {
-      isValid = false
-      errors.all.all = "En az 1 adet ürün seçilmeli !"
-     } else  {
-        errors.all.all = ""
-      }
-    
-      //every checked item
-    if(undeF.length !== 0) {
-      const check = undeF.map(item => {
-        if(item.description === "" || item.deliveryTime === "" ) return item
-      }).filter(item => item!=undefined);
+    //preparedBy
+    if (check_fields.options.preparedBy === "") {
+      isValid = false;
+      errors.options.preparedBy = "Hazırlayan Kişi Boş bırakılamaz !";
+    } else {
+      errors.options.preparedBy = "";
+    }
 
-      if(check.length !== 0) {
-        isValid = false
-        errors.all.all = "Ürün Açıklamaları ve Teslimat süreleri boş bırakılamaz!"
-      }
+    //language
+    if (check_fields.options.language === "") {
+      isValid = false;
+      errors.options.language = "Form Dili Boş bırakılamaz !";
+    } else {
+      errors.options.language = "";
+    }
 
-      else {
-        const check = undeF.map(item => {
-          if(item.currency !== undeF[0].currency) return item
-        }).filter(item => item!=undefined);
-  
-        if(check.length !== 0) {
-          isValid = false
-          errors.all.currency = "Seçilen Ürünlerin para birimleri aynı olmalıdır !"
-        }
-        else {
+    //company
+    if (check_fields.options.company === "") {
+      isValid = false;
+      errors.options.company = "Şirket Boş bırakılamaz !";
+    } else {
+      errors.options.company = "";
+    }
+
+    //approvedBy
+    if (check_fields.options.approvedBy === "") {
+      isValid = false;
+      errors.options.approvedBy = "Onaylayan Kişi Boş bırakılamaz !";
+    } else {
+      errors.options.approvedBy = "";
+    }
+
+    //delivery_type name !
+    if (check_fields.delivery_type.name === "") {
+      isValid = false;
+      errors.delivery_type.name = "Teslimat Şekli boş bırakalamaz !";
+    } else {
+      errors.delivery_type.name = "";
+    }
+
+    //deliveryCurrency
+    if (check_fields.delivery_type.currencyType === "") {
+      isValid = false;
+      errors.delivery_type.currencyType = "Döviz Tipi boş bırakılamaz";
+    } else {
+      errors.delivery_type.currencyType = "";
+    }
+
+    //deliveryCurrency
+    if (check_fields.delivery_type.currencyVal === "") {
+      isValid = false;
+      errors.delivery_type.currencyVal = "Döviz Kuru boş bırakılamaz";
+    } else {
+      errors.delivery_type.currencyVal = "";
+    }
+
+    //items!
+    const undeF = all.filter((item) => item != undefined);
+    if (undeF.length === 0) {
+      isValid = false;
+      errors.all.all = "En az 1 adet ürün seçilmeli !";
+    } else {
+      errors.all.all = "";
+    }
+
+    //every checked item
+    if (undeF.length !== 0) {
+      const check = undeF
+        .map((item) => {
+          if (item.description === "" || item.deliveryTime === "") return item;
+        })
+        .filter((item) => item != undefined);
+
+      if (check.length !== 0) {
+        isValid = false;
+        errors.all.all =
+          "Ürün Açıklamaları ve Teslimat süreleri boş bırakılamaz!";
+      } else {
+        const check = undeF
+          .map((item) => {
+            if (item.currency !== undeF[0].currency) return item;
+          })
+          .filter((item) => item != undefined);
+
+        if (check.length !== 0) {
+          isValid = false;
+          errors.all.currency =
+            "Seçilen Ürünlerin para birimleri aynı olmalıdır !";
+        } else {
           if (check_fields.delivery_type.currencyType !== undeF[0].currency) {
-            isValid = false
-            errors.delivery_type.currencyType = "Teslimat Kuru, seçilen ürünlerin para birimleriyle aynı olmalıdır !"
+            isValid = false;
+            errors.delivery_type.currencyType =
+              "Teslimat Kuru, seçilen ürünlerin para birimleriyle aynı olmalıdır !";
           }
-          errors.all.currency = ""
+          errors.all.currency = "";
         }
-        errors.all.all = ""
+        errors.all.all = "";
       }
     }
-    
-     setCurrErrors(errors)
-     return isValid
+
+    setCurrErrors(errors);
+    return isValid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (handleValidation()) {
-    let data = {
-      options : {
-        ...fields.options,
-        reference : item.reference,
-        Customer_ID : Customer_ID.options.Customer_ID,
-        grand_total : all.filter(item => item!=undefined).reduce((prev ,val) => {
-          return prev + parseFloat((val.total_price).split(" ")[0])
-        }, 0)
-      },
+      let data = {
+        options: {
+          ...fields.options,
+          Customer_ID: Customer_ID.options.Customer_ID,
+          grand_total: all
+            .filter((item) => item != undefined)
+            .reduce((prev, val) => {
+              return prev + parseFloat(val.total_price.split(" ")[0]);
+            }, 0),
+        },
 
-      delivery_type : {
-        ...fields.delivery_type,
-        total : parseFloat(fields.delivery_type.package_fee) + parseFloat(fields.delivery_type.loading_fee) + 
-        parseFloat(fields.delivery_type.delivery_fee) + parseFloat(fields.delivery_type.export_fee) + parseFloat(fields.delivery_type.terminal_fee_exit) +
-        parseFloat(fields.delivery_type.vehicleLoading_fee) + parseFloat(fields.delivery_type.transport_fee) +
-        parseFloat(fields.delivery_type.insurance_fee) + parseFloat(fields.delivery_type.terminal_fee_entry) + 
-        parseFloat(fields.delivery_type.import_fee)
-      },
+        delivery_type: {
+          ...fields.delivery_type,
+          total:
+            parseFloat(fields.delivery_type.package_fee) +
+            parseFloat(fields.delivery_type.loading_fee) +
+            parseFloat(fields.delivery_type.delivery_fee) +
+            parseFloat(fields.delivery_type.export_fee) +
+            parseFloat(fields.delivery_type.terminal_fee_exit) +
+            parseFloat(fields.delivery_type.vehicleLoading_fee) +
+            parseFloat(fields.delivery_type.transport_fee) +
+            parseFloat(fields.delivery_type.insurance_fee) +
+            parseFloat(fields.delivery_type.terminal_fee_entry) +
+            parseFloat(fields.delivery_type.import_fee),
+        },
 
-      all : all.filter(item => item!=undefined).map((item) => {
-        return {
-          item_id : item.item_id, 
-          description : item.description, 
-          deliveryTime : parseInt(item.deliveryTime)
+        all: all
+          .filter((item) => item != undefined)
+          .map((item) => {
+            return {
+              item_id: item.item_id,
+              description: item.description,
+              deliveryTime: parseInt(item.deliveryTime),
+            };
+          }),
+      };
+
+      try {
+        const res = await axios({
+          method: "post",
+          data: data,
+          url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/update`,
+          withCredentials: true,
+        });
+        if (res.status === 200) {
+          setSubmit(true);
+          setIsvalid(true);
         }
-      })
-    }
-    
-    
-      try{
-        const res = await axios({ 
-          method : "post",
-          data: data , 
-          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/update`,
-          withCredentials : true});
-          if(res.status === 200) {
-            setSubmit(true);
-            setIsvalid(true);
-          } 
-      }
-      catch(err) {
+      } catch (err) {
         setSubmit(false);
         setCreateErr(true);
       }
-      
-
-      
-      
     } else {
       setIsvalid(false);
     }
   };
-
- 
 
   const toggleCreate = () => {
     setCreate(!create);
@@ -466,8 +451,10 @@ export default function UpdateQuotationForm({quotID, customerID}) {
             strokeWidth={1.5}
             stroke="currentColor"
             className="w-6 h-6 relative top-0 left-0 hover:cursor-pointer"
-            onClick={() => {toggleCreate() 
-              router.reload(window.location.pathname);}}
+            onClick={() => {
+              toggleCreate();
+              router.reload(window.location.pathname);
+            }}
           >
             <path
               strokeLinecap="round"
@@ -478,7 +465,9 @@ export default function UpdateQuotationForm({quotID, customerID}) {
 
           <div
             className={`${
-              !submit && isValid && !createErr ? "visible scale-100" : "invisible scale-0 h-0"
+              !submit && isValid && !createErr
+                ? "visible scale-100"
+                : "invisible scale-0 h-0"
             } flex flex-col space-y-10`}
           >
             <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-yellow-600">
@@ -489,28 +478,31 @@ export default function UpdateQuotationForm({quotID, customerID}) {
               <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
                 <div className="space-y-2 lg:w-1/2">
                   <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
-                    Form  Bilgileri
+                    Form Bilgileri
                   </p>
                   <hr />
                 </div>
 
-                <div className="space-y-5 lg:grid lg:grid-cols-2 lg:items-end lg:gap-3 ">
-                <div className="flex flex-col space-y-3 ">
-                              <label
-                                htmlFor="small-input"
-                                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                              >
-                                Cari Kod *
-                              </label>
-                              <Dropdown
-                                label="Cari Kod"
-                                field="options"
-                                area="Customer_ID"
-                                items={[{key : Customer_ID.options.Customer_ID, value : Customer_ID.options.Customer_ID}]}
-                                fields={Customer_ID}
-                                handleChange={handleChangeCustomer}
-                              />
-                            </div>
+                <div className="space-y-5 lg:grid lg:grid-cols-3 lg:items-end lg:gap-10 ">
+                  <div className="flex flex-col space-y-3 ">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Cari Kod *
+                    </label>
+                    <p>{customerID}</p>
+                  </div>
+
+                  <div className="flex flex-col space-y-3 ">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Teklif No *
+                    </label>
+                    <p>{fields?.options?.reference}</p>
+                  </div>
 
                   <div className="flex flex-col">
                     <label
@@ -530,10 +522,6 @@ export default function UpdateQuotationForm({quotID, customerID}) {
                       }
                     />
                   </div>
-
-                  
-
-                  
                 </div>
               </div>
 
@@ -547,7 +535,11 @@ export default function UpdateQuotationForm({quotID, customerID}) {
                 </div>
 
                 <div className="space-y-5 lg:grid lg:place-items-center">
-                  <SetItem fields={Customer_ID} setAll={setAll} />
+                  <SetItem
+                    fields={Customer_ID}
+                    setAll={setAll}
+                    url={"getitems"}
+                  />
                 </div>
               </div>
 
@@ -561,56 +553,63 @@ export default function UpdateQuotationForm({quotID, customerID}) {
                 </div>
 
                 <div className="space-y-5 lg:space-x-10 lg:grid lg:grid-cols-3  lg:place-items-end">
-                <div className="flex flex-col lg:w-full lg:mr-1">
-                                <label
-                                  htmlFor="small-input"
-                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                                >
-                                  Teslimat Şekli *
-                                </label>
-                                <Dropdown
-                                  label="Teslimat"
-                                  field="area"
-                                  area="name"
-                                  items={[{key : "Yurt İçi", value: "intra"},{key:"Yurt Dışı", value : "extra"}]}
-                                  fields={fields}
-                                  handleChange={handleChange}
-                                />
+                  <div className="flex flex-col lg:w-full lg:mr-1">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Teslimat Şekli *
+                    </label>
+                    <Dropdown
+                      label="Teslimat"
+                      field="area"
+                      area="name"
+                      items={[
+                        { key: "Yurt İçi", value: "intra" },
+                        { key: "Yurt Dışı", value: "extra" },
+                      ]}
+                      fields={fields}
+                      handleChange={handleChange}
+                    />
                   </div>
-                <div className="flex flex-col lg:w-full lg:pr-1">
-                                <label
-                                  htmlFor="small-input"
-                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                                >
-                                  Teslimat Tipi *
-                                </label>
-                                <Dropdown
-                                  label="Teslimat Tipi"
-                                  field="delivery_type"
-                                  area="name"
-                                  items={setting === "extra" ? INCOTERMS_EXTRA : INCOTERMS_INTRA }
-                                  fields={fields}
-                                  handleChange={handleChange}
-                                />
+                  <div className="flex flex-col lg:w-full lg:pr-1">
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Teslimat Tipi *
+                    </label>
+                    <Dropdown
+                      label="Teslimat Tipi"
+                      field="delivery_type"
+                      area="name"
+                      items={
+                        setting === "extra" ? INCOTERMS_EXTRA : INCOTERMS_INTRA
+                      }
+                      fields={fields}
+                      handleChange={handleChange}
+                    />
                   </div>
-                  
-                
 
                   <div className="flex flex-col lg:w-full ">
-                                <label
-                                  htmlFor="small-input"
-                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                                >
-                                  Döviz Tipi
-                                </label>
-                                <Dropdown
-                                  label="Döviz"
-                                  field="delivery_type"
-                                  area="currencyType"
-                                  items={[{key : "₺", value: "₺"},{key:"$", value : "$"}, {key:"€", value : "€"}]}
-                                  fields={fields}
-                                  handleChange={handleChange}
-                                />
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Döviz Tipi
+                    </label>
+                    <Dropdown
+                      label="Döviz"
+                      field="delivery_type"
+                      area="currencyType"
+                      items={[
+                        { key: "₺", value: "₺" },
+                        { key: "$", value: "$" },
+                        { key: "€", value: "€" },
+                      ]}
+                      fields={fields}
+                      handleChange={handleChange}
+                    />
                   </div>
 
                   <div className="flex flex-col lg:w-full lg:pr-2">
@@ -623,35 +622,32 @@ export default function UpdateQuotationForm({quotID, customerID}) {
                     <input
                       type="number"
                       step={"any"}
-                      
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
                       required
-                      onChange={(e) => handleChange("delivery_type", "currencyVal", e)}
+                      onChange={(e) =>
+                        handleChange("delivery_type", "currencyVal", e)
+                      }
                     />
                   </div>
 
-                  
-
-                 
-                  
-
                   <div className="flex flex-col lg:w-full lg:pr-2">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Paketleme Ücreti*
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                onChange={(e) => handleChange("delivery_type", "package_fee", e)}
-              />
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Paketleme Ücreti*
+                    </label>
+                    <input
+                      type="number"
+                      step={"any"}
+                      className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                      placeholder=""
+                      required
+                      onChange={(e) =>
+                        handleChange("delivery_type", "package_fee", e)
+                      }
+                    />
                   </div>
 
                   <div className="flex flex-col lg:w-full lg:pr-2">
@@ -664,159 +660,194 @@ export default function UpdateQuotationForm({quotID, customerID}) {
                     <input
                       type="number"
                       step={"any"}
-                      
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
                       required
-                      onChange={(e) => handleChange("delivery_type", "loading_fee", e)}
+                      onChange={(e) =>
+                        handleChange("delivery_type", "loading_fee", e)
+                      }
                     />
                   </div>
-                  {setting === 'extra' ? <div className="flex flex-col lg:w-full lg:pr-2">
+                  {setting === "extra" ? (
+                    <div className="flex flex-col lg:w-full lg:pr-2">
+                      <label
+                        htmlFor="small-input"
+                        className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                      >
+                        Liman veya Belirlenen Yerde teslim Ücreti *
+                      </label>
+                      <input
+                        type="number"
+                        step={"any"}
+                        className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                        placeholder=""
+                        required
+                        onChange={(e) =>
+                          handleChange("delivery_type", "delivery_fee", e)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
+                  {setting === "extra" ? (
+                    <div className="flex flex-col lg:w-full lg:pr-2">
+                      <label
+                        htmlFor="small-input"
+                        className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                      >
+                        İhracat Prosedür Ücretleri *
+                      </label>
+                      <input
+                        type="number"
+                        step={"any"}
+                        className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                        placeholder=""
+                        required
+                        onChange={(e) =>
+                          handleChange("delivery_type", "export_fee", e)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
+                  {setting === "extra" ? (
+                    <div className="flex flex-col lg:w-full lg:pr-2">
+                      <label
+                        htmlFor="small-input"
+                        className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                      >
+                        Çıkış terminali Ücretleri *
+                      </label>
+                      <input
+                        type="number"
+                        step={"any"}
+                        className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                        placeholder=""
+                        required
+                        onChange={(e) =>
+                          handleChange("delivery_type", "terminal_fee_exit", e)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
+                  {setting === "extra" ? (
+                    <div className="flex flex-col lg:w-full lg:pr-2">
+                      <label
+                        htmlFor="small-input"
+                        className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                      >
+                        Araca Yükleme Ücreti *
+                      </label>
+                      <input
+                        type="number"
+                        step={"any"}
+                        className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                        placeholder=""
+                        required
+                        onChange={(e) =>
+                          handleChange("delivery_type", "vehicleLoading_fee", e)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
+                  <div className="flex flex-col lg:w-full lg:pr-1">
                     <label
                       htmlFor="small-input"
                       className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
                     >
-                      Liman veya Belirlenen Yerde teslim Ücreti *
+                      Taşıma Ücreti *
                     </label>
                     <input
                       type="number"
                       step={"any"}
-                      
                       className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
                       required
-                      onChange={(e) => handleChange("delivery_type", "delivery_fee", e)}
+                      onChange={(e) =>
+                        handleChange("delivery_type", "transport_fee", e)
+                      }
                     />
-                  </div> : '' }
-                  
-            {setting === "extra" ?  <div className="flex flex-col lg:w-full lg:pr-2">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                İhracat Prosedür Ücretleri *
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                onChange={(e) => handleChange("delivery_type", "export_fee", e)}
-              />
-            </div> : ''}   
-           
-            {setting === "extra" ? <div className="flex flex-col lg:w-full lg:pr-2">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Çıkış terminali Ücretleri *
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                onChange={(e) => handleChange("delivery_type", "terminal_fee_exit", e)}
-              />
-            </div> : ''}
-            
-            {setting === "extra" ?  <div className="flex flex-col lg:w-full lg:pr-2">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Araca Yükleme Ücreti *
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                onChange={(e) => handleChange("delivery_type", "vehicleLoading_fee", e)}
-              />
-            </div> : ''}
-           
-            
-            <div className="flex flex-col lg:w-full lg:pr-1">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Taşıma Ücreti *
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                onChange={(e) => handleChange("delivery_type", "transport_fee", e)}
-              />
-            </div>
-            {setting === "extra" ? <div className="flex flex-col lg:w-full lg:pr-2">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Sigorta Ücreti*
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                onChange={(e) => handleChange("delivery_type", "insurance_fee", e)}
-              />
-            </div> : ''}
-            
-            {setting === "extra" ? <div className="flex flex-col lg:w-full lg:pr-2">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Varış Terminali Ücretleri *
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                onChange={(e) => handleChange("delivery_type", "terminal_fee_entry", e)}
-              />
-            </div> : ''}
-            
-            {setting === "extra" ? <div className="flex flex-col lg:w-full lg:pr-2">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                İthalat Prosedür Ücretleri *
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                onChange={(e) => handleChange("delivery_type", "import_fee", e)}
-              />
-            </div>: ''}
-            
+                  </div>
+                  {setting === "extra" ? (
+                    <div className="flex flex-col lg:w-full lg:pr-2">
+                      <label
+                        htmlFor="small-input"
+                        className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                      >
+                        Sigorta Ücreti*
+                      </label>
+                      <input
+                        type="number"
+                        step={"any"}
+                        className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                        placeholder=""
+                        required
+                        onChange={(e) =>
+                          handleChange("delivery_type", "insurance_fee", e)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
 
-            <div className="flex flex-col lg:w-full lg:pr-1 ">
+                  {setting === "extra" ? (
+                    <div className="flex flex-col lg:w-full lg:pr-2">
+                      <label
+                        htmlFor="small-input"
+                        className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                      >
+                        Varış Terminali Ücretleri *
+                      </label>
+                      <input
+                        type="number"
+                        step={"any"}
+                        className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                        placeholder=""
+                        required
+                        onChange={(e) =>
+                          handleChange("delivery_type", "terminal_fee_entry", e)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
+                  {setting === "extra" ? (
+                    <div className="flex flex-col lg:w-full lg:pr-2">
+                      <label
+                        htmlFor="small-input"
+                        className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                      >
+                        İthalat Prosedür Ücretleri *
+                      </label>
+                      <input
+                        type="number"
+                        step={"any"}
+                        className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                        placeholder=""
+                        required
+                        onChange={(e) =>
+                          handleChange("delivery_type", "import_fee", e)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
+                  <div className="flex flex-col lg:w-full lg:pr-1 ">
                     <label
                       htmlFor="small-input"
                       className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
@@ -831,10 +862,7 @@ export default function UpdateQuotationForm({quotID, customerID}) {
                         handleChange("delivery_type", "description", e)
                       }
                     />
-            </div>
-           
-           
-
+                  </div>
                 </div>
               </div>
 
@@ -848,8 +876,6 @@ export default function UpdateQuotationForm({quotID, customerID}) {
                 </div>
 
                 <div className="space-y-2 lg:grid lg:grid-cols-1 lg:w-1/3 lg:items-end lg:gap-3 ">
-                
-                  
                   <div className="flex flex-col ">
                     <label
                       htmlFor="small-input"
@@ -867,7 +893,7 @@ export default function UpdateQuotationForm({quotID, customerID}) {
                       }
                     />
                   </div>
-                  
+
                   <div className="flex flex-col ">
                     <label
                       htmlFor="small-input"
@@ -917,41 +943,46 @@ export default function UpdateQuotationForm({quotID, customerID}) {
                       onChange={(e) =>
                         handleChange("options", "extraDetails", e)
                       }
-                      
                     />
                   </div>
                   <div className="flex flex-col lg:w-full lg:mr-1">
-                                <label
-                                  htmlFor="small-input"
-                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                                >
-                                  Form Dili *
-                                </label>
-                                <Dropdown
-                                  label="Dil"
-                                  field="options"
-                                  area="language"
-                                  items={[{key : "Türkçe", value: "Turkish"},{key:"İngilizce", value : "English"}]}
-                                  fields={fields}
-                                  handleChange={handleChange}
-                                />
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Form Dili *
+                    </label>
+                    <Dropdown
+                      label="Dil"
+                      field="options"
+                      area="language"
+                      items={[
+                        { key: "Türkçe", value: "Turkish" },
+                        { key: "İngilizce", value: "English" },
+                      ]}
+                      fields={fields}
+                      handleChange={handleChange}
+                    />
                   </div>
 
                   <div className="flex flex-col lg:w-full lg:mr-1">
-                                <label
-                                  htmlFor="small-input"
-                                  className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                                >
-                                  Şirket *
-                                </label>
-                                <Dropdown
-                                  label="Şirket"
-                                  field="options"
-                                  area="company"
-                                  items={[{key : "VNT", value: "VNT"},{key:"BILGESIN", value : "BILGESIN"}]}
-                                  fields={fields}
-                                  handleChange={handleChange}
-                                />
+                    <label
+                      htmlFor="small-input"
+                      className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                    >
+                      Şirket *
+                    </label>
+                    <Dropdown
+                      label="Şirket"
+                      field="options"
+                      area="company"
+                      items={[
+                        { key: "VNT", value: "VNT" },
+                        { key: "BILGESIN", value: "BILGESIN" },
+                      ]}
+                      fields={fields}
+                      handleChange={handleChange}
+                    />
                   </div>
 
                   <div className="flex flex-col">
@@ -967,9 +998,7 @@ export default function UpdateQuotationForm({quotID, customerID}) {
                       placeholder=""
                       defaultValue={fields.options.preparedBy}
                       required
-                      onChange={(e) =>
-                        handleChange("options", "preparedBy", e)
-                      }
+                      onChange={(e) => handleChange("options", "preparedBy", e)}
                     />
                   </div>
 
@@ -986,13 +1015,9 @@ export default function UpdateQuotationForm({quotID, customerID}) {
                       placeholder=""
                       defaultValue={fields.options.approvedBy}
                       required
-                      onChange={(e) =>
-                        handleChange("options", "approvedBy", e)
-                      }
+                      onChange={(e) => handleChange("options", "approvedBy", e)}
                     />
                   </div>
-
-                  
                 </div>
               </div>
             </form>
@@ -1052,7 +1077,6 @@ export default function UpdateQuotationForm({quotID, customerID}) {
                   toggleCreate();
                   setSubmit(false);
                   router.reload(window.location.pathname);
-                  
                 }}
                 className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >
@@ -1069,11 +1093,20 @@ export default function UpdateQuotationForm({quotID, customerID}) {
             } mt-3 text-center transition duration-500 ease-out`}
           >
             <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-             
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 stroke-red-600">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-</svg>
-
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6 stroke-red-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                />
+              </svg>
             </div>
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               Eksik Bilgi girdiniz !
@@ -1084,16 +1117,20 @@ export default function UpdateQuotationForm({quotID, customerID}) {
               </p>
 
               <div className="text-justify font-poppins italic w-full space-y-1">
-              {!submit && !isValid ? Object.entries(currErrors).map(heading => {
-                return Object.entries(heading[1]).map((err, index) => {
-                  if(err[1] !==0) {
-                    return <p key={index} className="text-sm text-red-600">{err[1]}</p>
-                  }
-                })
-              }) : ""}
+                {!submit && !isValid
+                  ? Object.entries(currErrors).map((heading) => {
+                      return Object.entries(heading[1]).map((err, index) => {
+                        if (err[1] !== 0) {
+                          return (
+                            <p key={index} className="text-sm text-red-600">
+                              {err[1]}
+                            </p>
+                          );
+                        }
+                      });
+                    })
+                  : ""}
               </div>
-              
-              
             </div>
             <div className="items-center px-4 py-3">
               <button
@@ -1101,7 +1138,6 @@ export default function UpdateQuotationForm({quotID, customerID}) {
                 onClick={() => {
                   setSubmit(false);
                   setIsvalid(true);
-                  
                 }}
                 className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >
@@ -1118,11 +1154,20 @@ export default function UpdateQuotationForm({quotID, customerID}) {
             } mt-3 text-center transition duration-500 ease-out`}
           >
             <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-             
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 stroke-red-600">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-</svg>
-
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6 stroke-red-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                />
+              </svg>
             </div>
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               Bir hata oluştu !
@@ -1130,7 +1175,7 @@ export default function UpdateQuotationForm({quotID, customerID}) {
             <div className="mt-2 px-7 py-3">
               <p className="text-sm text-gray-500">
                 Lütfen formu kontrol edin!
-              </p>  
+              </p>
             </div>
             <div className="items-center px-4 py-3">
               <button
@@ -1138,7 +1183,6 @@ export default function UpdateQuotationForm({quotID, customerID}) {
                 onClick={() => {
                   setSubmit(false);
                   setCreateErr(false);
-                  
                 }}
                 className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >
