@@ -1,6 +1,5 @@
 import { useState } from "react";
 import * as React from "react";
-import axios from "axios";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step, { useStepContext } from "@mui/material/Step";
@@ -19,6 +18,9 @@ import {
   QUOTYPE,
   TYPE_COMPS,
 } from "../../../../../../utils/mappers";
+import QuotationItemService from "../../../../../../services/QuotationService/QuotationItemService";
+import CustomerService from "../../../../../../services/CustomerService";
+import AnalysisService from "../../../../../../services/AnalysisService";
 
 export default function CreateMake({ prevValues, type }) {
   const [create, setCreate] = useState(false);
@@ -112,39 +114,35 @@ export default function CreateMake({ prevValues, type }) {
 
   //hooks
   React.useEffect(() => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_BACKEND}/api/analyze/getAll`)
-      .then((res) => {
-        if (res.status === 200) {
-          const temp = res.data.analyzes.map((analyse) => {
-            return {
-              key: analyse.analyze_Name,
-              value: analyse.analyze_id,
-              TIN: analyse.analyze_coefTin,
-              COPPER: analyse.analyze_coefCopper,
-            };
-          });
+    AnalysisService.getAllAnalyze().then((res) => {
+      if (res.status === 200) {
+        const temp = res.data.analyzes.map((analyse) => {
+          return {
+            key: analyse.analyze_Name,
+            value: analyse.analyze_id,
+            TIN: analyse.analyze_coefTin,
+            COPPER: analyse.analyze_coefCopper,
+          };
+        });
 
-          setAnalyze(temp);
-        }
-      });
+        setAnalyze(temp);
+      }
+    });
   }, []);
 
   React.useEffect(() => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`)
-      .then((res) => {
-        if (res.status === 200) {
-          const temp = res.data.customers.map((customer) => {
-            return {
-              key: customer.account_id,
-              value: customer.account_id,
-            };
-          });
+    CustomerService.getAllCustomers().then((res) => {
+      if (res.status === 200) {
+        const temp = res.data.customers.map((customer) => {
+          return {
+            key: customer.account_id,
+            value: customer.account_id,
+          };
+        });
 
-          setCustomer(temp);
-        }
-      });
+        setCustomer(temp);
+      }
+    });
   }, []);
 
   //handlers
@@ -258,12 +256,7 @@ export default function CreateMake({ prevValues, type }) {
     }
 
     try {
-      const res = await axios({
-        method: "post",
-        data: data,
-        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/create`,
-        withCredentials: true,
-      });
+      const res = await QuotationItemService.createItem(data);
       if (res.status === 200) {
         setSubmit(true);
         setIsvalid(true);

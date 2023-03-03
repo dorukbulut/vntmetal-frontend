@@ -1,21 +1,14 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
 import { IMAGE_MAPPER, ITEM_TYPES } from "../../../../utils/mappers";
 import ModalImage from "./ModalImage";
+import WorkOrderService from "../../../../services/WorkOrderService";
 export default function WorkOrderDisplay({ WorkOrderID }) {
   const router = useRouter();
   const [create, setCreate] = useState(false);
   const [values, setValues] = useState({});
   const getValues = () => {
-    axios({
-      method: "POST",
-      data: {
-        workorder_ID: WorkOrderID,
-      },
-      withCredentials: true,
-      url: `${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/get-work`,
-    })
+    WorkOrderService.getByWorkOrder(WorkOrderID)
       .then((res) => {
         if (res.status === 200) {
           setValues(res.data[0]);

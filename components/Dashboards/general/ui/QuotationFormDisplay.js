@@ -1,18 +1,11 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
+import QuotationFormService from "../../../../services/QuotationService/QuotationFormService";
 export default function QuotationFormDisplay({ quotID }) {
   const router = useRouter();
   const [values, setValues] = useState({});
   const getValues = () => {
-    axios({
-      method: "POST",
-      data: {
-        quotation_ID: quotID,
-      },
-      withCredentials: true,
-      url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/get-quo`,
-    })
+    QuotationFormService.getForm(quotID)
       .then((res) => {
         if (res.status === 200) {
           setValues(res.data[0]);

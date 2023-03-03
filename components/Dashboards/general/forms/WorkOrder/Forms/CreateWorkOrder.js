@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
-import axios, { Axios } from "axios";
 import { useRouter } from "next/router";
 import Dropdown from "../../Common/Dropdown";
-import ItemSelect from "../../ItemSelect";
-import CheckMark from "../../CheckMark";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-
+import WorkOrderService from "../../../../../../services/WorkOrderService";
+import OrderConfirmationService from "../../../../../../services/OrderConfirmationService";
 export default function CreateWorkOrder({ customers }) {
   const CUSTOMER = customers.map((customer) => {
     return {
@@ -107,14 +103,7 @@ export default function CreateWorkOrder({ customers }) {
 
   useEffect(() => {
     if (Customer_ID.options.Customer_ID !== "") {
-      axios({
-        method: "POST",
-        data: {
-          Customer_ID: Customer_ID.options.Customer_ID,
-        },
-        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/get`,
-        withCredentials: true,
-      })
+      OrderConfirmationService.getByCustomer(Customer_ID.options.Customer_ID)
         .then((res) => {
           setAll(res.data);
           let ITEMS = res.data.map((item) => {
@@ -214,12 +203,7 @@ export default function CreateWorkOrder({ customers }) {
       };
 
       try {
-        const res = await axios({
-          method: "post",
-          data: data,
-          url: `${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/create`,
-          withCredentials: true,
-        });
+        const res = await WorkOrderService.createForm(data);
         if (res.status === 200) {
           setSubmit(true);
           setIsvalid(true);

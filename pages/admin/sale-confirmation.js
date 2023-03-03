@@ -1,7 +1,6 @@
 import Navbar from "../../components/Dashboards/general/ui/Navbar";
 import ProfileBar from "../../components/Dashboards/general/ui/ProfileBar";
 import BreadCrumbs from "../../components/Dashboards/general/ui/BreadCrumbs";
-import axios from "axios";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import CreateConfirmationForm from "../../components/Dashboards/general/forms/SaleConfirmation/Forms/CreateConfirmation";
@@ -9,26 +8,10 @@ import UpdateConfirmationForm from "../../components/Dashboards/general/forms/Sa
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import SaleConfirmationDisplay from "../../components/Dashboards/general/ui/SaleConfirmationDisplay";
+import OrderConfirmationService from "../../services/OrderConfirmationService";
+import CustomerService from "../../services/CustomerService";
 
 export default function QuotationMake({ customers, confirmations }) {
-  const generate = (e) => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/generate`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id: e.target.id }),
-    }).then((response) => {
-      response.blob().then((blob) => {
-        console.log(blob);
-        let url = window.URL.createObjectURL(blob);
-        let a = document.createElement("a");
-        a.href = url;
-        a.download = "SaleConfirmation.docx";
-        a.click();
-      });
-    });
-  };
   const router = useRouter();
   const [filters, setFilters] = useState();
 
@@ -39,13 +22,7 @@ export default function QuotationMake({ customers, confirmations }) {
     setPage(value);
   };
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: `${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/get-page/${
-        parseInt(page) - 1
-      }`,
-      withCredentials: true,
-    })
+    OrderConfirmationService.getPage(parseInt(page) - 1)
       .then((res) => {
         if (res.status === 200) {
           setformItems(res.data.rows);
@@ -56,28 +33,25 @@ export default function QuotationMake({ customers, confirmations }) {
 
   useEffect(() => {
     if (filters) {
-      axios({
-        method: "GET",
-        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/filter`,
-        params: {
-          account:
-            filters.account_id !== undefined && filters.account_id !== ""
-              ? filters.account_id
-              : undefined,
-          saleReference:
-            filters.saleReference !== undefined && filters.saleReference !== ""
-              ? filters.saleReference.replaceAll(" ", "+")
-              : undefined,
-          date:
-            filters.date !== undefined && filters.date !== ""
-              ? filters.date
-              : undefined,
-          quotReference:
-            filters.quotReference !== undefined && filters.quotReference !== ""
-              ? filters.quotReference.replaceAll(" ", "+")
-              : undefined,
-        },
-      })
+      const params = {
+        account:
+          filters.account_id !== undefined && filters.account_id !== ""
+            ? filters.account_id
+            : undefined,
+        saleReference:
+          filters.saleReference !== undefined && filters.saleReference !== ""
+            ? filters.saleReference.replaceAll(" ", "+")
+            : undefined,
+        date:
+          filters.date !== undefined && filters.date !== ""
+            ? filters.date
+            : undefined,
+        quotReference:
+          filters.quotReference !== undefined && filters.quotReference !== ""
+            ? filters.quotReference.replaceAll(" ", "+")
+            : undefined,
+      };
+      OrderConfirmationService.getFilteredData(params)
         .then((res) => {
           if (res.status === 200) {
             setformItems(res.data.rows);
@@ -229,7 +203,7 @@ export default function QuotationMake({ customers, confirmations }) {
                         <td className="px-6 py-4 text-right">
                           <button
                             id={item.sale_ID}
-                            onClick={generate}
+                            onClick={OrderConfirmationService.generateForm}
                             className="hover:underline"
                           >
                             İndir
@@ -284,13 +258,8 @@ export default function QuotationMake({ customers, confirmations }) {
 
 export async function getServerSideProps(context) {
   try {
-    const res2 = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`
-    );
-
-    const res3 = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/get-page/0`
-    );
+    const res2 = await CustomerService.getAllCustomers();
+    const res3 = await OrderConfirmationService.getDefaultData();
     if (res2.status === 200 && res3.status === 200) {
       return {
         props: {

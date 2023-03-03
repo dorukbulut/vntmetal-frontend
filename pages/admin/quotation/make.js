@@ -1,10 +1,9 @@
 import Navbar from "../../../components/Dashboards/general/ui/Navbar";
 import ProfileBar from "../../../components/Dashboards/general/ui/ProfileBar";
 import BreadCrumbs from "../../../components/Dashboards/general/ui/BreadCrumbs";
-
+import QuotationItemService from "../../../services/QuotationService/QuotationItemService";
 import CreateMake from "../../../components/Dashboards/general/forms/QuotationMake/Forms/CreateaMake";
 import CreateAnalyze from "../../../components/Dashboards/general/forms/QuotationMake/Forms/CreateAnalyze";
-import axios from "axios";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Pagination from "@mui/material/Pagination";
@@ -24,13 +23,7 @@ export default function QuotationMake({ items }) {
     setPage(value);
   };
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/get-page/${
-        parseInt(page) - 1
-      }`,
-      withCredentials: true,
-    })
+    QuotationItemService.getPage(parseInt(page) - 1)
       .then((res) => {
         if (res.status === 200) {
           setquotItems(res.data.rows);
@@ -41,20 +34,17 @@ export default function QuotationMake({ items }) {
 
   useEffect(() => {
     if (filters) {
-      axios({
-        method: "GET",
-        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/filter`,
-        params: {
-          Customer_ID:
-            filters.account_id !== undefined && filters.account_id !== ""
-              ? filters.account_id
-              : undefined,
-          createdAt:
-            filters.date !== undefined && filters.date !== ""
-              ? filters.date
-              : undefined,
-        },
-      })
+      const params = {
+        Customer_ID:
+          filters.account_id !== undefined && filters.account_id !== ""
+            ? filters.account_id
+            : undefined,
+        createdAt:
+          filters.date !== undefined && filters.date !== ""
+            ? filters.date
+            : undefined,
+      };
+      QuotationItemService.getFilteredData(params)
         .then((res) => {
           if (res.status === 200) {
             setquotItems(res.data.rows);
@@ -214,10 +204,7 @@ export default function QuotationMake({ items }) {
 
 export async function getServerSideProps(context) {
   try {
-    const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/get-page/0`
-    );
-
+    const res = await QuotationItemService.getDefaultData();
     if (res.status === 200) {
       return {
         props: {

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Table from "../../Table";
 import EditableCell from "../../Table/EditableCell.js/index.js";
 import Checkbox from "@mui/material/Checkbox";
-import axios from "axios";
+import QuotationItemService from "../../../../../../services/QuotationService/QuotationItemService";
 function SetItem({ fields, setAll, url }) {
   const [rowdata, setRowData] = useState([]);
   const [skipPageReset, setSkipPageReset] = useState(false);
@@ -17,12 +17,7 @@ function SetItem({ fields, setAll, url }) {
         };
   useEffect(() => {
     if (fields.options.Customer_ID !== "") {
-      axios({
-        method: "POST",
-        data,
-        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/${url}`,
-        withCredentials: true,
-      })
+      QuotationItemService.fetchFormItems(data, url)
         .then((res) => {
           if (res.status === 200) {
             const formedData = res.data.map((item, index) => {

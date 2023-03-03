@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import axios, { Axios } from "axios";
 import { useRouter } from "next/router";
 import Dropdown from "../../Common/Dropdown";
 import SetItem from "./SetQuotationItem";
 import { useStepContext } from "@mui/material";
+import QuotationFormService from "../../../../../../services/QuotationService/QuotationFormService";
 
 const INCOTERMS_EXTRA = [
   {
@@ -355,12 +355,7 @@ export default function CreateQuotationForm({ customers }) {
       };
 
       try {
-        const res = await axios({
-          method: "post",
-          data: data,
-          url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/create`,
-          withCredentials: true,
-        });
+        const res = await QuotationFormService.createForm(data);
         if (res.status === 200) {
           setSubmit(true);
           setIsvalid(true);

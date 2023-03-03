@@ -1,8 +1,7 @@
 import Navbar from "../../components/Dashboards/general/ui/Navbar";
 import ProfileBar from "../../components/Dashboards/general/ui/ProfileBar";
 import BreadCrumbs from "../../components/Dashboards/general/ui/BreadCrumbs";
-
-import axios from "axios";
+import CustomerService from "../../services/CustomerService/index.js";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { useRouter } from "next/router";
@@ -10,27 +9,8 @@ import { useState, useEffect } from "react";
 import CreateWorkOrder from "../../components/Dashboards/general/forms/WorkOrder/Forms/CreateWorkOrder";
 import UpdateWorkOrder from "../../components/Dashboards/general/forms/WorkOrder/Forms/UpdateWorkOrder";
 import WorkOrderDisplay from "../../components/Dashboards/general/ui/WorkOrderDisplay";
+import WorkOrderService from "../../services/WorkOrderService";
 export default function QuotationMake({ customers, workOrders }) {
-  const generate = (e) => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/generate`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: e.target.id.split(",")[0],
-        type: e.target.id.split(",")[1],
-      }),
-    }).then((response) => {
-      response.blob().then((blob) => {
-        let url = window.URL.createObjectURL(blob);
-        let a = document.createElement("a");
-        a.href = url;
-        a.download = "WorkOrder.docx";
-        a.click();
-      });
-    });
-  };
   const router = useRouter();
   const [filters, setFilters] = useState();
 
@@ -41,13 +21,7 @@ export default function QuotationMake({ customers, workOrders }) {
     setPage(value);
   };
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: `${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/get-page/${
-        parseInt(page) - 1
-      }`,
-      withCredentials: true,
-    })
+    WorkOrderService.getPage(parseInt(page) - 1)
       .then((res) => {
         if (res.status === 200) {
           setformItems(res.data.rows);
@@ -58,28 +32,26 @@ export default function QuotationMake({ customers, workOrders }) {
 
   useEffect(() => {
     if (filters) {
-      axios({
-        method: "GET",
-        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/filter`,
-        params: {
-          account:
-            filters.account_id !== undefined && filters.account_id !== ""
-              ? filters.account_id
-              : undefined,
-          workReference:
-            filters.workReference !== undefined && filters.workReference !== ""
-              ? filters.workReference.replaceAll(" ", "+")
-              : undefined,
-          date:
-            filters.date !== undefined && filters.date !== ""
-              ? filters.date
-              : undefined,
-          saleReference:
-            filters.saleReference !== undefined && filters.saleReference !== ""
-              ? filters.saleReference.replaceAll(" ", "+")
-              : undefined,
-        },
-      })
+      const params = {
+        account:
+          filters.account_id !== undefined && filters.account_id !== ""
+            ? filters.account_id
+            : undefined,
+        workReference:
+          filters.workReference !== undefined && filters.workReference !== ""
+            ? filters.workReference.replaceAll(" ", "+")
+            : undefined,
+        date:
+          filters.date !== undefined && filters.date !== ""
+            ? filters.date
+            : undefined,
+        saleReference:
+          filters.saleReference !== undefined && filters.saleReference !== ""
+            ? filters.saleReference.replaceAll(" ", "+")
+            : undefined,
+      };
+
+      WorkOrderService.getFilteredData(params)
         .then((res) => {
           if (res.status === 200) {
             setformItems(res.data.rows);
@@ -231,7 +203,7 @@ export default function QuotationMake({ customers, workOrders }) {
                               "," +
                               item.quotationItem.itemType
                             }
-                            onClick={generate}
+                            onClick={WorkOrderService.generateForm}
                             className="hover:underline"
                           >
                             İndir
@@ -285,13 +257,8 @@ export default function QuotationMake({ customers, workOrders }) {
 
 export async function getServerSideProps(context) {
   try {
-    const res2 = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`
-    );
-
-    const res3 = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/get-page/0`
-    );
+    const res2 = await CustomerService.getAllCustomers();
+    const res3 = await WorkOrderService.getDefaultData();
     if (res2.status === 200 && res3.status === 200) {
       return {
         props: {

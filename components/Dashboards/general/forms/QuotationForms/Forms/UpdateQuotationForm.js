@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import axios, { Axios } from "axios";
 import { useRouter } from "next/router";
 import Dropdown from "../../Common/Dropdown";
 import SetItem from "./SetQuotationItem";
 import { useStepContext } from "@mui/material";
+import QuotationFormService from "../../../../../../services/QuotationService/QuotationFormService";
 
 const INCOTERMS_EXTRA = [
   {
@@ -162,14 +162,7 @@ export default function UpdateQuotationForm({ quotID, customerID }) {
   });
 
   const getValues = () => {
-    axios({
-      method: "POST",
-      data: {
-        quotation_ID: quotID,
-      },
-      withCredentials: true,
-      url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/get-quo`,
-    })
+    QuotationFormService.getForm(quotID)
       .then((res) => {
         if (res.status === 200) {
           const item = res.data[0];
@@ -404,12 +397,7 @@ export default function UpdateQuotationForm({ quotID, customerID }) {
       };
 
       try {
-        const res = await axios({
-          method: "post",
-          data: data,
-          url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/update`,
-          withCredentials: true,
-        });
+        const res = await QuotationFormService.updateForm(data);
         if (res.status === 200) {
           setSubmit(true);
           setIsvalid(true);

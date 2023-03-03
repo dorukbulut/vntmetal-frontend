@@ -1,7 +1,7 @@
 import Navbar from "../../../components/Dashboards/general/ui/Navbar";
 import ProfileBar from "../../../components/Dashboards/general/ui/ProfileBar";
 import BreadCrumbs from "../../../components/Dashboards/general/ui/BreadCrumbs";
-import axios from "axios";
+import CustomerService from "../../../services/CustomerService/index.js";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Pagination from "@mui/material/Pagination";
@@ -9,24 +9,8 @@ import Stack from "@mui/material/Stack";
 import CreateQuotationForm from "../../../components/Dashboards/general/forms/QuotationForms/Forms/CreateQuotationForm";
 import UpdateQuotationForm from "../../../components/Dashboards/general/forms/QuotationForms/Forms/UpdateQuotationForm";
 import QuotationFormDisplay from "../../../components/Dashboards/general/ui/QuotationFormDisplay";
+import QuotationFormService from "../../../services/QuotationService/QuotationFormService";
 export default function QuotationMake({ customers, forms }) {
-  const generate = (e) => {
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/generate`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id: e.target.id }),
-    }).then((response) => {
-      response.blob().then((blob) => {
-        let url = window.URL.createObjectURL(blob);
-        let a = document.createElement("a");
-        a.href = url;
-        a.download = "QuotationForm.docx";
-        a.click();
-      });
-    });
-  };
   const router = useRouter();
   const [filters, setFilters] = useState();
 
@@ -37,13 +21,7 @@ export default function QuotationMake({ customers, forms }) {
     setPage(value);
   };
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/get-page/${
-        parseInt(page) - 1
-      }`,
-      withCredentials: true,
-    })
+    QuotationFormService.getPage(parseInt(page - 1))
       .then((res) => {
         if (res.status === 200) {
           setformItems(res.data.rows);
@@ -54,28 +32,25 @@ export default function QuotationMake({ customers, forms }) {
 
   useEffect(() => {
     if (filters) {
-      axios({
-        method: "GET",
-        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/filter`,
-        params: {
-          account:
-            filters.account_id !== undefined && filters.account_id !== ""
-              ? filters.account_id
-              : undefined,
-          reference:
-            filters.reference !== undefined && filters.reference !== ""
-              ? filters.reference.replaceAll(" ", "+")
-              : undefined,
-          date:
-            filters.date !== undefined && filters.date !== ""
-              ? filters.date
-              : undefined,
-          customer:
-            filters.customer !== undefined && filters.customer !== ""
-              ? filters.customer.replaceAll(" ", "+")
-              : undefined,
-        },
-      })
+      const params = {
+        account:
+          filters.account_id !== undefined && filters.account_id !== ""
+            ? filters.account_id
+            : undefined,
+        reference:
+          filters.reference !== undefined && filters.reference !== ""
+            ? filters.reference.replaceAll(" ", "+")
+            : undefined,
+        date:
+          filters.date !== undefined && filters.date !== ""
+            ? filters.date
+            : undefined,
+        customer:
+          filters.customer !== undefined && filters.customer !== ""
+            ? filters.customer.replaceAll(" ", "+")
+            : undefined,
+      };
+      QuotationFormService.getFilteredData(params)
         .then((res) => {
           if (res.status === 200) {
             setformItems(res.data.rows);
@@ -223,7 +198,7 @@ export default function QuotationMake({ customers, forms }) {
                         <td className="px-6 py-4 text-right">
                           <button
                             id={item.quotation_ID}
-                            onClick={generate}
+                            onClick={QuotationFormService.generateForm}
                             className="hover:underline"
                           >
                             İndir
@@ -276,12 +251,8 @@ export default function QuotationMake({ customers, forms }) {
 
 export async function getServerSideProps(context) {
   try {
-    const res2 = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/all`
-    );
-    const r3 = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/get-page/0`
-    );
+    const res2 = await CustomerService.getAllCustomers();
+    const r3 = await QuotationFormService.getDefaultData();
     if (res2.status === 200 && r3.status === 200) {
       return {
         props: {

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import axios, { Axios } from "axios";
 import { useRouter } from "next/router";
+import AnalysisService from "../../../../../../services/AnalysisService";
 export default function CreateAnalyze() {
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
@@ -71,12 +71,7 @@ export default function CreateAnalyze() {
 
     if (handleValidation()) {
       try {
-        const res = await axios({
-          method: "post",
-          data: fields,
-          url: `${process.env.NEXT_PUBLIC_BACKEND}/api/analyze/create`,
-          withCredentials: true,
-        });
+        const res = await AnalysisService.createAnalayze(fields);
         if (res.status === 200) {
           setSubmit(true);
           setIsvalid(true);

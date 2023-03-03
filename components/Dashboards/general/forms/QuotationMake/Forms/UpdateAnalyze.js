@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import axios, { Axios } from "axios";
 import { useRouter } from "next/router";
 import DropDown from "../../Common/Dropdown";
+import AnalysisService from "../../../../../../services/AnalysisService";
 
 export default function UpdateAnalyze() {
   const [create, setCreate] = useState(false);
@@ -90,19 +90,15 @@ export default function UpdateAnalyze() {
 
     if (handleValidation()) {
       try {
-        const res = await axios({
-          method: "post",
-          data: {
-            analyze: {
-              analyze_Name: fields.analyze.analyze_Name,
-              analyze_coefCopper: fields.analyze.analyze_coefCopper,
-              analyze_coefTin: fields.analyze.analyze_coefTin,
-            },
-            analyze_id: fields.analyze.selected,
-          },
-          url: `${process.env.NEXT_PUBLIC_BACKEND}/api/analyze/update`,
-          withCredentials: true,
-        });
+        const analyze = {
+          analyze_Name: fields.analyze.analyze_Name,
+          analyze_coefCopper: fields.analyze.analyze_coefCopper,
+          analyze_coefTin: fields.analyze.analyze_coefTin,
+        };
+        const res = await AnalysisService.updateAnalysis(
+          analyze,
+          fields.analyze.selected
+        );
         if (res.status === 200) {
           setSubmit(true);
           setIsvalid(true);
@@ -120,11 +116,7 @@ export default function UpdateAnalyze() {
   };
 
   const getValues = () => {
-    axios({
-      method: "GET",
-      url: `${process.env.NEXT_PUBLIC_BACKEND}/api/analyze/getAll`,
-      withCredentials: true,
-    })
+    AnalysisService.getAllAnalyze()
       .then((res) => {
         if (res.status === 200) {
           let all_values = res.data.analyzes.map((item) => {
@@ -140,14 +132,7 @@ export default function UpdateAnalyze() {
   };
   useEffect(() => {
     if (fields.analyze.selected !== "") {
-      axios({
-        method: "POST",
-        data: {
-          analyze_id: fields.analyze.selected,
-        },
-        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/analyze/get`,
-        withCredentials: true,
-      })
+      AnalysisService.getAnalyze(fields.analyze.selected)
         .then((res) => {
           if (res.status === 200) {
             let data = res.data.analyze[0];

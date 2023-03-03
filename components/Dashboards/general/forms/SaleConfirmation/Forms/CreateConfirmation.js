@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import axios, { Axios } from "axios";
 import { useRouter } from "next/router";
 import Dropdown from "../../Common/Dropdown";
 import ItemSelect from "../../ItemSelect";
 import CheckMark from "../../CheckMark";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import QuotationItemService from "../../../../../../services/QuotationService/QuotationItemService";
+import QuotationFormService from "../../../../../../services/QuotationService/QuotationFormService";
+import OrderConfirmationService from "../../../../../../services/OrderConfirmationService";
 
 export default function CreateConfirmationForm({ customers }) {
   const CUSTOMER = customers.map((customer) => {
@@ -65,14 +67,10 @@ export default function CreateConfirmationForm({ customers }) {
 
   useEffect(() => {
     if (selectQuo.options.Quotation_ID !== "") {
-      axios({
-        method: "POST",
-        data: {
-          Quotation_ID: selectQuo.options.Quotation_ID,
-        },
-        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-items/get-quo`,
-        withCredentials: true,
-      })
+      const data = {
+        Quotation_ID: selectQuo.options.Quotation_ID,
+      };
+      QuotationItemService.fetchFormItems(data, "get-quo")
         .then((res) => {
           setItems(
             res.data.map((item, key) => {
@@ -146,14 +144,7 @@ export default function CreateConfirmationForm({ customers }) {
 
   useEffect(() => {
     if (Customer_ID.options.Customer_ID !== "") {
-      axios({
-        method: "POST",
-        data: {
-          Customer_ID: Customer_ID.options.Customer_ID,
-        },
-        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/get`,
-        withCredentials: true,
-      })
+      QuotationFormService.getFormByCustomer(Customer_ID.options.Customer_ID)
         .then((res) => {
           let ITEMS = res.data.map((item) => {
             return {
@@ -306,12 +297,7 @@ export default function CreateConfirmationForm({ customers }) {
       };
 
       try {
-        const res = await axios({
-          method: "post",
-          data: data,
-          url: `${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/create`,
-          withCredentials: true,
-        });
+        const res = await OrderConfirmationService.createForm(data);
         if (res.status === 200) {
           setSubmit(true);
           setIsvalid(true);

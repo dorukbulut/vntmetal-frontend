@@ -1,21 +1,14 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { ITEM_TYPES } from "../../../../utils/mappers";
-import axios from "axios";
+import OrderConfirmationService from "../../../../services/OrderConfirmationService";
 
 export default function SaleConfirmationDisplay({ ConfirmationID }) {
   const router = useRouter();
   const [create, setCreate] = useState(false);
   const [values, setValues] = useState({});
   const getValues = () => {
-    axios({
-      method: "POST",
-      data: {
-        sale_ID: ConfirmationID,
-      },
-      withCredentials: true,
-      url: `${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/get-conf`,
-    })
+    OrderConfirmationService.getByConfirmation(ConfirmationID)
       .then((res) => {
         let temp = [];
         temp.push(res.data[0].quotationItem);
