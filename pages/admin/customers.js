@@ -2,18 +2,17 @@ import Navbar from "../../components/Dashboards/general/ui/Navbar";
 import ProfileBar from "../../components/Dashboards/general/ui/ProfileBar";
 import BreadCrumbs from "../../components/Dashboards/general/ui/BreadCrumbs";
 import CreateCustomer from "../../components/Dashboards/general/forms/Customers/Forms/CreateCustomer";
-import axios from "axios";
 import UpdateCustomer from "../../components/Dashboards/general/forms/Customers/Forms/UpdateCustomer";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import CustomerService from "../../services/CustomerService/index.js";
 
 export default function CustomersPage({ customerData }) {
   const router = useRouter();
   const PER_PAGE = 3;
   const [filters, setFilters] = useState();
-
   const [customers, setCustomers] = useState(customerData.rows);
 
   const [page, setPage] = useState(1);
@@ -21,13 +20,7 @@ export default function CustomersPage({ customerData }) {
     setPage(value);
   };
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/get-page/${
-        parseInt(page) - 1
-      }`,
-      withCredentials: true,
-    })
+    CustomerService.getPage(parseInt(page) - 1)
       .then((res) => {
         if (res.status === 200) {
           setCustomers(res.data.rows);
@@ -38,25 +31,22 @@ export default function CustomersPage({ customerData }) {
 
   useEffect(() => {
     if (filters) {
-      axios({
-        method: "GET",
-        url: `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/filter`,
-        params: {
-          account_id:
-            filters.account_id !== undefined && filters.account_id !== ""
-              ? filters.account_id
-              : undefined,
-          account_title:
-            filters.account_title !== undefined && filters.account_title !== ""
-              ? filters.account_title.replaceAll(" ", "+")
-              : undefined,
-          account_related:
-            filters.account_related !== undefined &&
-            filters.account_related !== ""
-              ? filters.account_related.replaceAll(" ", "+")
-              : undefined,
-        },
-      })
+      const params = {
+        account_id:
+          filters.account_id !== undefined && filters.account_id !== ""
+            ? filters.account_id
+            : undefined,
+        account_title:
+          filters.account_title !== undefined && filters.account_title !== ""
+            ? filters.account_title.replaceAll(" ", "+")
+            : undefined,
+        account_related:
+          filters.account_related !== undefined &&
+          filters.account_related !== ""
+            ? filters.account_related.replaceAll(" ", "+")
+            : undefined,
+      };
+      CustomerService.getFilteredData(params)
         .then((res) => {
           if (res.status === 200) {
             setCustomers(res.data.rows);
@@ -208,9 +198,8 @@ export default function CustomersPage({ customerData }) {
 
 export async function getServerSideProps(context) {
   try {
-    const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/get-page/0`
-    );
+    const res = await CustomerService.getDefaultData();
+    console.log(res);
     if (res.status === 200) {
       return {
         props: {

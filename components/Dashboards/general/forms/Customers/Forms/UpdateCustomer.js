@@ -1,6 +1,6 @@
-import {useState, useEffect} from "react";
-import {useRouter} from "next/router";
-import axios from "axios";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import CustomerService from "../../../../../../services/CustomerService";
 
 export default function UpdateCustomer({ customer }) {
   const [create, setCreate] = useState(false);
@@ -25,22 +25,22 @@ export default function UpdateCustomer({ customer }) {
       account_KEP: `${customer.account_KEP}`,
     },
     taxinfo: {
-      tax_info_taxID: '', 
-      tax_info_Admin:  '',
-      tax_info_AdminID: '',
+      tax_info_taxID: "",
+      tax_info_Admin: "",
+      tax_info_AdminID: "",
     },
 
     adressinfo: {
-      customer_Address: '',
-      customer_bID: '',
-      customer_bName: '',
-      customer_dID: '',
-      customer_town: '',
-      customer_district : '',
-      customer_city: '',
-      customer_country: '',
-      customer_UAVT: '',
-      customer_postal: '',
+      customer_Address: "",
+      customer_bID: "",
+      customer_bName: "",
+      customer_dID: "",
+      customer_town: "",
+      customer_district: "",
+      customer_city: "",
+      customer_country: "",
+      customer_UAVT: "",
+      customer_postal: "",
     },
   });
   const [currErrors, setErrors] = useState({
@@ -76,24 +76,6 @@ export default function UpdateCustomer({ customer }) {
     },
   });
 
-  const handleDelete = async() => {
-    const res = await axios({
-      method : "delete",
-      data : {
-        account_id : fields.account_id
-      },
-
-      url : `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/delete`,
-      withCredentials : true
-    });
-
-    if (res.status === 200) {
-      setIsDelete(false);
-      setIsDel(true);
-    } else{
-      setIsvalid(false);
-    }
-  }
   const handleChange = (field, area, e) => {
     let new_fields = fields;
     new_fields[field][area] = e.target.value;
@@ -114,7 +96,7 @@ export default function UpdateCustomer({ customer }) {
     }
 
     //account_title
-    if (check_fields["customer"]["account_title"]  === "") {
+    if (check_fields["customer"]["account_title"] === "") {
       isValid = false;
       errors["customer"]["account_title"] = "Cari Ünvan boş bırakalamaz !";
     } else {
@@ -122,7 +104,7 @@ export default function UpdateCustomer({ customer }) {
     }
 
     //account_related
-    if (check_fields["customer"]["account_related"]  === "") {
+    if (check_fields["customer"]["account_related"] === "") {
       isValid = false;
       errors["customer"]["account_related"] = "İlgili Kişi boş bırakalamaz !";
     } else {
@@ -136,26 +118,16 @@ export default function UpdateCustomer({ customer }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (handleValidation()) {
-      try{
-        const res = await axios({ 
-          method : "post",
-          data: fields , 
-          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/update`,
-          withCredentials : true});
-          console.log(res);
-          if(res.status === 200) {
-            setSubmit(true);
-            setIsvalid(true);
-          } 
-      }
-      catch(err) {
+      try {
+        const res = await CustomerService.updateCustomer(fields);
+        if (res.status === 200) {
+          setSubmit(true);
+          setIsvalid(true);
+        }
+      } catch (err) {
         setSubmit(false);
         setCreateErr(true);
       }
-      
-
-      
-      
     } else {
       setIsvalid(false);
     }
@@ -165,44 +137,37 @@ export default function UpdateCustomer({ customer }) {
   };
 
   const getCustomer = () => {
-    axios({
-      method : "POST",
-      data : {
-        account_id : customer.account_id,
-      },
-      url : `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/get`,
-      withCredentials : true
-    })
-    .then(res => {
-      console.log(res);
-      if (res.status === 200) {
-        setFields(old => {
-          return {
-            ...old,
-            taxinfo: {
-              tax_info_taxID: `${res.data.customer[0].tax_info.tax_info_taxID}`, 
-              tax_info_Admin:  `${res.data.customer[0].tax_info.tax_info_Admin}`,
-              tax_info_AdminID:`${res.data.customer[0].tax_info.tax_info_AdminID}`,
-            },
-        
-            adressinfo: {
-              customer_Address: `${res.data.customer[0].customer_adress.customer_Address}`,
-              customer_bID: `${res.data.customer[0].customer_adress.customer_bID}`,
-              customer_bName: `${res.data.customer[0].customer_adress.customer_bName}`,
-              customer_dID: `${res.data.customer[0].customer_adress.customer_dID}`,
-              customer_town: `${res.data.customer[0].customer_adress.customer_town}`,
-              customer_district : `${res.data.customer[0].customer_adress.customer_districts}`,
-              customer_city: `${res.data.customer[0].customer_adress.customer_city}`,
-              customer_country: `${res.data.customer[0].customer_adress.customer_country}`,
-              customer_UAVT: `${res.data.customer[0].customer_adress.customer_UAVT}`,
-              customer_postal: `${res.data.customer[0].customer_adress.customer_postal}`,
-            },
-          }
-        })
-      }
-    })
-    .catch(err => console.log);
-  }
+    CustomerService.getCustomer(customer.account_id)
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          setFields((old) => {
+            return {
+              ...old,
+              taxinfo: {
+                tax_info_taxID: `${res.data.customer[0].tax_info.tax_info_taxID}`,
+                tax_info_Admin: `${res.data.customer[0].tax_info.tax_info_Admin}`,
+                tax_info_AdminID: `${res.data.customer[0].tax_info.tax_info_AdminID}`,
+              },
+
+              adressinfo: {
+                customer_Address: `${res.data.customer[0].customer_adress.customer_Address}`,
+                customer_bID: `${res.data.customer[0].customer_adress.customer_bID}`,
+                customer_bName: `${res.data.customer[0].customer_adress.customer_bName}`,
+                customer_dID: `${res.data.customer[0].customer_adress.customer_dID}`,
+                customer_town: `${res.data.customer[0].customer_adress.customer_town}`,
+                customer_district: `${res.data.customer[0].customer_adress.customer_districts}`,
+                customer_city: `${res.data.customer[0].customer_adress.customer_city}`,
+                customer_country: `${res.data.customer[0].customer_adress.customer_country}`,
+                customer_UAVT: `${res.data.customer[0].customer_adress.customer_UAVT}`,
+                customer_postal: `${res.data.customer[0].customer_adress.customer_postal}`,
+              },
+            };
+          });
+        }
+      })
+      .catch((err) => console.log);
+  };
   return (
     <div>
       <a
@@ -229,8 +194,8 @@ export default function UpdateCustomer({ customer }) {
             stroke="currentColor"
             className="w-6 h-6 relative top-0 left-0 hover:cursor-pointer"
             onClick={() => {
-                toggleCreate();
-                router.reload(window.location.pathname);
+              toggleCreate();
+              router.reload(window.location.pathname);
             }}
           >
             <path
@@ -329,7 +294,6 @@ export default function UpdateCustomer({ customer }) {
                       type="number"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       defaultValue={customer.account_IN}
                       onChange={(e) =>
                         handleChange("customer", "account_IN", e)
@@ -437,7 +401,6 @@ export default function UpdateCustomer({ customer }) {
                       type=""
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       defaultValue={customer.account_KEP}
                       onChange={(e) =>
                         handleChange("customer", "account_KEP", e)
@@ -469,7 +432,6 @@ export default function UpdateCustomer({ customer }) {
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
                       defaultValue={fields.taxinfo.tax_info_taxID}
-                      
                       onChange={(e) =>
                         handleChange("taxinfo", "tax_info_taxID", e)
                       }
@@ -487,7 +449,6 @@ export default function UpdateCustomer({ customer }) {
                       type="text"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       defaultValue={fields.taxinfo.tax_info_Admin}
                       onChange={(e) =>
                         handleChange("taxinfo", "tax_info_Admin", e)
@@ -506,7 +467,6 @@ export default function UpdateCustomer({ customer }) {
                       type="number"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       defaultValue={fields.taxinfo.tax_info_AdminID}
                       onChange={(e) =>
                         handleChange("taxinfo", "tax_info_AdminID", e)
@@ -556,7 +516,6 @@ export default function UpdateCustomer({ customer }) {
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
                       defaultValue={fields.adressinfo.customer_bID}
-                      
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_bID", e)
                       }
@@ -573,7 +532,6 @@ export default function UpdateCustomer({ customer }) {
                       type="text"
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       defaultValue={fields.adressinfo.customer_bName}
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_bName", e)
@@ -591,7 +549,6 @@ export default function UpdateCustomer({ customer }) {
                       type="number"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       defaultValue={fields.adressinfo.customer_dID}
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_dID", e)
@@ -610,7 +567,6 @@ export default function UpdateCustomer({ customer }) {
                       type="text"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       defaultValue={fields.adressinfo.customer_town}
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_town", e)
@@ -629,7 +585,6 @@ export default function UpdateCustomer({ customer }) {
                       type="text"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       defaultValue={fields.adressinfo.customer_district}
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_district", e)
@@ -648,7 +603,6 @@ export default function UpdateCustomer({ customer }) {
                       type="text"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       defaultValue={fields.adressinfo.customer_city}
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_city", e)
@@ -667,7 +621,6 @@ export default function UpdateCustomer({ customer }) {
                       type="text"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       defaultValue={fields.adressinfo.customer_country}
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_country", e)
@@ -686,7 +639,6 @@ export default function UpdateCustomer({ customer }) {
                       type="number"
                       className="pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       defaultValue={fields.adressinfo.customer_UAVT}
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_UAVT", e)
@@ -705,7 +657,6 @@ export default function UpdateCustomer({ customer }) {
                       type="number"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       defaultValue={fields.adressinfo.customer_postal}
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_postal", e)
@@ -725,19 +676,13 @@ export default function UpdateCustomer({ customer }) {
               >
                 Güncelle
               </button>
-              <button
-                className="bg-red-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                type="submit"
-                onClick={() => setIsDelete(true)}
-              >
-                Sil
-              </button>
+
               <button
                 className="bg-red-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
                 onClick={() => {
-                    toggleCreate();
-                    router.reload(window.location.pathname)
+                  toggleCreate();
+                  router.reload(window.location.pathname);
                 }}
               >
                 İptal
@@ -772,50 +717,6 @@ export default function UpdateCustomer({ customer }) {
             <div className="mt-2 px-7 py-3">
               <p className="text-sm text-gray-500">
                 Müşteri Başarıyla Güncellendi!
-              </p>
-            </div>
-            <div className="items-center px-4 py-3">
-              <button
-                id="ok-btn"
-                onClick={() => {
-                  toggleCreate();
-                  setSubmit(false);
-                  router.reload(window.location.pathname);
-                }}
-                className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
-              >
-                Tamam
-              </button>
-            </div>
-          </div>
-
-          <div
-            className={`${
-               isDel ? "visible scale-100" : "invisible scale-0 h-0"
-            } mt-3 text-center transition duration-500 ease-out`}
-          >
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-              <svg
-                className="h-6 w-6 text-green-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 13l4 4L19 7"
-                ></path>
-              </svg>
-            </div>
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
-              Başarılı!
-            </h3>
-            <div className="mt-2 px-7 py-3">
-              <p className="text-sm text-gray-500">
-                Müşteri Başarıyla Silindi!
               </p>
             </div>
             <div className="items-center px-4 py-3">
@@ -935,58 +836,6 @@ export default function UpdateCustomer({ customer }) {
                 className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >
                 Geri Dön
-              </button>
-            </div>
-          </div>
-
-          <div
-            className={`${
-              isDelete
-                ? "visible scale-100"
-                : "invisible scale-0 h-0"
-            } mt-3 text-center transition duration-500 ease-out`}
-          >
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-6 h-6 stroke-red-600"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-                />
-              </svg>
-            </div>
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
-              Uyarı !
-            </h3>
-            <div className="mt-2 px-7 py-3">
-              <p className="text-sm text-gray-500">
-                Müşteri Silinecektir!
-              </p>
-            </div>
-            <div className="items-center px-4 py-3 space-y-5">
-              <button
-                id="ok-btn"
-                onClick={() => {
-                  setIsDelete(false);
-                }}
-                className="px-4 py-2 bg-yellow-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-green-300"
-              >
-                Geri Dön
-              </button>
-
-              <button
-                id="ok-btn"
-                onClick={handleDelete}
-                className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-300"
-              >
-                Sil
               </button>
             </div>
           </div>

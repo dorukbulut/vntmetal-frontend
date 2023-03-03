@@ -1,6 +1,6 @@
 import { useState } from "react";
-import axios, { Axios } from "axios";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
+import CustomerService from "../../../../../../services/CustomerService/index.js";
 export default function CreateCustomer() {
   const [create, setCreate] = useState(false);
   const [submit, setSubmit] = useState(false);
@@ -92,7 +92,7 @@ export default function CreateCustomer() {
     }
 
     //account_title
-    if (check_fields["customer"]["account_title"]  === "") {
+    if (check_fields["customer"]["account_title"] === "") {
       isValid = false;
       errors["customer"]["account_title"] = "Cari Ünvan boş bırakalamaz !";
     } else {
@@ -100,7 +100,7 @@ export default function CreateCustomer() {
     }
 
     //account_related
-    if (check_fields["customer"]["account_related"]  === "") {
+    if (check_fields["customer"]["account_related"] === "") {
       isValid = false;
       errors["customer"]["account_related"] = "İlgili Kişi boş bırakalamaz !";
     } else {
@@ -113,27 +113,18 @@ export default function CreateCustomer() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (handleValidation()) {
-      try{
-        const res = await axios({ 
-          method : "post",
-          data: fields , 
-          url : `${process.env.NEXT_PUBLIC_BACKEND}/api/customer/create`,
-          withCredentials : true});
-          if(res.status === 200) {
-            setSubmit(true);
-            setIsvalid(true);
-          } 
-      }
-      catch(err) {
+      try {
+        const res = await CustomerService.createCustomer(fields);
+        if (res.status === 200) {
+          setSubmit(true);
+          setIsvalid(true);
+        }
+      } catch (err) {
         setSubmit(false);
         setCreateErr(true);
       }
-      
-
-      
-      
     } else {
       setIsvalid(false);
     }
@@ -175,7 +166,9 @@ export default function CreateCustomer() {
 
           <div
             className={`${
-              !submit && isValid && !createErr ? "visible scale-100" : "invisible scale-0 h-0"
+              !submit && isValid && !createErr
+                ? "visible scale-100"
+                : "invisible scale-0 h-0"
             } flex flex-col space-y-10`}
           >
             <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
@@ -358,7 +351,6 @@ export default function CreateCustomer() {
                       type=""
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       onChange={(e) =>
                         handleChange("customer", "account_KEP", e)
                       }
@@ -388,7 +380,6 @@ export default function CreateCustomer() {
                       type="number"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       onChange={(e) =>
                         handleChange("taxinfo", "tax_info_taxID", e)
                       }
@@ -406,7 +397,6 @@ export default function CreateCustomer() {
                       type="text"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       onChange={(e) =>
                         handleChange("taxinfo", "tax_info_Admin", e)
                       }
@@ -424,7 +414,6 @@ export default function CreateCustomer() {
                       type="number"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       onChange={(e) =>
                         handleChange("taxinfo", "tax_info_AdminID", e)
                       }
@@ -471,7 +460,6 @@ export default function CreateCustomer() {
                       type="number"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_bID", e)
                       }
@@ -488,7 +476,6 @@ export default function CreateCustomer() {
                       type="text"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_bName", e)
                       }
@@ -505,7 +492,6 @@ export default function CreateCustomer() {
                       type="number"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_dID", e)
                       }
@@ -523,7 +509,6 @@ export default function CreateCustomer() {
                       type="text"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_town", e)
                       }
@@ -541,7 +526,6 @@ export default function CreateCustomer() {
                       type="text"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_district", e)
                       }
@@ -576,7 +560,6 @@ export default function CreateCustomer() {
                       type="text"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_country", e)
                       }
@@ -594,7 +577,6 @@ export default function CreateCustomer() {
                       type="number"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_UAVT", e)
                       }
@@ -612,7 +594,6 @@ export default function CreateCustomer() {
                       type="number"
                       className=" pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                       placeholder=""
-                      
                       onChange={(e) =>
                         handleChange("adressinfo", "customer_postal", e)
                       }
@@ -677,7 +658,6 @@ export default function CreateCustomer() {
                   toggleCreate();
                   setSubmit(false);
                   router.reload(window.location.pathname);
-                  
                 }}
                 className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >
@@ -694,11 +674,20 @@ export default function CreateCustomer() {
             } mt-3 text-center transition duration-500 ease-out`}
           >
             <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-             
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 stroke-red-600">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-</svg>
-
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6 stroke-red-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                />
+              </svg>
             </div>
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               Eksik Bilgi girdiniz !
@@ -709,16 +698,20 @@ export default function CreateCustomer() {
               </p>
 
               <div className="text-justify font-poppins italic w-full space-y-1">
-              {!submit && !isValid ? Object.entries(currErrors).map(heading => {
-                return Object.entries(heading[1]).map((err, index) => {
-                  if(err[1] !==0) {
-                    return <p key={index} className="text-sm text-red-600">{err[1]}</p>
-                  }
-                })
-              }) : ""}
+                {!submit && !isValid
+                  ? Object.entries(currErrors).map((heading) => {
+                      return Object.entries(heading[1]).map((err, index) => {
+                        if (err[1] !== 0) {
+                          return (
+                            <p key={index} className="text-sm text-red-600">
+                              {err[1]}
+                            </p>
+                          );
+                        }
+                      });
+                    })
+                  : ""}
               </div>
-              
-              
             </div>
             <div className="items-center px-4 py-3">
               <button
@@ -726,7 +719,6 @@ export default function CreateCustomer() {
                 onClick={() => {
                   setSubmit(false);
                   setIsvalid(true);
-                  
                 }}
                 className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >
@@ -743,11 +735,20 @@ export default function CreateCustomer() {
             } mt-3 text-center transition duration-500 ease-out`}
           >
             <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-             
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 stroke-red-600">
-  <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-</svg>
-
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6 stroke-red-600"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                />
+              </svg>
             </div>
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               Böyle bir müşteri zaten mecvut !
@@ -755,7 +756,7 @@ export default function CreateCustomer() {
             <div className="mt-2 px-7 py-3">
               <p className="text-sm text-gray-500">
                 Lütfen formu kontrol edin!
-              </p>  
+              </p>
             </div>
             <div className="items-center px-4 py-3">
               <button
@@ -763,7 +764,6 @@ export default function CreateCustomer() {
                 onClick={() => {
                   setSubmit(false);
                   setCreateErr(false);
-                  
                 }}
                 className="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >
