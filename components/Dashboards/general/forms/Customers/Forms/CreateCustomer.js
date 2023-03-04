@@ -1,5 +1,6 @@
+"use client";
 import { useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import CustomerService from "../../../../../../services/CustomerService/index.js";
 export default function CreateCustomer() {
   const [create, setCreate] = useState(false);
@@ -657,7 +658,7 @@ export default function CreateCustomer() {
                 onClick={() => {
                   toggleCreate();
                   setSubmit(false);
-                  router.reload(window.location.pathname);
+                  router.refresh();
                 }}
                 className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >

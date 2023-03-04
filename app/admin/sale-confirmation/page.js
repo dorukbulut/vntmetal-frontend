@@ -1,22 +1,34 @@
-import Navbar from "../../components/Dashboards/general/ui/Navbar";
-import ProfileBar from "../../components/Dashboards/general/ui/ProfileBar";
-import BreadCrumbs from "../../components/Dashboards/general/ui/BreadCrumbs";
+"use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import CreateConfirmationForm from "../../components/Dashboards/general/forms/SaleConfirmation/Forms/CreateConfirmation";
-import UpdateConfirmationForm from "../../components/Dashboards/general/forms/SaleConfirmation/Forms/UpdateConfirmation";
+import CreateConfirmationForm from "../../../components/Dashboards/general/forms/SaleConfirmation/Forms/CreateConfirmation";
+import UpdateConfirmationForm from "../../../components/Dashboards/general/forms/SaleConfirmation/Forms/UpdateConfirmation";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import SaleConfirmationDisplay from "../../components/Dashboards/general/ui/SaleConfirmationDisplay";
-import OrderConfirmationService from "../../services/OrderConfirmationService";
-import CustomerService from "../../services/CustomerService";
+import SaleConfirmationDisplay from "../../../components/Dashboards/general/ui/SaleConfirmationDisplay";
+import OrderConfirmationService from "../../../services/OrderConfirmationService";
+import CustomerService from "../../../services/CustomerService";
 
-export default function QuotationMake({ customers, confirmations }) {
-  const router = useRouter();
+export default function QuotationMake() {
   const [filters, setFilters] = useState();
 
-  const [formItems, setformItems] = useState(confirmations.rows);
+  const [formItems, setformItems] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    OrderConfirmationService.getDefaultData().then((res) => {
+      if (res.status === 200) {
+        setformItems(res.data.rows);
+        setCount(res.data.count);
 
+        CustomerService.getAllCustomers().then((res) => {
+          console.log("res");
+          if (res.status === 200) {
+            setCustomers(res.data.customers);
+          }
+        });
+      }
+    });
+  }, []);
   const [page, setPage] = useState(1);
   const handlePageChange = (event, value) => {
     setPage(value);
@@ -68,14 +80,9 @@ export default function QuotationMake({ customers, confirmations }) {
         [field]: e.target.value,
       };
     });
-    console.log(filters);
-    router.replace(router.asPath);
   };
   return (
     <div className="">
-      <Navbar />
-      <ProfileBar />
-      <BreadCrumbs />
       <div className="flex flex-col p-10 lg:p-20 space-y-10">
         <h2 className=" font-medium lg:text-lg text-sm text-sky-700 tracking-widest font-poppins">
           Sipariş Onay Formu Hazırlama
@@ -243,7 +250,7 @@ export default function QuotationMake({ customers, confirmations }) {
         {formItems.length !== 0 ? (
           <Stack spacing={2}>
             <Pagination
-              count={Math.ceil(confirmations.count / 6)}
+              count={Math.ceil(count / 6)}
               page={page}
               onChange={handlePageChange}
             />

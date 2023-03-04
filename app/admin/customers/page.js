@@ -1,19 +1,24 @@
-import Navbar from "../../components/Dashboards/general/ui/Navbar";
-import ProfileBar from "../../components/Dashboards/general/ui/ProfileBar";
-import BreadCrumbs from "../../components/Dashboards/general/ui/BreadCrumbs";
-import CreateCustomer from "../../components/Dashboards/general/forms/Customers/Forms/CreateCustomer";
-import UpdateCustomer from "../../components/Dashboards/general/forms/Customers/Forms/UpdateCustomer";
+"use client";
+import CreateCustomer from "../../../components/Dashboards/general/forms/Customers/Forms/CreateCustomer";
+import UpdateCustomer from "../../../components/Dashboards/general/forms/Customers/Forms/UpdateCustomer";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import CustomerService from "../../services/CustomerService/index.js";
+import CustomerService from "../../../services/CustomerService/index.js";
 
-export default function CustomersPage({ customerData }) {
-  const router = useRouter();
+export default function CustomersPage() {
   const PER_PAGE = 3;
   const [filters, setFilters] = useState();
-  const [customers, setCustomers] = useState(customerData.rows);
+  const [customers, setCustomers] = useState([]);
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    CustomerService.getDefaultData().then((res) => {
+      if (res.status === 200) {
+        setCustomers(res.data.rows);
+        setCount(res.data.count);
+      }
+    });
+  }, []);
 
   const [page, setPage] = useState(1);
   const handlePageChange = (event, value) => {
@@ -63,14 +68,9 @@ export default function CustomersPage({ customerData }) {
         [field]: e.target.value,
       };
     });
-
-    router.replace(router.asPath);
   };
   return (
     <div className="">
-      <Navbar />
-      <ProfileBar />
-      <BreadCrumbs />
       <div className="flex flex-col p-10 lg:p-20 space-y-10">
         <h2 className=" font-medium lg:text-lg text-sm text-sky-700 tracking-widest font-poppins">
           Müşterilerim
@@ -183,7 +183,7 @@ export default function CustomersPage({ customerData }) {
         {customers.length !== 0 ? (
           <Stack spacing={2}>
             <Pagination
-              count={Math.ceil(customerData.count / 6)}
+              count={Math.ceil(count / 6)}
               page={page}
               onChange={handlePageChange}
             />
@@ -194,25 +194,4 @@ export default function CustomersPage({ customerData }) {
       </div>
     </div>
   );
-}
-
-export async function getServerSideProps(context) {
-  try {
-    const res = await CustomerService.getDefaultData();
-    console.log(res);
-    if (res.status === 200) {
-      return {
-        props: {
-          customerData: res.data,
-        },
-      };
-    }
-  } catch (err) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/login",
-      },
-    };
-  }
 }

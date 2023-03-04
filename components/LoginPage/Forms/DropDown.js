@@ -1,17 +1,17 @@
-import { Fragment, useState } from 'react'
-import { Menu, Transition } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
+"use client";
+import { Fragment, useState } from "react";
+import { Menu, Transition } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 export default function DropDown() {
   const [curr, setCurr] = useState("Personel");
   const [types, setTypes] = useState({
-    all : ["Yönetim", "Satış", "Muhasebe", "Çalışan"]
+    all: ["Yönetim", "Satış", "Muhasebe", "Çalışan"],
   });
-
 
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -33,29 +33,27 @@ export default function DropDown() {
       >
         <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
-
-            {types.all.map((type,i) => {
-              return(
+            {types.all.map((type, i) => {
+              return (
                 <Menu.Item key={i}>
-                {({ active }) => (
-                  <a
-                    href="#"
-                    className={classNames(
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block px-4 py-2 text-sm'
-                    )}
-                    
-                    onClick={() => setCurr(type)}
-                  >
+                  {({ active }) => (
+                    <a
+                      href="#"
+                      className={classNames(
+                        active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                        "block px-4 py-2 text-sm"
+                      )}
+                      onClick={() => setCurr(type)}
+                    >
                       {type}
-                  </a>
-                )}
-              </Menu.Item>
+                    </a>
+                  )}
+                </Menu.Item>
               );
             })}
           </div>
         </Menu.Items>
       </Transition>
     </Menu>
-  )
+  );
 }

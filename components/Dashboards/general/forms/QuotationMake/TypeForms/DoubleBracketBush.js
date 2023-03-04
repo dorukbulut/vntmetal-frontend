@@ -1,3 +1,4 @@
+"use client";
 import ModalImage from "../../../ui/ModalImage";
 import { useEffect, useState } from "react";
 import Alert from "./Alert";
@@ -18,52 +19,66 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
 
   const [fields, setFields] = useState({
     doublebracket_bush: {
-      bigger_diameter:  "doublebracket_bush" in prevValues && prevValues.doublebracket_bush !== null
-      ? "bigger_diameter" in prevValues.doublebracket_bush
-        ? prevValues.doublebracket_bush.bigger_diameter
-        : ""
-      : "",
-      inner_diameter:  "doublebracket_bush" in prevValues && prevValues.doublebracket_bush !== null
-      ? "inner_diameter" in prevValues.doublebracket_bush
-        ? prevValues.doublebracket_bush.inner_diameter
-        : ""
-      : "",
-      body_diameter:  "doublebracket_bush" in prevValues && prevValues.doublebracket_bush !== null
-      ? "body_diameter" in prevValues.doublebracket_bush
-        ? prevValues.doublebracket_bush.body_diameter
-        : ""
-      : "",
-      bracket_l1: "doublebracket_bush" in prevValues && prevValues.doublebracket_bush !== null
-      ? "bracket_l1" in prevValues.doublebracket_bush
-        ? prevValues.doublebracket_bush.bracket_l1
-        : ""
-      : "",
-      bracket_l2: "doublebracket_bush" in prevValues && prevValues.doublebracket_bush !== null
-      ? "bracket_l2" in prevValues.doublebracket_bush
-        ? prevValues.doublebracket_bush.bracket_l2
-        : ""
-      : "",
-      bracket_l3: "doublebracket_bush" in prevValues && prevValues.doublebracket_bush !== null
-      ? "bracket_l3" in prevValues.doublebracket_bush
-        ? prevValues.doublebracket_bush.bracket_l3
-        : ""
-      : "",
-      bracket_full: "doublebracket_bush" in prevValues && prevValues.doublebracket_bush !== null
-      ? "bracket_full" in prevValues.doublebracket_bush
-        ? prevValues.doublebracket_bush.bracket_full
-        : ""
-      : "",
+      bigger_diameter:
+        "doublebracket_bush" in prevValues &&
+        prevValues.doublebracket_bush !== null
+          ? "bigger_diameter" in prevValues.doublebracket_bush
+            ? prevValues.doublebracket_bush.bigger_diameter
+            : ""
+          : "",
+      inner_diameter:
+        "doublebracket_bush" in prevValues &&
+        prevValues.doublebracket_bush !== null
+          ? "inner_diameter" in prevValues.doublebracket_bush
+            ? prevValues.doublebracket_bush.inner_diameter
+            : ""
+          : "",
+      body_diameter:
+        "doublebracket_bush" in prevValues &&
+        prevValues.doublebracket_bush !== null
+          ? "body_diameter" in prevValues.doublebracket_bush
+            ? prevValues.doublebracket_bush.body_diameter
+            : ""
+          : "",
+      bracket_l1:
+        "doublebracket_bush" in prevValues &&
+        prevValues.doublebracket_bush !== null
+          ? "bracket_l1" in prevValues.doublebracket_bush
+            ? prevValues.doublebracket_bush.bracket_l1
+            : ""
+          : "",
+      bracket_l2:
+        "doublebracket_bush" in prevValues &&
+        prevValues.doublebracket_bush !== null
+          ? "bracket_l2" in prevValues.doublebracket_bush
+            ? prevValues.doublebracket_bush.bracket_l2
+            : ""
+          : "",
+      bracket_l3:
+        "doublebracket_bush" in prevValues &&
+        prevValues.doublebracket_bush !== null
+          ? "bracket_l3" in prevValues.doublebracket_bush
+            ? prevValues.doublebracket_bush.bracket_l3
+            : ""
+          : "",
+      bracket_full:
+        "doublebracket_bush" in prevValues &&
+        prevValues.doublebracket_bush !== null
+          ? "bracket_full" in prevValues.doublebracket_bush
+            ? prevValues.doublebracket_bush.bracket_full
+            : ""
+          : "",
     },
   });
 
   const [calculated, setCalculated] = useState({
-    calcRaw: "calcRaw" in prevValues ? prevValues.calcRaw :"",
+    calcRaw: "calcRaw" in prevValues ? prevValues.calcRaw : "",
   });
 
   const [warning, setWarning] = useState({
-    message : "",
-    validity : false,
-    clicked : []
+    message: "",
+    validity: false,
+    clicked: [],
   });
 
   //handlers
@@ -91,7 +106,6 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
       isValid = false;
     }
     if (check_fields["doublebracket_bush"]["bracket_l1"] === "") {
-      
       isValid = false;
     }
     if (check_fields["doublebracket_bush"]["bracket_l2"] === "") {
@@ -106,25 +120,24 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
     return isValid;
   };
 
-
   const toggleWarning = (e) => {
-    if(!warning.clicked.includes(e.target.id)){
+    if (!warning.clicked.includes(e.target.id)) {
       setWarning((old) => {
-        let new_arr = old.clicked
-        new_arr.push(e.target.id)
+        let new_arr = old.clicked;
+        new_arr.push(e.target.id);
         return {
-          message : "Paylı/Paysız ölçü girişine dikkat ediniz",
-          validity : true,
-          clicked : new_arr
-        }
+          message: "Paylı/Paysız ölçü girişine dikkat ediniz",
+          validity: true,
+          clicked: new_arr,
+        };
       });
     }
-  }
+  };
 
   //hooks
 
   useEffect(() => {
-    console.log("entered calc raws")
+    console.log("entered calc raws");
     let numbers = { ...fields.doublebracket_bush };
     if (true) {
       const calc = calcWeigth(
@@ -162,16 +175,16 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
   }, [calculated.calcRaw, fields]);
 
   useEffect(() => {
-    if(calculated.calcRaw < 1) {
+    if (calculated.calcRaw < 1) {
       setWarning((old) => {
         return {
-          message : "1 KG. Altı Ürün",
-          validity : true,
-          clicked : old.clicked
-        }
-      })
+          message: "1 KG. Altı Ürün",
+          validity: true,
+          clicked: old.clicked,
+        };
+      });
     }
-  }, [calculated.calcRaw])
+  }, [calculated.calcRaw]);
 
   return (
     <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center ">
@@ -347,7 +360,11 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
         <ModalImage image={"/doublebracket.png"} />
       </div>
 
-      <Alert setWarning={setWarning} message={warning.message} renderOpen={warning.validity} />
+      <Alert
+        setWarning={setWarning}
+        message={warning.message}
+        renderOpen={warning.validity}
+      />
     </div>
   );
 }

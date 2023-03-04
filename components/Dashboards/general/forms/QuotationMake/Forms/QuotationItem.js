@@ -1,3 +1,4 @@
+"use client";
 import Dropdown from "../../Common/Dropdown";
 import React, { useEffect, useState } from "react";
 import InputLabel from "@mui/material/InputLabel";

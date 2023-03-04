@@ -1,32 +1,43 @@
+"use client";
 import Dropdown from "../../Common/Dropdown";
 import { useRef, useEffect, useState } from "react";
 
-
-
-export default function CalculateRaw({ CUSTOMER, TYPE,ANALYZE, getCalcRaw, prevValues, type}) {
+export default function CalculateRaw({
+  CUSTOMER,
+  TYPE,
+  ANALYZE,
+  getCalcRaw,
+  prevValues,
+  type,
+}) {
   //states
   const [fields, setFields] = useState({
     calc_raw: {
-      account_id: "account_id" in prevValues.values ? prevValues.values.account_id : "" ,
-      analyze_Name: "analyze_Name" in prevValues.values ? prevValues.values.analyze_Name : "" ,
+      account_id:
+        "account_id" in prevValues.values ? prevValues.values.account_id : "",
+      analyze_Name:
+        "analyze_Name" in prevValues.values
+          ? prevValues.values.analyze_Name
+          : "",
       LME: "LME" in prevValues.values ? prevValues.values.LME : "",
       TINP: "TINP" in prevValues.values ? prevValues.values.TINP : "",
       usd: "usd" in prevValues.values ? prevValues.values.usd : "",
       euro: "euro" in prevValues.values ? prevValues.values.euro : "",
       type: "type" in prevValues.values ? prevValues.values.type : "",
-      workmanship: "workmanship" in prevValues.values ? prevValues.values.workmanship : "",
+      workmanship:
+        "workmanship" in prevValues.values ? prevValues.values.workmanship : "",
     },
   });
 
   const [calculated, setCalculated] = useState({
     COPPER: "COPPER" in prevValues.values ? prevValues.values.COPPER : "",
     TIN: "TIN" in prevValues.values ? prevValues.values.TIN : "",
-    priceCopper: "priceCopper" in prevValues.values ? prevValues.values.priceCopper : "",
+    priceCopper:
+      "priceCopper" in prevValues.values ? prevValues.values.priceCopper : "",
     priceTin: "priceTin" in prevValues.values ? prevValues.values.priceTin : "",
     totalRaw: "totalRaw" in prevValues.values ? prevValues.values.totalRaw : "",
     kgPrice: "kgPrice" in prevValues.values ? prevValues.values.kgPrice : "",
   });
-
 
   //hooks
   // react hook for analyse
@@ -46,7 +57,7 @@ export default function CalculateRaw({ CUSTOMER, TYPE,ANALYZE, getCalcRaw, prevV
     }
   }, [fields.calc_raw.analyze_Name]);
 
-  //for Copper Prices 
+  //for Copper Prices
   useEffect(() => {
     setCalculated((old) => {
       let inter =
@@ -78,10 +89,11 @@ export default function CalculateRaw({ CUSTOMER, TYPE,ANALYZE, getCalcRaw, prevV
 
   useEffect(() => {
     setCalculated((old) => {
-      
       return {
         ...old,
-        totalRaw: (parseFloat(old.priceCopper) + parseFloat(old.priceTin)).toFixed(2),
+        totalRaw: (
+          parseFloat(old.priceCopper) + parseFloat(old.priceTin)
+        ).toFixed(2),
       };
     });
   }, [calculated.priceCopper, calculated.priceTin]);
@@ -90,10 +102,10 @@ export default function CalculateRaw({ CUSTOMER, TYPE,ANALYZE, getCalcRaw, prevV
 
   useEffect(() => {
     setCalculated((old) => {
-      
       return {
         ...old,
-        kgPrice: (parseFloat(fields.calc_raw.workmanship) + parseFloat(old.totalRaw)
+        kgPrice: (
+          parseFloat(fields.calc_raw.workmanship) + parseFloat(old.totalRaw)
         ).toFixed(2),
       };
     });
@@ -101,15 +113,10 @@ export default function CalculateRaw({ CUSTOMER, TYPE,ANALYZE, getCalcRaw, prevV
 
   // getValues hook with lmeCopper, lmeTin, usd, euro, kgPrice
   useEffect(() => {
-    
-      getCalcRaw(handleValidation(), {
-
-        ...fields.calc_raw,
-        ...calculated,
-        
-      });
-    
-    
+    getCalcRaw(handleValidation(), {
+      ...fields.calc_raw,
+      ...calculated,
+    });
   }, [fields, calculated]);
 
   //handlers
@@ -173,12 +180,16 @@ export default function CalculateRaw({ CUSTOMER, TYPE,ANALYZE, getCalcRaw, prevV
   };
   return (
     <div className="mt-10">
-      {type === "update" ? <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-yellow-600">
-        Teklifi Güncelle
-      </p> : <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
-        Yeni Teklif
-      </p> }
-      
+      {type === "update" ? (
+        <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-yellow-600">
+          Teklifi Güncelle
+        </p>
+      ) : (
+        <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
+          Yeni Teklif
+        </p>
+      )}
+
       <form className="grid grid-cols-1 space-y-5 lg:grid lg:place-items-center ">
         {/*Customer info*/}
         <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">

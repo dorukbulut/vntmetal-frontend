@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import Table from "../../Table";
 import EditableCell from "../../Table/EditableCell.js/index.js";

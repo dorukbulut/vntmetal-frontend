@@ -1,11 +1,14 @@
+"use client";
 import { useEffect, useState } from "react";
 
-export default function Alert({message, renderOpen, setWarning}){
+export default function Alert({ message, renderOpen, setWarning }) {
   return (
     <div
       id="popup-modal"
       tabIndex="-1"
-      className={`fixed  inset-0 bg-gray-600 bg-opacity-40  right-0 z-50 ${renderOpen ? "" : "hidden"} p-4 `}
+      className={`fixed  inset-0 bg-gray-600 bg-opacity-40  right-0 z-50 ${
+        renderOpen ? "" : "hidden"
+      } p-4 `}
     >
       <div className="relative top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-full h-full max-w-md md:h-auto">
         <div className="relative bg-white rounded-lg shadow ">
@@ -26,18 +29,20 @@ export default function Alert({message, renderOpen, setWarning}){
               ></path>
             </svg>
             <h3 className="animate-pulse mb-5 text-xl font-normal text-red-500 ">
-                UYARI : {message} !
+              UYARI : {message} !
             </h3>
             <button
               data-modal-hide="popup-modal"
               type="button"
-              onClick={() => setWarning((old) => {
-                return {
-                  message : "",
-                  clicked : old.clicked,
-                  validity : false,
-                }
-              })}
+              onClick={() =>
+                setWarning((old) => {
+                  return {
+                    message: "",
+                    clicked: old.clicked,
+                    validity: false,
+                  };
+                })
+              }
               className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
             >
               TAMAM

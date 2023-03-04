@@ -1,3 +1,4 @@
+"use client";
 import ModalImage from "../../../ui/ModalImage";
 import { useEffect, useState } from "react";
 import Alert from "./Alert";

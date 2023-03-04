@@ -1,5 +1,6 @@
+"use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import CustomerService from "../../../../../../services/CustomerService";
 
 export default function UpdateCustomer({ customer }) {
@@ -195,7 +196,7 @@ export default function UpdateCustomer({ customer }) {
             className="w-6 h-6 relative top-0 left-0 hover:cursor-pointer"
             onClick={() => {
               toggleCreate();
-              router.reload(window.location.pathname);
+              router.refresh();
             }}
           >
             <path
@@ -682,7 +683,7 @@ export default function UpdateCustomer({ customer }) {
                 type="button"
                 onClick={() => {
                   toggleCreate();
-                  router.reload(window.location.pathname);
+                  router.refresh();
                 }}
               >
                 İptal
@@ -725,7 +726,7 @@ export default function UpdateCustomer({ customer }) {
                 onClick={() => {
                   toggleCreate();
                   setSubmit(false);
-                  router.reload(window.location.pathname);
+                  router.refresh();
                 }}
                 className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >

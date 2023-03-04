@@ -1,5 +1,6 @@
+"use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { IMAGE_MAPPER, ITEM_TYPES } from "../../../../utils/mappers";
 import ModalImage from "./ModalImage";
 import WorkOrderService from "../../../../services/WorkOrderService";
@@ -46,7 +47,7 @@ export default function WorkOrderDisplay({ WorkOrderID }) {
             className="w-6 h-6 relative top-0 left-0 hover:cursor-pointer"
             onClick={() => {
               toggleCreate();
-              router.reload(window.location.pathname);
+              router.refresh();
             }}
           >
             <path

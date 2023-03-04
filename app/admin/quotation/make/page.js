@@ -1,23 +1,28 @@
-import Navbar from "../../../components/Dashboards/general/ui/Navbar";
-import ProfileBar from "../../../components/Dashboards/general/ui/ProfileBar";
-import BreadCrumbs from "../../../components/Dashboards/general/ui/BreadCrumbs";
-import QuotationItemService from "../../../services/QuotationService/QuotationItemService";
-import CreateMake from "../../../components/Dashboards/general/forms/QuotationMake/Forms/CreateaMake";
-import CreateAnalyze from "../../../components/Dashboards/general/forms/QuotationMake/Forms/CreateAnalyze";
+"use client";
+import QuotationItemService from "../../../../services/QuotationService/QuotationItemService";
+import CreateMake from "../../../../components/Dashboards/general/forms/QuotationMake/Forms/CreateaMake";
+import CreateAnalyze from "../../../../components/Dashboards/general/forms/QuotationMake/Forms/CreateAnalyze";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import UpdateAnalyze from "../../../components/Dashboards/general/forms/QuotationMake/Forms/UpdateAnalyze";
-import { ITEM_TYPES } from "../../../utils/mappers";
+import UpdateAnalyze from "../../../../components/Dashboards/general/forms/QuotationMake/Forms/UpdateAnalyze";
+import { ITEM_TYPES } from "../../../../utils/mappers";
 
 export default function QuotationMake({ items }) {
   //
-  const router = useRouter();
+
   const [filters, setFilters] = useState();
 
-  const [quotItems, setquotItems] = useState(items.rows);
-
+  const [quotItems, setquotItems] = useState([]);
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    QuotationItemService.getDefaultData().then((res) => {
+      if (res.status === 200) {
+        setquotItems(res.data.rows);
+        setCount(res.data.count);
+      }
+    });
+  }, []);
   const [page, setPage] = useState(1);
   const handlePageChange = (event, value) => {
     setPage(value);
@@ -63,14 +68,9 @@ export default function QuotationMake({ items }) {
         [field]: e.target.value,
       };
     });
-    console.log(filters);
-    router.replace(router.asPath);
   };
   return (
     <div className="">
-      <Navbar />
-      <ProfileBar />
-      <BreadCrumbs />
       <div className="flex flex-col p-10 lg:p-20 space-y-10">
         <h2 className=" font-medium lg:text-lg text-sm text-sky-700 tracking-widest font-poppins">
           Teklif Hazırlama
@@ -189,7 +189,7 @@ export default function QuotationMake({ items }) {
         {quotItems.length !== 0 ? (
           <Stack spacing={2}>
             <Pagination
-              count={Math.ceil(items.count / 6)}
+              count={Math.ceil(count / 6)}
               page={page}
               onChange={handlePageChange}
             />
@@ -200,25 +200,4 @@ export default function QuotationMake({ items }) {
       </div>
     </div>
   );
-}
-
-export async function getServerSideProps(context) {
-  try {
-    const res = await QuotationItemService.getDefaultData();
-    if (res.status === 200) {
-      return {
-        props: {
-          items: res.data,
-        },
-      };
-    }
-  } catch (err) {
-    console.log(err);
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/login",
-      },
-    };
-  }
 }

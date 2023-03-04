@@ -1,27 +1,40 @@
-import Navbar from "../../../components/Dashboards/general/ui/Navbar";
-import ProfileBar from "../../../components/Dashboards/general/ui/ProfileBar";
-import BreadCrumbs from "../../../components/Dashboards/general/ui/BreadCrumbs";
+"use client";
 import CustomerService from "../../../services/CustomerService/index.js";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import CreateQuotationForm from "../../../components/Dashboards/general/forms/QuotationForms/Forms/CreateQuotationForm";
-import UpdateQuotationForm from "../../../components/Dashboards/general/forms/QuotationForms/Forms/UpdateQuotationForm";
-import QuotationFormDisplay from "../../../components/Dashboards/general/ui/QuotationFormDisplay";
-import QuotationFormService from "../../../services/QuotationService/QuotationFormService";
-export default function QuotationMake({ customers, forms }) {
-  const router = useRouter();
+import { useState, useEffect } from "react";
+import CreateWorkOrder from "../../../components/Dashboards/general/forms/WorkOrder/Forms/CreateWorkOrder";
+import UpdateWorkOrder from "../../../components/Dashboards/general/forms/WorkOrder/Forms/UpdateWorkOrder";
+import WorkOrderDisplay from "../../../components/Dashboards/general/ui/WorkOrderDisplay";
+import WorkOrderService from "../../../services/WorkOrderService";
+export default function QuotationMake() {
   const [filters, setFilters] = useState();
 
-  const [formItems, setformItems] = useState(forms.rows);
+  const [formItems, setformItems] = useState([]);
+  const [customers, setCustomers] = useState([]);
+  const [count, setCount] = useState(0);
 
+  useEffect(() => {
+    WorkOrderService.getDefaultData().then((res) => {
+      if (res.status === 200) {
+        setformItems(res.data.rows);
+        setCount(res.data.count);
+
+        CustomerService.getAllCustomers().then((res) => {
+          console.log("res");
+          if (res.status === 200) {
+            setCustomers(res.data.customers);
+          }
+        });
+      }
+    });
+  }, []);
   const [page, setPage] = useState(1);
   const handlePageChange = (event, value) => {
     setPage(value);
   };
   useEffect(() => {
-    QuotationFormService.getPage(parseInt(page - 1))
+    WorkOrderService.getPage(parseInt(page) - 1)
       .then((res) => {
         if (res.status === 200) {
           setformItems(res.data.rows);
@@ -37,20 +50,21 @@ export default function QuotationMake({ customers, forms }) {
           filters.account_id !== undefined && filters.account_id !== ""
             ? filters.account_id
             : undefined,
-        reference:
-          filters.reference !== undefined && filters.reference !== ""
-            ? filters.reference.replaceAll(" ", "+")
+        workReference:
+          filters.workReference !== undefined && filters.workReference !== ""
+            ? filters.workReference.replaceAll(" ", "+")
             : undefined,
         date:
           filters.date !== undefined && filters.date !== ""
             ? filters.date
             : undefined,
-        customer:
-          filters.customer !== undefined && filters.customer !== ""
-            ? filters.customer.replaceAll(" ", "+")
+        saleReference:
+          filters.saleReference !== undefined && filters.saleReference !== ""
+            ? filters.saleReference.replaceAll(" ", "+")
             : undefined,
       };
-      QuotationFormService.getFilteredData(params)
+
+      WorkOrderService.getFilteredData(params)
         .then((res) => {
           if (res.status === 200) {
             setformItems(res.data.rows);
@@ -67,39 +81,47 @@ export default function QuotationMake({ customers, forms }) {
         [field]: e.target.value,
       };
     });
-    router.replace(router.asPath);
   };
   return (
     <div className="">
-      <Navbar />
-      <ProfileBar />
-      <BreadCrumbs />
       <div className="flex flex-col p-10 lg:p-20 space-y-10">
         <h2 className=" font-medium lg:text-lg text-sm text-sky-700 tracking-widest font-poppins">
-          Teklif Formu Hazırlama
+          İş Emri Hazırlama
         </h2>
         <div className="relative flex overflow-x-auto shadow-md sm:rounded-lg p-5 space-x-5 items-center">
-          <CreateQuotationForm
-            key={`${9012}+${new Date().getTime()}+qr2`}
-            customers={customers}
-          />
+          {/*Create Button*/}
+          <CreateWorkOrder key={12002} customers={customers} />
           <p className="text-sky-700 italic font-poppins tracking-widest">
             Filtrele
           </p>
           <div className="flex space-x-20">
             <div className="flex flex-col space-y-3">
               <p className="text-xs font-poppins font-medium italic text-sky-700">
-                Form Referans Numarası
+                İş Emri Referans Numarası
               </p>
               <div className="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease-soft">
                 <input
                   type="text"
                   className="pl-9 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
                   placeholder="Ürün Ara..."
-                  onChange={(e) => handleFilters("reference", e)}
+                  onChange={(e) => handleFilters("workReference", e)}
                 />
               </div>
             </div>
+            <div className="flex flex-col space-y-3">
+              <p className="text-xs font-poppins font-medium italic text-sky-700">
+                Sipariş Referans Numarası
+              </p>
+              <div className="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease-soft">
+                <input
+                  type="text"
+                  className="pl-9 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
+                  placeholder="Ürün Ara..."
+                  onChange={(e) => handleFilters("saleReference", e)}
+                />
+              </div>
+            </div>
+
             <div className="flex flex-col space-y-3">
               <p className="text-xs font-poppins font-medium italic text-sky-700">
                 Cari Kod
@@ -113,21 +135,6 @@ export default function QuotationMake({ customers, forms }) {
                 />
               </div>
             </div>
-
-            <div className="flex flex-col space-y-3">
-              <p className="text-xs font-poppins font-medium italic text-sky-700">
-                Müşteri Referans Numarası
-              </p>
-              <div className="relative flex flex-wrap items-stretch w-full transition-all rounded-lg ease-soft">
-                <input
-                  type="text"
-                  className="pl-9 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                  placeholder="Cari Kod Ara..."
-                  onChange={(e) => handleFilters("customer", e)}
-                />
-              </div>
-            </div>
-
             <div className="flex flex-col space-y-3">
               <p className="text-xs font-poppins font-medium italic text-sky-700">
                 Tarih
@@ -151,13 +158,13 @@ export default function QuotationMake({ customers, forms }) {
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 ">
                   <tr>
                     <th scope="col" className="px-6 py-3">
-                      Form Referans Numarası
+                      İş Emri Referans Numarası
+                    </th>
+                    <th scope="col" className="px-6 py-3">
+                      Sipariş Referans Numarası
                     </th>
                     <th scope="col" className="px-6 py-3">
                       CARİ KOD
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Müşteri Referans Numarası
                     </th>
                     <th scope="col" className="px-6 py-3">
                       Tarih
@@ -179,42 +186,49 @@ export default function QuotationMake({ customers, forms }) {
                 <tbody>
                   {formItems.map((item, index) => {
                     return (
-                      <tr
-                        key={index}
-                        className="bg-white border-b  hover:bg-gray-50 "
-                      >
+                      <tr key={index} className="bg-white border-b ">
                         <th
                           scope="row"
-                          className="px-6 py-4 font-medium text-gray-900  whitespace-nowrap"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                         >
                           {item.reference}
                         </th>
-                        <td className="px-6 py-4">{item.Customer_ID}</td>
-                        <td className="px-6 py-4">{item.customerInquiryNum}</td>
                         <td className="px-6 py-4">
-                          {`${item.day}-${item.month}-${item.year}`}
+                          {item.sale_confirmation.reference}
                         </td>
-                        <td className="px-6 py-4">{item.revision}</td>
+
+                        <td className="px-6 py-4">{item.Customer_ID}</td>
+                        <td className="px-6 py-4">
+                          {item.day + "-" + item.month + "-" + item.year}
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          {item.revision}
+                        </td>
                         <td className="px-6 py-4 text-right">
                           <button
-                            id={item.quotation_ID}
-                            onClick={QuotationFormService.generateForm}
+                            id={
+                              item.workorder_ID +
+                              "," +
+                              item.quotationItem.itemType
+                            }
+                            onClick={WorkOrderService.generateForm}
                             className="hover:underline"
                           >
                             İndir
                           </button>
                         </td>
+
                         <td className="px-6 py-4 text-right">
-                          <QuotationFormDisplay
-                            key={`${index}+${new Date().getTime()}qr`}
-                            quotID={item.quotation_ID}
+                          <WorkOrderDisplay
+                            key={`${index + 3}+${new Date().getTime()}`}
+                            WorkOrderID={item.workorder_ID}
                           />
                         </td>
+
                         <td className="px-6 py-4 text-right">
-                          <UpdateQuotationForm
-                            key={`${index}+${new Date().getTime()}`}
-                            customerID={item.Customer_ID}
-                            quotID={item.quotation_ID}
+                          <UpdateWorkOrder
+                            key={`${index + 4}+${new Date().getTime()}`}
+                            Workitem={item}
                           />
                         </td>
                       </tr>
@@ -225,7 +239,7 @@ export default function QuotationMake({ customers, forms }) {
             ) : (
               <div className="grid place-items-center p-5">
                 <p className="italic font-poppins tracking-widest text-sm text-sky-700">
-                  Form Bulunamadı
+                  İş Emri Bulunamadı
                 </p>
               </div>
             )}
@@ -236,7 +250,7 @@ export default function QuotationMake({ customers, forms }) {
         {formItems.length !== 0 ? (
           <Stack spacing={2}>
             <Pagination
-              count={Math.ceil(forms.count / 6)}
+              count={Math.ceil(count / 6)}
               page={page}
               onChange={handlePageChange}
             />
@@ -247,26 +261,4 @@ export default function QuotationMake({ customers, forms }) {
       </div>
     </div>
   );
-}
-
-export async function getServerSideProps(context) {
-  try {
-    const res2 = await CustomerService.getAllCustomers();
-    const r3 = await QuotationFormService.getDefaultData();
-    if (res2.status === 200 && r3.status === 200) {
-      return {
-        props: {
-          customers: res2.data.customers,
-          forms: r3.data,
-        },
-      };
-    }
-  } catch (err) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/login",
-      },
-    };
-  }
 }

@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { useRouter } from "next/router";
