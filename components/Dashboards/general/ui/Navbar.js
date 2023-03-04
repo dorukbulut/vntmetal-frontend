@@ -7,6 +7,7 @@ export default function Navbar() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [sales, setSales] = useState(false);
+  const [manifac, setManifac] = useState(false);
   const [quotation, setQuotation] = useState(false);
 
   const toggleQuotation = () => {
@@ -14,6 +15,10 @@ export default function Navbar() {
   };
   const toggleSales = () => {
     setSales(!sales);
+  };
+
+  const toggleManifac = () => {
+    setManifac(!manifac);
   };
   const toggleNav = () => {
     setIsOpen(!isOpen);
@@ -175,6 +180,63 @@ export default function Navbar() {
               <Link href={"/admin/work-order"} passHref>
                 <p className="hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md">
                   Iş Emirlerim
+                </p>
+              </Link>
+            </div>
+          </div>
+
+          {/*Production navigation*/}
+          <div className="flex flex-col items-end pb-2 space-y-2">
+            <div className="flex items-center space-x-5">
+              <svg
+                fill="none"
+                viewBox="0 0 28 28"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="stroke-sky-700 w-6 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M13 0C5.826 0 0 5.826 0 13s5.826 13 13 13 13-5.826 13-13S20.174 0 13 0zm0 1c6.633 0 12 5.367 12 12s-5.367 12-12 12S1 19.633 1 13 6.367 1 13 1zM7 5v6.623l-1 .582V21h15V8.027l-3.977 2.97v-3l-4.021 3V8.122L10 9.873V5H7zm1 1h1v4.457l-1 .582V6zm4.002 3.865v3.125l4.021-3v3L20 10.021V20H7v-7.219l5.002-2.916zM8 15.995v3h3v-3H8zm4 0v3h3v-3h-3zm4 0v3h3v-3h-3zm-7 1h1v1H9v-1zm4 0h1v1h-1v-1zm4 0h1v1h-1v-1z"
+                />
+              </svg>
+              <p
+                onClick={toggleManifac}
+                className="hover:cursor-pointer font-poppins text-xs text-sky-700 tracking-widest"
+              >
+                Üretim Modülü
+              </p>
+              <ChevronDownIcon
+                onClick={toggleManifac}
+                className={`-mr-1 ml-2 h-5 w-5 ${
+                  manifac ? "rotate-180" : ""
+                } ease-in-out duration-300 hover:cursor-pointer`}
+                aria-hidden="true"
+              />
+            </div>
+
+            <div
+              className={`flex flex-col space-y-4 tracking-widest font-poppins lg:text-xs text-xs text-sky-600 ${
+                manifac
+                  ? "visible  scale-100 border-solid border-l-2"
+                  : "invisible transform scale-0 h-0"
+              } transition duration-300 ease-in-out origin-top`}
+            >
+              <Link href={"/admin/customers"} passHref>
+                <p className=" hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md">
+                  Stok Bilgileri
+                </p>
+              </Link>
+
+              <Link href={"/admin/sale-confirmation"} passHref>
+                <p className="hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md">
+                  Ocak ve Dökümhane
+                </p>
+              </Link>
+              <Link href={"/admin/work-order"} passHref>
+                <p className="hover:bg-gray-200 hover:cursor-pointer p-2 hover:rounded-md">
+                  Atölye
                 </p>
               </Link>
             </div>
