@@ -32,12 +32,6 @@ class CustomerService {
 
 export default new CustomerService();
 
-// TODO WorkOrder Service
-// TODO SaleConfirmation Service
-// TODO Refactor All Pages anc Component Code to Services
-// TODO Upgrade Create app folder format with loading and layout
-// TODO QuicK link Component
-// TODO Backend and frontend error handling class
-// TODO Optimize Frontend Request quality.
-// TODO Optimize Backend Code.
-// TODO Optimize frontend Code.
+// TODO : Optimize code on frontend
+// TODO : Optimize  Code on backend
+// TODO : Check for Errors
