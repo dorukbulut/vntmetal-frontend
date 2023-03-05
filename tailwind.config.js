@@ -7,9 +7,12 @@ module.exports = {
   ],
   theme: {
     extend: {},
-    fontFamily : {
-      poppins : ['Poppins', 'sans-serif']
-    }
+    fontFamily: {
+      roboto: ["Roboto Mono", "monospace"],
+    },
+    rotate: {
+      4: "4deg",
+    },
   },
   plugins: [],
-}
+};
