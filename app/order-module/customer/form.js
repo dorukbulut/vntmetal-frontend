@@ -105,11 +105,9 @@ export default function CustomerForm() {
                 res.data.customer[0].customer_adress.customer_postal,
             },
           };
+
           setFields((old) => {
-            return {
-              ...old,
-              old_data,
-            };
+            return old_data;
           });
         }
       });
@@ -198,7 +196,7 @@ export default function CustomerForm() {
                       key={index}
                       id="standard-helperText"
                       label={item.name}
-                      defaultValue={fields[item.field][item.area]}
+                      value={fields[item.field][item.area] || ""}
                       variant="standard"
                       helperText="Zorunlu Alan"
                       type={item.type}
@@ -207,7 +205,7 @@ export default function CustomerForm() {
                   ) : (
                     <TextField
                       key={index}
-                      defaultValue={fields[item.field][item.area]}
+                      value={fields[item.field][item.area] || ""}
                       id="standard-helperText"
                       label={item.name}
                       variant="standard"
@@ -230,7 +228,7 @@ export default function CustomerForm() {
                       key={index}
                       id="standard-helperText"
                       label={item.name}
-                      defaultValue={fields[item.field][item.area]}
+                      value={fields[item.field][item.area] || ""}
                       variant="standard"
                       type={item.type}
                       onChange={(e) => handleChange(item.field, item.area, e)}
@@ -251,7 +249,7 @@ export default function CustomerForm() {
                       key={index}
                       id="standard-helperText"
                       label={item.name}
-                      defaultValue={fields[item.field][item.area]}
+                      value={fields[item.field][item.area] || ""}
                       variant="standard"
                       type={item.type}
                       onChange={(e) => handleChange(item.field, item.area, e)}
