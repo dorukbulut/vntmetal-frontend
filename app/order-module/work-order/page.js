@@ -5,7 +5,6 @@ import Stack from "@mui/material/Stack";
 import { useState, useEffect } from "react";
 import CreateWorkOrder from "../../../components/Dashboards/general/forms/WorkOrder/Forms/CreateWorkOrder";
 import UpdateWorkOrder from "../../../components/Dashboards/general/forms/WorkOrder/Forms/UpdateWorkOrder";
-import WorkOrderDisplay from "../../../components/Dashboards/general/ui/WorkOrderDisplay";
 import WorkOrderService from "../../../services/WorkOrderService";
 export default function QuotationMake() {
   const [filters, setFilters] = useState();
@@ -216,13 +215,6 @@ export default function QuotationMake() {
                           >
                             İndir
                           </button>
-                        </td>
-
-                        <td className="px-6 py-4 text-right">
-                          <WorkOrderDisplay
-                            key={`${index + 3}+${new Date().getTime()}`}
-                            WorkOrderID={item.workorder_ID}
-                          />
                         </td>
 
                         <td className="px-6 py-4 text-right">

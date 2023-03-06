@@ -2,6 +2,7 @@
 import Table from "../table";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
+import Link from "next/link";
 import SearchIcon from "@mui/icons-material/Search";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { columns } from "./data";
@@ -86,10 +87,20 @@ export default function Page() {
       </div>
       <div className="lg:flex lg:gap-10 lg:items-center p-2 shadow-xl rounded-lg">
         <div className="flex items-center hover:cursor-pointer transition duration-500 hover:scale-110 ">
-          <AddBoxIcon
-            color="success"
-            sx={{ width: "2.75rem", height: "2.75rem" }}
-          />
+          <Link
+            href={{
+              pathname: "/order-module/customer/form",
+              query: {
+                type: "create",
+                id: "none",
+              },
+            }}
+          >
+            <AddBoxIcon
+              color="success"
+              sx={{ width: "2.75rem", height: "2.75rem" }}
+            />
+          </Link>
         </div>
         <TextField
           label="Cari Kod"

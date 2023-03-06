@@ -5,9 +5,10 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import Link from "next/link";
 
 export default function CustomizedMenus({ preference, children }) {
-  const { name, action } = preference;
+  const { name, action, pathname, query } = preference;
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -47,7 +48,9 @@ export default function CustomizedMenus({ preference, children }) {
       >
         <MenuItem onClick={handleClose} disableRipple>
           {children}
-          {action}
+          <Link href={{ pathname, query }} passHref>
+            {action}
+          </Link>
         </MenuItem>
       </Menu>
     </div>

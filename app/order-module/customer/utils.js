@@ -5,7 +5,17 @@ export const formatData = (rows) => {
     return {
       ...row,
       options: (
-        <Action preference={{ name: "Düzenle", action: "Müşteriyi Düzenle" }}>
+        <Action
+          preference={{
+            name: "Düzenle",
+            action: "Müşteriyi Düzenle",
+            pathname: "/order-module/customer/form",
+            query: {
+              type: "update",
+              id: row.account_id,
+            },
+          }}
+        >
           <EditIcon />
         </Action>
       ),

@@ -180,8 +180,8 @@ export default function MiniDrawer({ children, modulename, color, navdata }) {
         <List>
           <div className="space-y-5">
             {navdata.map((item, index) => (
-              <ListItem key={index} disablePadding sx={{ display: "block" }}>
-                <Link href={item.path} passHref>
+              <Link href={item.path} passHref>
+                <ListItem key={index} disablePadding sx={{ display: "block" }}>
                   <ListItemButton
                     sx={{
                       minHeight: 48,
@@ -203,8 +203,8 @@ export default function MiniDrawer({ children, modulename, color, navdata }) {
                       sx={{ opacity: open ? 1 : 0 }}
                     />
                   </ListItemButton>
-                </Link>
-              </ListItem>
+                </ListItem>
+              </Link>
             ))}
           </div>
         </List>
