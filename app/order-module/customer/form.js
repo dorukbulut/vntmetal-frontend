@@ -7,7 +7,7 @@ import CustomerService from "../../../services/CustomerService";
 import Alert from "../../../components/base/alert";
 import Loading from "../../../components/base/Loading";
 import { useRouter } from "next/navigation";
-import Link from "next/Link";
+import Link from  "next/link";
 import { isValid } from "../../valid";
 import { delay } from "../../utils";
 export default function CustomerForm() {
