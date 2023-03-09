@@ -31,7 +31,3 @@ class CustomerService {
 }
 
 export default new CustomerService();
-
-// TODO : Optimize code on frontend
-// TODO : Optimize  Code on backend
-// TODO : Check for Errors
