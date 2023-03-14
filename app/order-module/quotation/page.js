@@ -5,6 +5,8 @@ import TextField from "@mui/material/TextField";
 import Link from "next/link";
 import SearchIcon from "@mui/icons-material/Search";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import { columns } from "./data";
+import TimePicker from "../../../components/base/timepicker.js";
 
 export default function Quotation() {
   //TODO : Filters Tab with CustomerID, Quotation Reference, Day, month, year
@@ -68,52 +70,25 @@ export default function Quotation() {
           }}
           variant="standard"
         />
-        <TextField
-          label="Gün"
-          onChange={(e) => handleFilters("account_related", e)}
-          id="filled-start-adornment"
-          sx={{ m: 1, width: "25ch" }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon></SearchIcon>
-              </InputAdornment>
-            ),
-          }}
-          variant="standard"
-        />
-        <TextField
-          label="Ay"
-          onChange={(e) => handleFilters("account_related", e)}
-          id="filled-start-adornment"
-          sx={{ m: 1, width: "25ch" }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon></SearchIcon>
-              </InputAdornment>
-            ),
-          }}
-          variant="standard"
-        />
-        <TextField
-          label="Yıl"
-          onChange={(e) => handleFilters("account_related", e)}
-          id="filled-start-adornment"
-          sx={{ m: 1, width: "25ch" }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon></SearchIcon>
-              </InputAdornment>
-            ),
-          }}
-          variant="standard"
-        />
+
+        {[
+          { label: "Gün", views: ["day"], format: "DD" },
+          { label: "Ay", views: ["month"], format: "MM" },
+          { label: "Yıl", views: ["year"], format: "YYYY" },
+        ].map((item, index) => {
+          return (
+            <TimePicker
+              key={index}
+              propLabels={item.label}
+              propViews={item.views}
+              propFormat={item.format}
+            />
+          );
+        })}
       </div>
 
       <div className="lg:flex lg:flex-col shadow-xl">
-        <Table columns={[]} rowdata={[]} count={0} setNPage={() => {}} />
+        <Table columns={columns} rowdata={[]} count={0} setNPage={() => {}} />
       </div>
     </div>
   );

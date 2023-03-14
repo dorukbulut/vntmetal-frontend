@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Table from "../../Table";
+import ActionBar from "../../../../../../app/order-module/quotation/actionbar";
 import EditableCell from "../../Table/EditableCell.js/index.js";
 import Checkbox from "@mui/material/Checkbox";
 import QuotationItemService from "../../../../../../services/QuotationService/QuotationItemService";
@@ -177,6 +178,7 @@ function SetItem({ fields, setAll, url }) {
           updateMyData={updateMyData}
           skipPageReset={skipPageReset}
         />
+        <ActionBar />
       </div>
     </div>
   );
