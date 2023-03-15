@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 export default function FormPage() {
   const fields = useSelector((state) => state.quotation.fields);
+  const customer = useSelector((state) => state.quotation.customer);
   const dispatch = useDispatch();
   const [customers, setCustomers] = useState([]);
   useEffect(() => {
@@ -25,7 +26,7 @@ export default function FormPage() {
   return (
     <div className="w-full h-full">
       <QuotationForm
-        prevValue={{ fields }}
+        prevValue={{ fields, customer }}
         dispatch={dispatch}
         customers={customers}
       />

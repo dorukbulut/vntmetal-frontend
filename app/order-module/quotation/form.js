@@ -2,7 +2,11 @@
 import Loading from "../../../components/base/Loading";
 import SetItem from "../../../components/Dashboards/general/forms/QuotationForms/Forms/SetQuotationItem";
 import TextField from "@mui/material/TextField";
-import { setValues } from "../../GlobalRedux/Features/Quotation/quotationSlice";
+import {
+  setValues,
+  clearResults,
+  setCust,
+} from "../../GlobalRedux/Features/Quotation/quotationSlice";
 import {
   QuotationInfo,
   PreparedData,
@@ -15,19 +19,22 @@ import { isValid } from "../../valid";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 export default function QuotationForm({ customers, prevValue, dispatch }) {
+  const { customer } = prevValue;
   const router = useRouter();
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
   const id = searchParams.get("id");
   const [all, setAll] = useState([]);
   const [valid, setValid] = useState(false);
-  const [Customer_ID, setCustomer] = useState("");
+  const [Customer_ID, setCustomer] = useState({
+    title: customer,
+  });
   const [isLoading, setLoading] = useState(false);
   const [fields, setFields] = useState({ ...prevValue.fields });
   useEffect(() => {}, []);
   useEffect(() => {
     dispatch(setValues(fields));
-
+    dispatch(setCust(Customer_ID?.title || ""));
     const check_valid = {
       a: Customer_ID?.title === undefined ? "" : Customer_ID?.title,
       b: fields?.options?.customerInquiryNum,
@@ -37,6 +44,7 @@ export default function QuotationForm({ customers, prevValue, dispatch }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    dispatch(clearResults());
     console.log(fields);
     console.log(Customer_ID?.title);
   };
@@ -77,6 +85,7 @@ export default function QuotationForm({ customers, prevValue, dispatch }) {
                 <AutoComplete
                   data={customers}
                   setData={setCustomer}
+                  prevValue={Customer_ID}
                   valid={valid}
                   dropDownOptions={{ label: "Cari Kod" }}
                 />

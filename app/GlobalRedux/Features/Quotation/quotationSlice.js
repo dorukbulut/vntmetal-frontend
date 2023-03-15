@@ -38,6 +38,7 @@ const initialState = {
 
     all: [],
   },
+  customer: "",
 };
 
 export const quotationSlice = createSlice({
@@ -47,9 +48,16 @@ export const quotationSlice = createSlice({
     setValues: (state, action) => {
       state.fields = action.payload;
     },
+    setCust: (state, action) => {
+      state.customer = action.payload;
+    },
+    clearResults: (state) => {
+      state.fields = initialState.fields;
+      state.customer = "";
+    },
   },
 });
 
-export const { setValues } = quotationSlice.actions;
+export const { setValues, clearResults, setCust } = quotationSlice.actions;
 const quotationReducer = quotationSlice.reducer;
 export default quotationReducer;

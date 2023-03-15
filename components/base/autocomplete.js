@@ -6,19 +6,24 @@ export default function AutoComplete({
   dropDownOptions,
   data,
   setData,
+  prevValue,
   valid,
 }) {
   const { label } = dropDownOptions;
-  const defaultProps = {
-    options: data,
-    getOptionLabel: (option) => option.title,
-  };
+  const [value, setValue] = React.useState(prevValue);
+
   return (
     <Autocomplete
-      {...defaultProps}
+      options={data}
+      getOptionLabel={(option) => option.title}
       id="clear-on-escape"
       clearText={""}
-      onChange={(e, newValue) => setData(newValue)}
+      value={value}
+      isOptionEqualToValue={(option, value) => option.title === value.title}
+      onChange={(e, newValue) => {
+        setData(newValue);
+        setValue(newValue);
+      }}
       renderInput={(params) => (
         <TextField
           error={!valid}
