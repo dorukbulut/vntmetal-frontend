@@ -2,8 +2,10 @@
 import QuotationForm from "../form";
 import CustomerService from "../../../../services/CustomerService";
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 export default function FormPage() {
-  // fetch customer data
+  const fields = useSelector((state) => state.quotation.fields);
+  const dispatch = useDispatch();
   const [customers, setCustomers] = useState([]);
   useEffect(() => {
     CustomerService.getAllCustomers()
@@ -22,7 +24,11 @@ export default function FormPage() {
   }, []);
   return (
     <div className="w-full h-full">
-      <QuotationForm customers={customers} />
+      <QuotationForm
+        prevValue={{ fields }}
+        dispatch={dispatch}
+        customers={customers}
+      />
     </div>
   );
 }

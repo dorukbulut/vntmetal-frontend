@@ -1,6 +1,6 @@
+"use client";
 import "../styles/globals.css";
-import Head from "next/head";
-
+import { Providers } from "./GlobalRedux/provider";
 export default function RootLayout({ children }) {
   return (
     <html>
@@ -8,7 +8,9 @@ export default function RootLayout({ children }) {
         <title>DÖKÜM YÖNETİM SİSTEMİ</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </head>
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

@@ -125,3 +125,53 @@ export const PreparedData = [
     isRequired: true,
   },
 ];
+
+export const INCOTERMS_EXTRA = [
+  {
+    title: "EXW",
+  },
+  {
+    title: "FCA",
+  },
+  {
+    title: "FAS",
+  },
+  { title: "FOB" },
+  {
+    title: "CFR",
+  },
+  {
+    title: "CIF",
+  },
+  {
+    title: "CPT",
+  },
+  {
+    title: "CIP",
+  },
+  {
+    title: "DAP",
+  },
+  {
+    title: "DPU",
+  },
+  {
+    title: "DDP",
+  },
+];
+
+export const INCOTERMS_INTRA = [
+  {
+    title: "VNTFT",
+  },
+  {
+    title: "MT",
+  },
+  {
+    title: "ARAS",
+  },
+
+  {
+    title: "UPS",
+  },
+];

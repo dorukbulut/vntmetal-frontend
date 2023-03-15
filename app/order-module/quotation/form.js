@@ -2,6 +2,7 @@
 import Loading from "../../../components/base/Loading";
 import SetItem from "../../../components/Dashboards/general/forms/QuotationForms/Forms/SetQuotationItem";
 import TextField from "@mui/material/TextField";
+import { setValues } from "../../GlobalRedux/Features/Quotation/quotationSlice";
 import {
   QuotationInfo,
   PreparedData,
@@ -10,18 +11,49 @@ import {
 } from "./form/data";
 import AutoComplete from "../../../components/base/autocomplete";
 import { useEffect, useState } from "react";
+import { isValid } from "../../valid";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
-export default function QuotationForm({ customers }) {
+export default function QuotationForm({ customers, prevValue, dispatch }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
   const id = searchParams.get("id");
   const [all, setAll] = useState([]);
+  const [valid, setValid] = useState(false);
+  const [Customer_ID, setCustomer] = useState("");
   const [isLoading, setLoading] = useState(false);
+  const [fields, setFields] = useState({ ...prevValue.fields });
+  useEffect(() => {}, []);
+  useEffect(() => {
+    dispatch(setValues(fields));
+
+    const check_valid = {
+      a: Customer_ID?.title === undefined ? "" : Customer_ID?.title,
+      b: fields?.options?.customerInquiryNum,
+    };
+    setValid(isValid(check_valid));
+  }, [fields, Customer_ID?.title]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(fields);
+    console.log(Customer_ID?.title);
+  };
+  const handleChange = (area, field, e) => {
+    setFields((old) => {
+      return {
+        ...old,
+        [area]: {
+          ...old[area],
+          [field]: e.target.value,
+        },
+      };
+    });
+  };
   return (
-    !isLoading && (
-      <div className="w-full h-full flex flex-col space-y-5">
+    <div className="w-full h-full flex flex-col space-y-5">
+      {!isLoading && (
         <div className="space-y-5">
           <div>
             <p
@@ -44,6 +76,8 @@ export default function QuotationForm({ customers }) {
               <div className="grid grid-cols-4 gap-10  p-2 rounded-lg ">
                 <AutoComplete
                   data={customers}
+                  setData={setCustomer}
+                  valid={valid}
                   dropDownOptions={{ label: "Cari Kod" }}
                 />
                 <TextField
@@ -51,7 +85,12 @@ export default function QuotationForm({ customers }) {
                   label={"Müşteri Referans No."}
                   variant="standard"
                   helperText="Zorunlu Alan"
+                  value={fields?.options?.customerInquiryNum || ""}
                   type={"text"}
+                  error={!valid}
+                  onChange={(e) =>
+                    handleChange("options", "customerInquiryNum", e)
+                  }
                 />
               </div>
 
@@ -62,9 +101,9 @@ export default function QuotationForm({ customers }) {
               </div>
               <div className="grid grid-col-4 gap-5 rounded-lg">
                 <SetItem
-                  fields={{ options: { Customer_ID: 33 } }}
+                  fields={{ options: { Customer_ID: Customer_ID?.title } }}
                   setAll={setAll}
-                  url={"get"}
+                  url={type === "create" ? "get" : "getitems"}
                 />
               </div>
 
@@ -78,6 +117,7 @@ export default function QuotationForm({ customers }) {
                   if (item.type === "dropdown") {
                     return (
                       <AutoComplete
+                        key={index}
                         data={item.data}
                         dropDownOptions={{ label: item.name }}
                       />
@@ -155,6 +195,8 @@ export default function QuotationForm({ customers }) {
                 })}
                 <div className="grid grid-cols-4 space-x-10 col-span-2">
                   <button
+                    onClick={handleSubmit}
+                    disabled={!valid}
                     className={`text-sm ${
                       type === "create" ? "text-green-600" : "text-yellow-600"
                     } border-2 ${
@@ -169,13 +211,13 @@ export default function QuotationForm({ customers }) {
                   >
                     {type === "create" ? "OLUŞTUR" : "GÜNCELLE"}
                   </button>
-                  <Link href={"/order-module/customer"} passHref>
+                  <Link href={"/order-module/quotation"} passHref>
                     <button className="text-red-600 w-full h-full border-2 border-red-600 transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-red-700 font-roboto hover:text-white tacking-widest rounded">
                       IPTAL
                     </button>
                   </Link>
                 </div>
-                {false && (
+                {!valid && (
                   <p className="text-lg font-rotobot tracking widest text-red-600">
                     Tüm zorunlu alanlar doldurulmalıdır !
                   </p>
@@ -184,7 +226,8 @@ export default function QuotationForm({ customers }) {
             </div>
           </div>
         </div>
-      </div>
-    )
+      )}
+      {isLoading && <Loading />}
+    </div>
   );
 }

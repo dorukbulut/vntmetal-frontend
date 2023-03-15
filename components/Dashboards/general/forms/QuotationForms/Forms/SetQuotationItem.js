@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Table from "../../Table";
-import ActionBar from "../../../../../../app/order-module/quotation/actionbar";
+import ActionBar from "../../../../../base/actionbar";
 import EditableCell from "../../Table/EditableCell.js/index.js";
 import Checkbox from "@mui/material/Checkbox";
 import QuotationItemService from "../../../../../../services/QuotationService/QuotationItemService";
@@ -18,7 +18,10 @@ function SetItem({ fields, setAll, url }) {
           Customer_ID: fields.options.Customer_ID,
         };
   useEffect(() => {
-    if (fields.options.Customer_ID !== "") {
+    if (
+      fields.options.Customer_ID !== "" &&
+      fields.options.Customer_ID !== undefined
+    ) {
       QuotationItemService.fetchFormItems(data, url)
         .then((res) => {
           if (res.status === 200) {
