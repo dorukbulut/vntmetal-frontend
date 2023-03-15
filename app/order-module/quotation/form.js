@@ -20,7 +20,6 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 export default function QuotationForm({ customers, prevValue, dispatch }) {
   const { customer } = prevValue;
-  const router = useRouter();
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
   const id = searchParams.get("id");

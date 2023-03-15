@@ -7,17 +7,34 @@ import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import SaveIcon from "@mui/icons-material/Save";
+import { useRouter } from "next/navigation";
 
 const actions = [
-  { icon: <EditIcon />, name: "Analiz Güncelle" },
-  { icon: <SaveIcon />, name: "Analiz Ekle" },
-  { icon: <PostAddIcon />, name: "Teklif Kalemi Ekle" },
+  {
+    icon: <EditIcon />,
+    name: "Analiz Güncelle",
+    path: "/order-module/quotation/form/analysis",
+    type: "update",
+  },
+  {
+    icon: <SaveIcon />,
+    name: "Analiz Ekle",
+    path: "/order-module/quotation/form/analysis",
+    type: "create",
+  },
+  {
+    icon: <PostAddIcon />,
+    name: "Teklif Kalemi Ekle",
+    path: "/order-module/quotation/form/item",
+    type: "create",
+  },
 ];
 
 export default function ControlledOpenSpeedDial() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const router = useRouter();
 
   return (
     <Box sx={{ height: 320, transform: "translateZ(0px)", flexGrow: 1 }}>
@@ -36,10 +53,12 @@ export default function ControlledOpenSpeedDial() {
       >
         {actions.map((action) => (
           <SpeedDialAction
-            key={action.name}
             icon={action.icon}
             tooltipTitle={action.name}
-            onClick={handleClose}
+            onClick={(e, path = action.path, type = action.type) => {
+              router.replace(path + `?type=${type}`);
+            }}
+            key={action.name}
           />
         ))}
       </SpeedDial>
