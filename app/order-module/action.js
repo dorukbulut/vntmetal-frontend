@@ -31,7 +31,7 @@ export default function CustomizedMenus({ preference, children }) {
           onClick={handleClick}
           endIcon={<KeyboardArrowDownIcon />}
         >
-          <p className="text-indigo-600 text-xs font-roboto tracking-widest hover:text-inherit">
+          <p className="text-white text-xs font-roboto tracking-widest hover:text-inherit">
             {name}
           </p>
         </Button>
