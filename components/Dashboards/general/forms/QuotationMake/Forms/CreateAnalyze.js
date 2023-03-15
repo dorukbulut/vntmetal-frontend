@@ -18,13 +18,7 @@ export default function CreateAnalyze({ type }) {
     message: "neden",
     title: "",
   });
-  const [fields, setFields] = useState({
-    analyze: {
-      analyze_Name: "",
-      analyze_coefCopper: "",
-      analyze_coefTin: "",
-    },
-  });
+  const [fields, setFields] = useState({});
 
   useEffect(() => {
     const check_valid = {
