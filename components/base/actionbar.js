@@ -30,7 +30,7 @@ const actions = [
   },
 ];
 
-export default function ControlledOpenSpeedDial() {
+export default function ControlledOpenSpeedDial({ prevType, prevId }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -56,7 +56,9 @@ export default function ControlledOpenSpeedDial() {
             icon={action.icon}
             tooltipTitle={action.name}
             onClick={(e, path = action.path, type = action.type) => {
-              router.replace(path + `?type=${type}`);
+              router.replace(
+                path + `?type=${type}&prevType=${prevType}&prevId=${prevId}`
+              );
             }}
             key={action.name}
           />

@@ -5,7 +5,7 @@ import ActionBar from "../../../../../base/actionbar";
 import EditableCell from "../../Table/EditableCell.js/index.js";
 import Checkbox from "@mui/material/Checkbox";
 import QuotationItemService from "../../../../../../services/QuotationService/QuotationItemService";
-function SetItem({ fields, setAll, url }) {
+function SetItem({ fields, setAll, url, prevType, prevId }) {
   const [rowdata, setRowData] = useState([]);
   const [skipPageReset, setSkipPageReset] = useState(false);
   const data =
@@ -181,7 +181,7 @@ function SetItem({ fields, setAll, url }) {
           updateMyData={updateMyData}
           skipPageReset={skipPageReset}
         />
-        <ActionBar />
+        <ActionBar prevType={prevType} prevId={prevId} />
       </div>
     </div>
   );

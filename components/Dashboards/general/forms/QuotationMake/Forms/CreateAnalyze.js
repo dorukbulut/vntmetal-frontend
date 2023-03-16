@@ -8,7 +8,7 @@ import Alert from "../../../../../base/alert";
 import { delay } from "../../../../../../app/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-export default function CreateAnalyze({ type }) {
+export default function CreateAnalyze({ type, prevType, prevId }) {
   const router = useRouter();
   const [valid, setValid] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -18,7 +18,14 @@ export default function CreateAnalyze({ type }) {
     message: "neden",
     title: "",
   });
-  const [fields, setFields] = useState({});
+  const [fields, setFields] = useState({
+    analyze: {
+      analyze_Name: "",
+      analyze_coefCopper: "",
+      analyze_coefTin: "",
+      selected: "",
+    },
+  });
 
   useEffect(() => {
     const check_valid = {
@@ -63,7 +70,9 @@ export default function CreateAnalyze({ type }) {
           title: "Başarılı",
         });
         await delay(2000);
-        router.push("/order-module/quotation/form?type=create&id=none");
+        router.push(
+          `/order-module/quotation/form?type=${prevType}&id=${prevId}`
+        );
       }
     } catch (err) {
       setLoading(false);
@@ -141,8 +150,8 @@ export default function CreateAnalyze({ type }) {
               href={{
                 pathname: "/order-module/quotation/form",
                 query: {
-                  type: "create",
-                  id: "none",
+                  type: prevType,
+                  id: prevId,
                 },
               }}
               passHref

@@ -4,7 +4,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import Link from "next/link";
 import SearchIcon from "@mui/icons-material/Search";
-import AddBoxIcon from "@mui/icons-material/AddBox";
+import Button from "@mui/material/Button";
 import { columns } from "./data";
 import { useState, useEffect } from "react";
 import CustomerService from "../../../services/CustomerService";
@@ -96,10 +96,9 @@ export default function Page() {
               },
             }}
           >
-            <AddBoxIcon
-              color="success"
-              sx={{ width: "2.75rem", height: "2.75rem" }}
-            />
+            <Button variant="outlined" color={"success"}>
+              Yeni Müşteri
+            </Button>
           </Link>
         </div>
         <TextField

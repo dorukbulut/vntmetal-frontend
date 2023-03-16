@@ -112,6 +112,8 @@ export default function QuotationForm({ customers, prevValue, dispatch }) {
                   fields={{ options: { Customer_ID: Customer_ID?.title } }}
                   setAll={setAll}
                   url={type === "create" ? "get" : "getitems"}
+                  prevType={type}
+                  prevId={id}
                 />
               </div>
 

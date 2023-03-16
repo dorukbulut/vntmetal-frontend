@@ -4,7 +4,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import Link from "next/link";
 import SearchIcon from "@mui/icons-material/Search";
-import AddBoxIcon from "@mui/icons-material/AddBox";
+import Button from "@mui/material/Button";
 import { columns } from "./data";
 import TimePicker from "../../../components/base/timepicker.js";
 
@@ -36,10 +36,9 @@ export default function Quotation() {
               },
             }}
           >
-            <AddBoxIcon
-              color="success"
-              sx={{ width: "2.75rem", height: "2.75rem" }}
-            />
+            <Button variant="outlined" color={"success"}>
+              Yeni Teklif
+            </Button>
           </Link>
         </div>
         <TextField

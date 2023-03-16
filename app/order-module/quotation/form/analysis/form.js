@@ -1,11 +1,13 @@
 "use client";
-import Loading from "../../../../../components/base/Loading";
+import UpdateAnalyze from "../../../../../components/Dashboards/general/forms/QuotationMake/Forms/UpdateAnalyze";
 import CreateAnalyze from "../../../../../components/Dashboards/general/forms/QuotationMake/Forms/CreateAnalyze";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 export default function AnalysisForm() {
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
+  const prevType = searchParams.get("prevType");
+  const prevId = searchParams.get("prevId");
   return (
     <div className="w-full h-full flex flex-col space-y-5">
       {true && (
@@ -26,7 +28,19 @@ export default function AnalysisForm() {
                   Analiz Bilgileri
                 </p>
 
-                {type === "create" ? <CreateAnalyze type={type} /> : ""}
+                {type === "create" ? (
+                  <CreateAnalyze
+                    prevType={prevType}
+                    prevId={prevId}
+                    type={type}
+                  />
+                ) : (
+                  <UpdateAnalyze
+                    type={type}
+                    prevType={prevType}
+                    prevId={prevId}
+                  />
+                )}
               </div>
             </div>
           </div>
