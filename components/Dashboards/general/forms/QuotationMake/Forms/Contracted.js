@@ -1,6 +1,5 @@
 "use client";
 import DropDown from "../../../../../base/autocomplete";
-import Dropdown from "../../../forms/Common/Dropdown";
 import { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { isValid } from "../../../../../../app/valid";
@@ -37,45 +36,6 @@ export default function Contracted({
   const [valid, setValid] = useState(false);
 
   //handlers
-
-  const handleValidation = () => {
-    let check_fields = fields;
-    let isValid = true;
-
-    // account_id
-    if (check_fields["calc_raw"]["account_id"] === "") {
-      isValid = false;
-    }
-
-    // analyze_Name
-    if (check_fields["calc_raw"]["analyze_Name"] === "") {
-      isValid = false;
-    }
-
-    // euro
-    if (check_fields["calc_raw"]["euro"] === "") {
-      isValid = false;
-    }
-
-    // usd
-    if (check_fields["calc_raw"]["usd"] === "") {
-      isValid = false;
-    }
-
-    // kgPrice
-    if (
-      check_fields["calc_raw"]["kgPrice"] === "" ||
-      isNaN(check_fields["calc_raw"]["kgPrice"])
-    ) {
-      isValid = false;
-    }
-
-    // type
-    if (check_fields["calc_raw"]["type"] === "") {
-      isValid = false;
-    }
-    return isValid;
-  };
 
   const handleChange = (field, area, e) => {
     setFields((old) => {
