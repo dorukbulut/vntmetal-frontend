@@ -28,15 +28,15 @@ export const steps = [
 ];
 
 export const TYPE = [
-  { key: "Düz Burç", value: "straight_bush" },
-  { key: "Plaka", value: "plate_strip" },
-  { key: "Flanşlı Burç", value: "bracket_bush" },
-  { key: "Ortadan Flanşlı Burç", value: "middlebracket_bush" },
-  { key: "Çift Flanşlı Burç", value: "doublebracket_bush" },
+  { title: "Düz Burç", value: "straight_bush" },
+  { title: "Plaka", value: "plate_strip" },
+  { title: "Flanşlı Burç", value: "bracket_bush" },
+  { title: "Ortadan Flanşlı Burç", value: "middlebracket_bush" },
+  { title: "Çift Flanşlı Burç", value: "doublebracket_bush" },
 ];
 export const QUOTYPE = [
-  { key: "Anlaşmalı Teklif Hazırlama", value: "0" },
-  { key: "Hammade Üzerinden Teklif Hazırlama", value: "1" },
+  { title: "Anlaşmalı Teklif Hazırlama", id: "0" },
+  { title: "Hammade Üzerinden Teklif Hazırlama", id: "1" },
 ];
 export const TYPE_COMPS = {
   straight_bush: <StrBush />,

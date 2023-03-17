@@ -11,10 +11,23 @@ export default function AutoComplete({
 }) {
   const { label } = dropDownOptions;
   const [value, setValue] = React.useState(prevValue);
+  data.sort((x, y) => {
+    if (isNaN(x.title) && isNaN(y.title)) {
+      return x.title.localeCompare(y.title);
+    } else {
+      return x.title - y.title;
+    }
+  });
 
+  const formattedData = data.map((item) => {
+    return {
+      ...item,
+      title: `${item.title}`,
+    };
+  });
   return (
     <Autocomplete
-      options={data}
+      options={formattedData}
       getOptionLabel={(option) => option.title}
       id="clear-on-escape"
       clearText={""}

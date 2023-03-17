@@ -9,14 +9,6 @@ import { columns } from "./data";
 import TimePicker from "../../../components/base/timepicker.js";
 
 export default function Quotation() {
-  //TODO : Filters Tab with CustomerID, Quotation Reference, Day, month, year
-  //TODO : Display Table
-  //TODO : Create Quotation Form : GET ONLY unused quotation items list
-  //TODO : Update Quotation Form : GET unused and used
-  //TODO : Create Quotation Items
-  //TODO : Update Quotation Items
-  //TODO : Create Filter Component and Apply to Customers too
-
   return (
     <div className="w-full h-full space-y-10">
       <div>

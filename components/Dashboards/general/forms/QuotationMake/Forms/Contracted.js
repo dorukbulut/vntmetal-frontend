@@ -1,6 +1,9 @@
 "use client";
-import Dropdown from "../../Common/Dropdown";
-import { useRef, useEffect, useState } from "react";
+import DropDown from "../../../../../base/autocomplete";
+import Dropdown from "../../../forms/Common/Dropdown";
+import { useEffect, useState } from "react";
+import TextField from "@mui/material/TextField";
+import { isValid } from "../../../../../../app/valid";
 
 export default function Contracted({
   CUSTOMER,
@@ -12,20 +15,26 @@ export default function Contracted({
 }) {
   //state
 
+  const [Customer_ID, setCustomer] = useState({
+    title:
+      "account_id" in prevValues.values ? prevValues.values.account_id : "",
+  });
+  const [Analyze_ID, setAnalyze] = useState({
+    title:
+      "analyze_Name" in prevValues.values ? prevValues.values.analyze_Name : "",
+  });
+  const [itemType, setType] = useState({
+    title: "type" in prevValues.values ? prevValues.values.type : "",
+  });
+
   const [fields, setFields] = useState({
     calc_raw: {
-      account_id:
-        "account_id" in prevValues.values ? prevValues.values.account_id : "",
-      analyze_Name:
-        "analyze_Name" in prevValues.values
-          ? prevValues.values.analyze_Name
-          : "",
       usd: "usd" in prevValues.values ? prevValues.values.usd : "",
       euro: "euro" in prevValues.values ? prevValues.values.euro : "",
-      type: "type" in prevValues.values ? prevValues.values.type : "",
       kgPrice: "kgPrice" in prevValues.values ? prevValues.values.kgPrice : "",
     },
   });
+  const [valid, setValid] = useState(false);
 
   //handlers
 
@@ -82,22 +91,32 @@ export default function Contracted({
   //hooks
 
   useEffect(() => {
-    getCalcRaw(handleValidation(), {
+    const check_valid = {
+      a:
+        Customer_ID?.title === undefined || Customer_ID?.title === null
+          ? ""
+          : Customer_ID?.title,
+      b:
+        Analyze_ID?.title === undefined || Analyze_ID?.title === null
+          ? ""
+          : Analyze_ID?.title,
+      c:
+        itemType?.title === undefined || itemType?.title === null
+          ? ""
+          : itemType?.title,
       ...fields.calc_raw,
+    };
+    getCalcRaw(isValid(check_valid), {
+      ...fields.calc_raw,
+      account_id: Customer_ID?.title,
+      analyze_Name: Analyze_ID?.title,
+      type: itemType?.title,
     });
-  }, [fields]);
+    setValid(isValid(check_valid));
+  }, [fields, Customer_ID, itemType, Analyze_ID]);
 
   return (
     <div className="mt-10">
-      {type === "update" ? (
-        <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-yellow-600">
-          Teklifi Güncelle
-        </p>
-      ) : (
-        <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
-          Yeni Teklif
-        </p>
-      )}
       <form className="grid grid-cols-1 space-y-5 lg:grid lg:place-items-center ">
         {/*Customer info*/}
         <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
@@ -110,106 +129,61 @@ export default function Contracted({
 
           <div className="space-y-5 lg:grid lg:grid-cols-3 lg:items-end lg:gap-3 ">
             <div className="flex flex-col space-y-3 ">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Cari Kod *
-              </label>
-              <Dropdown
-                label="Cari Kod"
-                field="calc_raw"
-                area="account_id"
-                items={CUSTOMER}
-                fields={fields}
-                handleChange={handleChange}
+              <DropDown
+                dropDownOptions={{ label: "Cari Kod" }}
+                data={CUSTOMER}
+                prevValue={Customer_ID}
+                valid={valid}
+                setData={setCustomer}
               />
             </div>
             <div className="flex flex-col space-y-3">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Analiz *
-              </label>
-              <Dropdown
-                label="Analiz"
-                field="calc_raw"
-                area="analyze_Name"
-                fields={fields}
-                items={ANALYZE}
-                handleChange={handleChange}
+              <DropDown
+                dropDownOptions={{ label: "Analiz" }}
+                data={ANALYZE}
+                prevValue={Analyze_ID}
+                valid={valid}
+                setData={setAnalyze}
               />
             </div>
             <div className="flex flex-col space-y-3">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Ürün Tipi *
-              </label>
-              <Dropdown
-                label="Tip"
-                field="calc_raw"
-                area="type"
-                items={TYPE}
-                fields={fields}
-                handleChange={handleChange}
+              <DropDown
+                dropDownOptions={{ label: "Ürün Tipi" }}
+                data={TYPE}
+                prevValue={itemType}
+                valid={valid}
+                setData={setType}
               />
             </div>
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Dolar Kuru *
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                defaultValue={fields["calc_raw"]["usd"]}
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                onChange={(e) => handleChange("calc_raw", "usd", e)}
-              />
-            </div>
+            <TextField
+              label={"Dolar Kuru"}
+              variant="standard"
+              helperText="Zorunlu Alan"
+              value={fields?.calc_raw?.usd || ""}
+              type={"number"}
+              error={!valid}
+              onChange={(e) => handleChange("calc_raw", "usd", e)}
+            />
 
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Euro Kuru *
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                defaultValue={fields["calc_raw"]["euro"]}
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                onChange={(e) => handleChange("calc_raw", "euro", e)}
-              />
-            </div>
+            <TextField
+              label={"Euro Kuru"}
+              variant="standard"
+              helperText="Zorunlu Alan"
+              value={fields?.calc_raw?.euro || ""}
+              type={"number"}
+              error={!valid}
+              onChange={(e) => handleChange("calc_raw", "euro", e)}
+            />
 
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Döküm Kilogram Fiyatı*
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                defaultValue={fields["calc_raw"]["kgPrice"]}
-                required
-                onChange={(e) => handleChange("calc_raw", "kgPrice", e)}
-              />
-            </div>
+            <TextField
+              label={"Kilogram Fiyatı (TL)"}
+              variant="standard"
+              helperText="Zorunlu Alan"
+              value={fields?.calc_raw?.kgPrice || ""}
+              type={"number"}
+              error={!valid}
+              onChange={(e) => handleChange("calc_raw", "kgPrice", e)}
+            />
           </div>
         </div>
       </form>

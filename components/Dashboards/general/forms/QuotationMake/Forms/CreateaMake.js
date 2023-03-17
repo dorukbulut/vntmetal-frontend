@@ -8,10 +8,12 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
-import Dropdown from "../../Common/Dropdown";
 import QuotationItem from "./QuotationItem";
 import CalculateRaw from "./CalcRaw";
 import Contracted from "./Contracted";
+import Link from "next/link";
+import DropDown from "../../../../../base/autocomplete";
+import { isValid } from "../../../../../../app/valid";
 
 import {
   steps,
@@ -23,21 +25,15 @@ import QuotationItemService from "../../../../../../services/QuotationService/Qu
 import CustomerService from "../../../../../../services/CustomerService";
 import AnalysisService from "../../../../../../services/AnalysisService";
 
-export default function CreateMake({ prevValues, type }) {
+export default function CreateMake({ prevValues, type, prevType, prevId }) {
   const [create, setCreate] = useState(false);
-  const [submit, setSubmit] = useState(false);
-  const [isValid, setIsvalid] = useState(true);
-  const [createErr, setCreateErr] = useState(false);
+  const [valid, setValid] = useState(false);
   const [activeStep, setActiveStep] = useState(type === "update" ? 2 : 0);
   const [skipped, setSkipped] = useState(new Set());
 
   const router = useRouter();
 
-  const [fields, setFields] = useState({
-    quo_type: {
-      quo_type_name: "type" in prevValues ? prevValues.type : "",
-    },
-  });
+  const [fields, setFields] = useState({ title: "" });
 
   const [canSkipStep1, setCanSkip1] = useState(false);
 
@@ -71,18 +67,11 @@ export default function CreateMake({ prevValues, type }) {
     let check_fields = fields;
     let isValid = true;
     // quo_type
-    if (check_fields["quo_type"]["quo_type_name"] === "") {
+    if (check_fields["title"] === "") {
       isValid = false;
     }
 
     return isValid;
-  };
-  const handleChange = (field, area, e) => {
-    const new_fields = fields;
-    new_fields[field][area] = e.target.value;
-    setFields(new_fields);
-
-    setCanSkip1(handleValidation1());
   };
 
   // states
@@ -119,8 +108,8 @@ export default function CreateMake({ prevValues, type }) {
       if (res.status === 200) {
         const temp = res.data.analyzes.map((analyse) => {
           return {
-            key: analyse.analyze_Name,
-            value: analyse.analyze_id,
+            title: analyse.analyze_Name,
+            id: analyse.analyze_id,
             TIN: analyse.analyze_coefTin,
             COPPER: analyse.analyze_coefCopper,
           };
@@ -136,8 +125,8 @@ export default function CreateMake({ prevValues, type }) {
       if (res.status === 200) {
         const temp = res.data.customers.map((customer) => {
           return {
-            key: customer.account_id,
-            value: customer.account_id,
+            title: customer.account_id,
+            id: customer.account_id,
           };
         });
 
@@ -145,6 +134,16 @@ export default function CreateMake({ prevValues, type }) {
       }
     });
   }, []);
+
+  React.useEffect(() => {
+    const check_valid = {
+      a:
+        fields?.title === undefined || fields?.title === null
+          ? ""
+          : fields?.title,
+    };
+    setValid(isValid(check_valid));
+  }, [fields]);
 
   //handlers
   const getCalcRaw = (validity, values) => {
@@ -277,29 +276,17 @@ export default function CreateMake({ prevValues, type }) {
   }, [prevValues]);
   return (
     <div>
-      {type === "update" ? (
-        <a
-          onClick={toggleCreate}
-          className="hover:cursor-pointer font-medium text-text-fuchsia-500  hover:underline"
+      <div className="relative lg:top-3 top-20 mx-auto p-5 lg:w-full lg:w-full rounded-md bg-white p-10">
+        <Link
+          href={{
+            pathname: "/order-module/quotation/form",
+            query: {
+              type: prevType,
+              id: prevId,
+            },
+          }}
+          passHref
         >
-          Düzenle
-        </a>
-      ) : (
-        <button
-          className="bg-green-600 text-white active:bg-sky-500 font-bold font-poppins uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-          type="button"
-          onClick={toggleCreate}
-        >
-          + Teklif Hazırla
-        </button>
-      )}
-
-      <div
-        className={`${
-          create ? "visible scale-100" : "invisible transform scale-0 h-0"
-        } fixed z-50 inset-0 bg-gray-600 bg-opacity-40 overflow-y-auto lg:p-10  h-full w-full transition duration-500 ease-in-out origin-center`}
-      >
-        <div className="relative lg:top-3 top-20 mx-auto p-5 border shadow-lg lg:w-full lg:w-full rounded-md bg-white p-10">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -318,234 +305,181 @@ export default function CreateMake({ prevValues, type }) {
               d="M6 18L18 6M6 6l12 12"
             />
           </svg>
+        </Link>
 
-          <div
-            className={`${
-              !submit && isValid && !createErr
-                ? "visible scale-100"
-                : "invisible scale-0 h-0"
-            } flex flex-col space-y-20`}
-          >
-            <Box sx={{ width: "100%" }}>
-              <Stepper activeStep={activeStep}>
-                {steps.map((label, index) => {
-                  const stepProps = {};
-                  const labelProps = {};
-                  if (isStepOptional(index)) {
-                    labelProps.optional = (
-                      <Typography variant="caption">Optional</Typography>
-                    );
-                  }
-                  if (isStepSkipped(index)) {
-                    stepProps.completed = false;
-                  }
-                  return (
-                    <Step key={label} {...stepProps}>
-                      <StepLabel {...labelProps}>{label}</StepLabel>
-                    </Step>
+        <div
+          className={`${
+            true ? "visible scale-100" : "invisible scale-0 h-0"
+          } flex flex-col space-y-20`}
+        >
+          <Box sx={{ width: "100%" }}>
+            <Stepper activeStep={activeStep}>
+              {steps.map((label, index) => {
+                const stepProps = {};
+                const labelProps = {};
+                if (isStepOptional(index)) {
+                  labelProps.optional = (
+                    <Typography variant="caption">Optional</Typography>
                   );
-                })}
-              </Stepper>
-              {activeStep === steps.length ? (
-                <React.Fragment>
-                  <Typography sx={{ mt: 2, mb: 1 }}>
-                    Bir Hata oluştu !
-                  </Typography>
-                  <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-                    <Box sx={{ flex: "1 1 auto" }} />
-                    <Button onClick={handleReset}>Reset</Button>
-                  </Box>
-                </React.Fragment>
-              ) : (
-                <React.Fragment>
-                  {activeStep == 0 ? (
-                    <form className="grid grid-cols-1 space-y-5 lg:grid lg:place-items-center ">
-                      {/*Customer info*/}
-                      <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
-                        <div className="space-y-2 lg:w-full">
-                          <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
-                            Teklif Tipi Seç
-                          </p>
-                          <hr />
-                        </div>
+                }
+                if (isStepSkipped(index)) {
+                  stepProps.completed = false;
+                }
+                return (
+                  <Step key={label} {...stepProps}>
+                    <StepLabel {...labelProps}>{label}</StepLabel>
+                  </Step>
+                );
+              })}
+            </Stepper>
+            {activeStep === steps.length ? (
+              <React.Fragment>
+                <Typography sx={{ mt: 2, mb: 1 }}>Bir Hata oluştu !</Typography>
+                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                  <Box sx={{ flex: "1 1 auto" }} />
+                  <Button onClick={handleReset}>Reset</Button>
+                </Box>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                {activeStep == 0 ? (
+                  <form className="grid grid-cols-1 space-y-5 lg:grid lg:place-items-center ">
+                    {/*Customer info*/}
+                    <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
+                      <div className="space-y-2 lg:w-full">
+                        <p className="text-center font-poppins text-gray-500 font-medium text-sm ">
+                          Teklif Tipi Seç
+                        </p>
+                        <hr />
+                      </div>
 
-                        <div className="space-y-5 lg:grid  lg:w-full lg:items-end lg:gap-3 ">
-                          <div className="lg:w-96 space-y-5">
-                            <label
-                              htmlFor="small-input"
-                              className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-                            >
-                              Teklif Tipi *
-                            </label>
-                            <Dropdown
-                              label="Teklif Tipi Seç"
-                              field="quo_type"
-                              area="quo_type_name"
-                              fields={fields}
-                              items={QUOTYPE}
-                              handleChange={handleChange}
-                            />
-                          </div>
+                      <div className="space-y-5 lg:grid  lg:w-full lg:items-end lg:gap-3 ">
+                        <div className="lg:w-96 space-y-5">
+                          <DropDown
+                            dropDownOptions={{ label: "Teklif Tipi Seç" }}
+                            data={QUOTYPE}
+                            setData={setFields}
+                            prevValue={fields}
+                            valid={valid}
+                          />
                         </div>
                       </div>
-                    </form>
-                  ) : (
-                    ""
-                  )}
+                    </div>
+                  </form>
+                ) : (
+                  ""
+                )}
 
-                  {activeStep == 1 ? (
-                    fields.quo_type.quo_type_name == 0 ? (
-                      <Contracted
-                        type={type}
-                        TYPE={TYPE}
-                        prevValues={calcRaws}
-                        getCalcRaw={getCalcRaw}
-                        ANALYZE={ANALYZE}
-                        CUSTOMER={CUSTOMER}
-                      />
-                    ) : (
-                      <CalculateRaw
-                        TYPE={TYPE}
-                        ANALYZE={ANALYZE}
-                        CUSTOMER={CUSTOMER}
-                        prevValues={calcRaws}
-                        customers={CUSTOMER}
-                        type={type}
-                        analyzes={ANALYZE}
-                        getCalcRaw={getCalcRaw}
-                      />
-                    )
-                  ) : (
-                    ""
-                  )}
-
-                  {activeStep == 2 ? (
-                    <QuotationItem
+                {activeStep == 1 ? (
+                  fields.id == 0 ? (
+                    <Contracted
                       type={type}
+                      TYPE={TYPE}
+                      prevValues={calcRaws}
                       getCalcRaw={getCalcRaw}
-                      euro={calcRaws.values.euro}
-                      usd={calcRaws.values.usd}
-                      prevValues={calcRaws.values}
-                      kgPrice={calcRaws.values.kgPrice}
-                      name={calcRaws.values.type}
-                    >
-                      {" "}
-                      {TYPE_COMPS[calcRaws.values.type]}{" "}
-                    </QuotationItem>
+                      ANALYZE={ANALYZE}
+                      CUSTOMER={CUSTOMER}
+                    />
                   ) : (
-                    ""
-                  )}
+                    <CalculateRaw
+                      TYPE={TYPE}
+                      ANALYZE={ANALYZE}
+                      CUSTOMER={CUSTOMER}
+                      prevValues={calcRaws}
+                      customers={CUSTOMER}
+                      type={type}
+                      analyzes={ANALYZE}
+                      getCalcRaw={getCalcRaw}
+                    />
+                  )
+                ) : (
+                  ""
+                )}
 
-                  {activeStep == 3 ? (
-                    <p className="text-lg mt-10 leading-6 font-medium text-green-500 text-center">
-                      Bütün bilgiler başarıyla dolduruldu. Teklif Oluşturmak
-                      için Oluştur seçeneğine tıklayınız.
-                    </p>
-                  ) : (
-                    ""
-                  )}
+                {activeStep == 2 ? (
+                  <QuotationItem
+                    type={type}
+                    getCalcRaw={getCalcRaw}
+                    euro={calcRaws.values.euro}
+                    usd={calcRaws.values.usd}
+                    prevValues={calcRaws.values}
+                    kgPrice={calcRaws.values.kgPrice}
+                    name={
+                      TYPE.find((item) => item.title === calcRaws.values.type)
+                        .value
+                    }
+                  >
+                    {" "}
+                    {
+                      TYPE_COMPS[
+                        TYPE.find((item) => item.title === calcRaws.values.type)
+                          .value
+                      ]
+                    }{" "}
+                  </QuotationItem>
+                ) : (
+                  ""
+                )}
 
-                  <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-                    <Button
-                      color="inherit"
-                      disabled={activeStep === 0}
-                      onClick={handleBack}
-                      sx={{ mr: 1 }}
-                    >
-                      Geri
+                {activeStep == 3 ? (
+                  <p className="text-lg mt-10 leading-6 font-medium text-green-500 text-center">
+                    Bütün bilgiler başarıyla dolduruldu. Teklif Oluşturmak için
+                    Oluştur seçeneğine tıklayınız.
+                  </p>
+                ) : (
+                  ""
+                )}
+
+                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                  <Button
+                    color="inherit"
+                    disabled={activeStep === 0}
+                    onClick={handleBack}
+                    sx={{ mr: 1 }}
+                  >
+                    Geri
+                  </Button>
+                  <Box sx={{ flex: "1 1 auto" }} />
+                  {activeStep === 0 ? (
+                    <Button disabled={!valid} onClick={handleNext}>
+                      {"ileri"}
                     </Button>
-                    <Box sx={{ flex: "1 1 auto" }} />
-                    {activeStep === 0 ? (
-                      <Button disabled={!canSkipStep1} onClick={handleNext}>
-                        {"ileri"}
-                      </Button>
-                    ) : (
-                      ""
-                    )}
+                  ) : (
+                    ""
+                  )}
 
-                    {activeStep === 1 ? (
-                      <Button
-                        disabled={!calcRaws.validity}
-                        onClick={handleNext}
-                      >
-                        {"ileri"}
-                      </Button>
-                    ) : (
-                      ""
-                    )}
-                    {activeStep === 2 ? (
-                      <Button
-                        disabled={!calcRaws.validity}
-                        onClick={handleNext}
-                      >
-                        {"ileri"}
-                      </Button>
-                    ) : (
-                      ""
-                    )}
+                  {activeStep === 1 ? (
+                    <Button disabled={!calcRaws.validity} onClick={handleNext}>
+                      {"ileri"}
+                    </Button>
+                  ) : (
+                    ""
+                  )}
+                  {activeStep === 2 ? (
+                    <Button disabled={!calcRaws.validity} onClick={handleNext}>
+                      {"ileri"}
+                    </Button>
+                  ) : (
+                    ""
+                  )}
 
-                    {activeStep === 3 ? (
-                      <Button
-                        disabled={false}
-                        onClick={async (e) => {
-                          await handleSubmit(e);
-                          handleNext(e);
-                        }}
-                      >
-                        {"Oluştur"}
-                      </Button>
-                    ) : (
-                      ""
-                    )}
-                  </Box>
-                </React.Fragment>
-              )}
-            </Box>
-          </div>
-
-          <div
-            className={`${
-              submit && isValid ? "visible scale-100" : "invisible scale-0 h-0"
-            } mt-3 text-center transition duration-500 ease-out`}
-          >
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-              <svg
-                className="h-6 w-6 text-green-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 13l4 4L19 7"
-                ></path>
-              </svg>
-            </div>
-            <h3 className="text-lg leading-6 font-medium text-gray-900">
-              Başarılı!
-            </h3>
-            <div className="mt-2 px-7 py-3">
-              <p className="text-sm text-gray-500">
-                Teklif Başarıyla Kaydedildi!
-              </p>
-            </div>
-            <div className="items-center px-4 py-3">
-              <button
-                id="ok-btn"
-                onClick={() => {
-                  toggleCreate();
-                  setSubmit(false);
-                  router.refresh();
-                }}
-                className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
-              >
-                Tamam
-              </button>
-            </div>
-          </div>
+                  {activeStep === 3 ? (
+                    <Button
+                      disabled={false}
+                      onClick={async (e) => {
+                        await handleSubmit(e);
+                        handleNext(e);
+                      }}
+                    >
+                      {"Oluştur"}
+                    </Button>
+                  ) : (
+                    ""
+                  )}
+                </Box>
+              </React.Fragment>
+            )}
+          </Box>
         </div>
       </div>
     </div>
