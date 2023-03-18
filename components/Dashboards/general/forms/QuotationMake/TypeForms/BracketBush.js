@@ -2,6 +2,8 @@
 import ModalImage from "../../../ui/ModalImage";
 import { useState, useEffect } from "react";
 import Alert from "./Alert";
+import { bracketData } from "../Forms/data";
+import TextField from "@mui/material/TextField";
 export default function BracketBush({ getMeasures, prevValues }) {
   const calcWeigth = (A8, B8, C8, D8, E8) => {
     return (
@@ -48,6 +50,8 @@ export default function BracketBush({ getMeasures, prevValues }) {
           : "",
     },
   });
+
+  const [valid, setValid] = useState(false);
 
   const [warning, setWarning] = useState({
     message: "",
@@ -135,6 +139,7 @@ export default function BracketBush({ getMeasures, prevValues }) {
   ]);
 
   useEffect(() => {
+    setValid(handleValidation());
     getMeasures(handleValidation(), {
       bracket_bush: { ...fields.bracket_bush },
       ...calculated,
@@ -168,123 +173,31 @@ export default function BracketBush({ getMeasures, prevValues }) {
         <hr />
       </div>
       <div className="space-y-5 lg:grid lg:grid-cols-2 lg:items-end lg:gap-3 space-x1-10">
-        <div className="flex flex-col">
-          <label
-            htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-          >
-            Büyük Çap * (Q1)
-          </label>
-          <input
-            type="number"
-            step={"any"}
-            id={"br1"}
-            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-            placeholder=""
-            defaultValue={fields.bracket_bush.bigger_diameter}
-            required
-            onClick={toggleWarning}
-            onChange={(e) => {
-              handleChange("bracket_bush", "bigger_diameter", e);
-            }}
-          />
-        </div>
+        {bracketData.map((item, index) => {
+          return (
+            <TextField
+              label={item.label}
+              key={index}
+              onClick={toggleWarning}
+              variant="standard"
+              helperText="Zorunlu Alan"
+              value={fields[item.fields][item.value] || ""}
+              type={item.type}
+              error={!valid}
+              onChange={(e) => handleChange(item.fields, item.value, e)}
+            />
+          );
+        })}
 
-        <div className="flex flex-col">
-          <label
-            htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-          >
-            Body Çap * (Q3)
-          </label>
-          <input
-            type="number"
-            step={"any"}
-            id={"br2"}
-            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-            placeholder=""
-            required
-            onClick={toggleWarning}
-            defaultValue={fields.bracket_bush.body_diameter}
-            onChange={(e) => {
-              handleChange("bracket_bush", "body_diameter", e);
-            }}
-          />
-        </div>
-
-        <div className="flex flex-col">
-          <label
-            htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-          >
-            Flanş Boyu * (L1)
-          </label>
-          <input
-            type="number"
-            step={"any"}
-            id={"br3"}
-            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-            placeholder=""
-            required
-            onClick={toggleWarning}
-            defaultValue={fields.bracket_bush.bush_length}
-            onChange={(e) => {
-              handleChange("bracket_bush", "bush_length", e);
-            }}
-          />
-        </div>
-        <div className="flex flex-col">
-          <label
-            htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-          >
-            Boy * (L)
-          </label>
-          <input
-            type="number"
-            step={"any"}
-            id={"br4"}
-            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-            placeholder=""
-            defaultValue={fields.bracket_bush.bracket_length}
-            required
-            onClick={toggleWarning}
-            onChange={(e) => {
-              handleChange("bracket_bush", "bracket_length", e);
-            }}
-          />
-        </div>
-        <div className="flex flex-col">
-          <label
-            htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-          >
-            İç Çap * (Q2)
-          </label>
-          <input
-            type="number"
-            step={"any"}
-            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-            placeholder=""
-            id={"br5"}
-            required
-            onClick={toggleWarning}
-            defaultValue={fields.bracket_bush.inner_diameter}
-            onChange={(e) => {
-              handleChange("bracket_bush", "inner_diameter", e);
-            }}
-          />
-        </div>
-
-        <div className="flex flex-col">
-          <label
-            htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-          >
-            Hesaplanan Ağırlık
-          </label>
-          <p className="font-poppins text-red-700">{calculated.calcRaw}</p>
-        </div>
+        <TextField
+          InputProps={{
+            readOnly: true,
+          }}
+          variant="standard"
+          value={isNaN(calculated.calcRaw) ? "" : calculated.calcRaw.toFixed(3)}
+          label="Hesaplanan Ağırlık"
+        />
+        <br />
         <ModalImage image={"/bracketbush.png"} />
         <Alert
           setWarning={setWarning}

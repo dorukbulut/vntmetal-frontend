@@ -2,6 +2,8 @@
 import ModalImage from "../../../ui/ModalImage";
 import { useState, useEffect } from "react";
 import Alert from "./Alert";
+import TextField from "@mui/material/TextField";
+import { plateData } from "../Forms/data";
 export default function PlateStrip({ getMeasures, prevValues }) {
   const calcWeigth = (A8, B8, C8) => {
     return (A8 * B8 * C8 * 8.6) / 1000000;
@@ -30,6 +32,7 @@ export default function PlateStrip({ getMeasures, prevValues }) {
           : "",
     },
   });
+  const [valid, setValid] = useState(false);
 
   const [calculated, setCalculated] = useState({
     calcRaw: "calcRaw" in prevValues ? prevValues.calcRaw : "",
@@ -109,6 +112,7 @@ export default function PlateStrip({ getMeasures, prevValues }) {
   ]);
 
   useEffect(() => {
+    setValid(handleValidation());
     getMeasures(handleValidation(), {
       plate_strip: { ...fields.plate_strip },
       ...calculated,
@@ -135,81 +139,30 @@ export default function PlateStrip({ getMeasures, prevValues }) {
         <hr />
       </div>
       <div className="space-y-5 lg:grid lg:grid-cols-2 lg:items-end lg:gap-3 space-x1-10">
-        <div className="flex flex-col">
-          <label
-            htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-          >
-            En *
-          </label>
-          <input
-            type="number"
-            step={"any"}
-            onClick={toggleWarning}
-            id={"pt1"}
-            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-            placeholder=""
-            required
-            defaultValue={fields.plate_strip.width}
-            onChange={(e) => {
-              handleChange("plate_strip", "width", e);
-            }}
-          />
-        </div>
-
-        <div className="flex flex-col">
-          <label
-            htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-          >
-            Boy *
-          </label>
-          <input
-            type="number"
-            step={"any"}
-            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-            placeholder=""
-            required
-            onClick={toggleWarning}
-            id={"pt2"}
-            defaultValue={fields.plate_strip.length}
-            onChange={(e) => {
-              handleChange("plate_strip", "length", e);
-            }}
-          />
-        </div>
-
-        <div className="flex flex-col">
-          <label
-            htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-          >
-            Kalınlık *
-          </label>
-          <input
-            type="number"
-            step={"any"}
-            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-            placeholder=""
-            required
-            onClick={toggleWarning}
-            id={"pt3"}
-            defaultValue={fields.plate_strip.thickness}
-            onChange={(e) => {
-              handleChange("plate_strip", "thickness", e);
-            }}
-          />
-        </div>
-
-        <div className="flex flex-col">
-          <label
-            htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-          >
-            Hesaplanan Ağırlık
-          </label>
-          <p className="font-poppins text-red-700">{calculated.calcRaw}</p>
-        </div>
+        {plateData.map((item, index) => {
+          return (
+            <TextField
+              label={item.label}
+              key={index}
+              onClick={toggleWarning}
+              variant="standard"
+              helperText="Zorunlu Alan"
+              value={fields[item.fields][item.value] || ""}
+              type={item.type}
+              error={!valid}
+              onChange={(e) => handleChange(item.fields, item.value, e)}
+            />
+          );
+        })}
+        <TextField
+          InputProps={{
+            readOnly: true,
+          }}
+          variant="standard"
+          value={isNaN(calculated.calcRaw) ? "" : calculated.calcRaw.toFixed(3)}
+          label="Hesaplanan Ağırlık"
+        />
+        <br />
       </div>
 
       <div className="flex flex-col">

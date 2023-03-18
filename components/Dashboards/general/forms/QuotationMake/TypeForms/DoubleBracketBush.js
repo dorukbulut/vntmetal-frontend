@@ -2,6 +2,8 @@
 import ModalImage from "../../../ui/ModalImage";
 import { useEffect, useState } from "react";
 import Alert from "./Alert";
+import TextField from "@mui/material/TextField";
+import { doubleBracketData } from "../Forms/data";
 export default function DoubleBracketBush({ getMeasures, prevValues }) {
   const calcWeigth = (A8, B8, C8, D8, E8, F8, G8) => {
     return (
@@ -16,6 +18,7 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
         1000000
     );
   };
+  const [valid, setValid] = useState(false);
 
   const [fields, setFields] = useState({
     doublebracket_bush: {
@@ -167,7 +170,7 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
   ]);
 
   useEffect(() => {
-    console.log("entered measures");
+    setValid(handleValidation());
     getMeasures(handleValidation(), {
       doublebracket_bush: { ...fields.doublebracket_bush },
       ...calculated,
@@ -195,165 +198,30 @@ export default function DoubleBracketBush({ getMeasures, prevValues }) {
         <hr />
       </div>
       <div className="space-y-5 lg:grid lg:grid-cols-2 lg:items-end lg:gap-3 space-x1-10">
-        <div className="flex flex-col">
-          <label
-            htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-          >
-            Büyük Çap * (Q1)
-          </label>
-          <input
-            type="number"
-            step={"any"}
-            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-            placeholder=""
-            onClick={toggleWarning}
-            id={"dbr1"}
-            required
-            defaultValue={fields.doublebracket_bush.bigger_diameter}
-            onChange={(e) => {
-              handleChange("doublebracket_bush", "bigger_diameter", e);
-            }}
-          />
-        </div>
-
-        <div className="flex flex-col">
-          <label
-            htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-          >
-            Body Çap * (Q3)
-          </label>
-          <input
-            type="number"
-            step={"any"}
-            id={"dbr2"}
-            onClick={toggleWarning}
-            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-            placeholder=""
-            defaultValue={fields.doublebracket_bush.body_diameter}
-            required
-            onChange={(e) => {
-              handleChange("doublebracket_bush", "body_diameter", e);
-            }}
-          />
-        </div>
-        <div className="flex flex-col">
-          <label
-            htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-          >
-            İç Çap * (Q2)
-          </label>
-          <input
-            type="number"
-            step={"any"}
-            onClick={toggleWarning}
-            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-            placeholder=""
-            id={"dbr3"}
-            required
-            defaultValue={fields.doublebracket_bush.inner_diameter}
-            onChange={(e) => {
-              handleChange("doublebracket_bush", "inner_diameter", e);
-            }}
-          />
-        </div>
-
-        <div className="flex flex-col">
-          <label
-            htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-          >
-            Flanş Boyu L1 *
-          </label>
-          <input
-            type="number"
-            step={"any"}
-            id={"dbr4"}
-            onClick={toggleWarning}
-            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-            placeholder=""
-            defaultValue={fields.doublebracket_bush.bracket_l1}
-            required
-            onChange={(e) => {
-              handleChange("doublebracket_bush", "bracket_l1", e);
-            }}
-          />
-        </div>
-        <div className="flex flex-col">
-          <label
-            htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-          >
-            Flanş Boyu L2 *
-          </label>
-          <input
-            type="number"
-            step={"any"}
-            onClick={toggleWarning}
-            id={"dbr5"}
-            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-            placeholder=""
-            defaultValue={fields.doublebracket_bush.bracket_l2}
-            required
-            onChange={(e) => {
-              handleChange("doublebracket_bush", "bracket_l2", e);
-            }}
-          />
-        </div>
-
-        <div className="flex flex-col">
-          <label
-            htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-          >
-            Ara Boy L3 *
-          </label>
-          <input
-            type="number"
-            step={"any"}
-            id={"dbr6"}
-            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-            placeholder=""
-            onClick={toggleWarning}
-            defaultValue={fields.doublebracket_bush.bracket_l3}
-            required
-            onChange={(e) => {
-              handleChange("doublebracket_bush", "bracket_l3", e);
-            }}
-          />
-        </div>
-        <div className="flex flex-col">
-          <label
-            htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-          >
-            Tam Boy L *
-          </label>
-          <input
-            type="number"
-            step={"any"}
-            id={"dbr7"}
-            className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-            placeholder=""
-            onClick={toggleWarning}
-            defaultValue={fields.doublebracket_bush.bracket_full}
-            required
-            onChange={(e) => {
-              handleChange("doublebracket_bush", "bracket_full", e);
-            }}
-          />
-        </div>
-        <div className="flex flex-col">
-          <label
-            htmlFor="small-input"
-            className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-          >
-            Hesaplanan Ağırlık
-          </label>
-          <p className="font-poppins text-red-700">{calculated.calcRaw}</p>
-        </div>
+        {doubleBracketData.map((item, index) => {
+          return (
+            <TextField
+              label={item.label}
+              key={index}
+              onClick={toggleWarning}
+              variant="standard"
+              helperText="Zorunlu Alan"
+              value={fields[item.fields][item.value] || ""}
+              type={item.type}
+              error={!valid}
+              onChange={(e) => handleChange(item.fields, item.value, e)}
+            />
+          );
+        })}
+        <TextField
+          InputProps={{
+            readOnly: true,
+          }}
+          variant="standard"
+          value={isNaN(calculated.calcRaw) ? "" : calculated.calcRaw.toFixed(3)}
+          label="Hesaplanan Ağırlık"
+        />
+        <br />
       </div>
 
       <div className="flex flex-col">

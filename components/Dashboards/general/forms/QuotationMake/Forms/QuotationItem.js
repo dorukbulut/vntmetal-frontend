@@ -1,11 +1,12 @@
 "use client";
-import Dropdown from "../../Common/Dropdown";
 import React, { useEffect, useState } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { ITEM_TYPES } from "../../../../../../utils/mappers";
+import TextField from "@mui/material/TextField";
+import { quotCols } from "./data";
 export default function QuotationItem({
   name,
   children,
@@ -35,6 +36,7 @@ export default function QuotationItem({
       totalPrice: "totalPrice" in prevValues ? prevValues.totalPrice : "",
     },
   });
+  const [valid, setValid] = useState(false);
 
   const [calculated, setCalculated] = useState({
     modelUnitPrice:
@@ -146,6 +148,7 @@ export default function QuotationItem({
     molding.values.calcRaw,
   ]);
   useEffect(() => {
+    setValid(handleValidation());
     getCalcRaw(handleValidation() && molding.validity, {
       ...fields.quotation_item,
       ...calculated,
@@ -224,16 +227,6 @@ export default function QuotationItem({
 
   return (
     <div className="mt-10 lg:grid lg:place-items-center">
-      {type === "update" ? (
-        <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-yellow-600">
-          {ITEM_TYPES[name]} Güncelle
-        </p>
-      ) : (
-        <p className="text-center font-poppins tracking-wide lg:text-lg text-sm text-green-600">
-          Yeni {ITEM_TYPES[name]}
-        </p>
-      )}
-
       <div className="grid grid-cols-1 space-y-5 lg:grid lg:grid-cols-2 space-x-10 ">
         {childrenWithProps}
         <div className="mt-5 space-y-2 lg:flex lg:flex-col lg:items-center">
@@ -244,221 +237,71 @@ export default function QuotationItem({
             <hr />
           </div>
           <div className="space-y-5 lg:grid lg:grid-cols-3 lg:items-end lg:gap-3 space-x1-10">
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Adet *
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                defaultValue={fields["quotation_item"]["unit_frequence"]}
-                required
-                onChange={(e) => {
-                  handleChange("quotation_item", "unit_frequence", e);
-                }}
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Döküm Kilogram Fiyatı (₺)
-              </label>
-              <p className="font-poppins text-red-700">{kgPrice} ₺</p>
-            </div>
-
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Döküm Fiyatı (₺)
-              </label>
-              <p className="font-poppins">
-                {(molding.values.calcRaw * parseFloat(kgPrice)).toFixed(2)} ₺
-              </p>
-            </div>
-
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Model Fiyatı *
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                defaultValue={fields["quotation_item"]["model_price"]}
-                required
-                onChange={(e) => {
-                  handleChange("quotation_item", "model_price", e);
-                }}
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Model Adet Fiyatı (₺)
-              </label>
-              <p className="font-poppins">
-                {isNaN(calculated.modelUnitPrice)
+            {quotCols.map((item, index) => {
+              return (
+                <TextField
+                  label={item.label}
+                  key={index}
+                  variant="standard"
+                  helperText="Zorunlu Alan"
+                  value={fields[item.fields][item.value] || ""}
+                  type={item.type}
+                  error={!valid}
+                  onChange={(e) => handleChange(item.fields, item.value, e)}
+                />
+              );
+            })}
+            <br />
+            <TextField
+              InputProps={{
+                readOnly: true,
+              }}
+              variant="standard"
+              value={
+                isNaN(calculated.modelUnitPrice)
                   ? ""
-                  : calculated.modelUnitPrice}{" "}
-                ₺
-              </p>
-            </div>
-
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900"
-              >
-                Model Firma Adı *
-              </label>
-              <input
-                type="text"
-                step={"any"}
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                defaultValue={fields["quotation_item"]["model_firm"]}
-                onChange={(e) =>
-                  handleChange("quotation_item", "model_firm", e)
-                }
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                İşleme Fiyatı *
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                defaultValue={fields.quotation_item.treatment_price}
-                required
-                onChange={(e) =>
-                  handleChange("quotation_item", "treatment_price", e)
-                }
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                İşleme Firma Adı *
-              </label>
-              <input
-                type="text"
-                step={"any"}
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                defaultValue={fields["quotation_item"]["treatment_firm"]}
-                onChange={(e) =>
-                  handleChange("quotation_item", "treatment_firm", e)
-                }
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Test Fiyatı *
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                defaultValue={fields.quotation_item.test_price}
-                required
-                onChange={(e) =>
-                  handleChange("quotation_item", "test_price", e)
-                }
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Maliyet (₺)
-              </label>
-              <p className="font-poppins text-red-700">
-                {isNaN(calculated.totalCost) ? "" : calculated.totalCost} ₺
-              </p>
-            </div>
-
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Kar Oranı(yüzde) *
-              </label>
-              <input
-                type="number"
-                min={0}
-                max={100}
-                step={"any"}
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                defaultValue={fields["quotation_item"]["benefit"]}
-                onChange={(e) => handleChange("quotation_item", "benefit", e)}
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <label
-                htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
-              >
-                Alternatif Fiyat *
-              </label>
-              <input
-                type="number"
-                step={"any"}
-                className="invalid:border-red-500 valid:border-green-500 pl-5 text-sm focus:shadow-soft-primary-outline ease-soft w-1/100 leading-5.6 relative -ml-px block min-w-0 flex-auto rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 pr-3 text-gray-700 transition-all placeholder:text-gray-500 focus:border-sky-600 focus:outline-none focus:transition-shadow"
-                placeholder=""
-                required
-                defaultValue={fields["quotation_item"]["alterPrice"]}
-                onChange={(e) =>
-                  handleChange("quotation_item", "alterPrice", e)
-                }
-              />
-            </div>
+                  : calculated.modelUnitPrice + " ₺"
+              }
+              label="Model Adet Fiyatı"
+            />
+            <TextField
+              InputProps={{
+                readOnly: true,
+              }}
+              variant="standard"
+              value={isNaN(kgPrice) ? "" : kgPrice + " ₺"}
+              label="Döküm Kilogram Fiyatı"
+            />
+            <TextField
+              InputProps={{
+                readOnly: true,
+              }}
+              variant="standard"
+              value={
+                isNaN((molding.values.calcRaw * parseFloat(kgPrice)).toFixed(2))
+                  ? ""
+                  : (molding.values.calcRaw * parseFloat(kgPrice)).toFixed(2) +
+                    " ₺"
+              }
+              label="Döküm Fiyatı (₺)"
+            />
+            <TextField
+              InputProps={{
+                readOnly: true,
+              }}
+              variant="standard"
+              value={
+                isNaN(calculated.totalCost) ? "" : calculated.totalCost + " ₺"
+              }
+              label="Maliyet"
+            />
 
             <div className="flex flex-col space-y-3">
               <label
                 htmlFor="small-input"
-                className="block mb-2 text-sm font-medium font-poppins italic text-sky-600 text-gray-900 "
+                className="block mb-2 text-sm font-roboto font-poppins text-gray-900 "
               >
-                Satış Fiyatı
+                Satış Fiyatı (Zorunlu)
               </label>
               <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                 <InputLabel id="demo-select-small">Fiyat</InputLabel>

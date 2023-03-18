@@ -422,7 +422,7 @@ export default function CreateMake({ prevValues, type, prevType, prevId }) {
                 )}
 
                 {activeStep == 3 ? (
-                  <p className="text-lg mt-10 leading-6 font-medium text-green-500 text-center">
+                  <p className="text-lg mt-10 leading-6 font-roboto text-green-500 text-center">
                     Bütün bilgiler başarıyla dolduruldu. Teklif Oluşturmak için
                     Oluştur seçeneğine tıklayınız.
                   </p>
