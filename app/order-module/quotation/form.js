@@ -25,6 +25,9 @@ export default function QuotationForm({ customers, prevValue, dispatch }) {
   const id = searchParams.get("id");
   const [all, setAll] = useState([]);
   const [valid, setValid] = useState(false);
+  const [isEmpty, setisEmpty] = useState(false);
+  const [isSame, setisSame] = useState(false);
+  const [isAllSame, setAllSame] = useState(false);
   const [Customer_ID, setCustomer] = useState({
     title: customer,
   });
@@ -39,7 +42,7 @@ export default function QuotationForm({ customers, prevValue, dispatch }) {
       b: fields?.options?.customerInquiryNum,
     };
     setValid(isValid(check_valid));
-  }, [fields, Customer_ID?.title]);
+  }, [fields, Customer_ID?.title, all]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
