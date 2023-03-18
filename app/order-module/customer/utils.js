@@ -1,5 +1,5 @@
 import EditIcon from "@mui/icons-material/Edit";
-import Action from "../action";
+import Action from "../../../components/base/action";
 export const formatData = (rows) => {
   return rows.map((row) => {
     return {

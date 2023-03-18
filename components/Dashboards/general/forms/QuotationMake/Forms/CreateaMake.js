@@ -28,7 +28,7 @@ import QuotationItemService from "../../../../../../services/QuotationService/Qu
 import CustomerService from "../../../../../../services/CustomerService";
 import AnalysisService from "../../../../../../services/AnalysisService";
 
-export default function CreateMake({ prevValues, type, prevType, prevId }) {
+export default function CreateMake({ type, prevType, prevId, id }) {
   const [error, setError] = useState({
     isOpen: false,
     type: "info",
@@ -36,12 +36,10 @@ export default function CreateMake({ prevValues, type, prevType, prevId }) {
     title: "",
   });
   const [valid, setValid] = useState(false);
-  const [activeStep, setActiveStep] = useState(type === "update" ? 2 : 0);
+  const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
   const [isLoading, setLoading] = useState(false);
-
   const router = useRouter();
-
   const [fields, setFields] = useState({ title: "" });
 
   const [canSkipStep1, setCanSkip1] = useState(false);
@@ -86,26 +84,7 @@ export default function CreateMake({ prevValues, type, prevType, prevId }) {
   // states
   const [calcRaws, setCalcRaws] = useState({
     validity: false,
-
-    values:
-      type === "update"
-        ? {
-            ...prevValues,
-            account_id:
-              "Customer_ID" in prevValues ? prevValues.Customer_ID : "",
-            analyze_Name:
-              "Analyze_ID" in prevValues ? prevValues.Analyze_ID : "",
-            benefit:
-              "benefitPercent" in prevValues ? prevValues.benefitPercent : "",
-            alterPrice:
-              "alternativeSale_price" in prevValues
-                ? prevValues.alternativeSale_price
-                : "",
-            LME: "lmeCopper" in prevValues ? prevValues.lmeCopper : "",
-            TINP: "lmeTin" in prevValues ? prevValues.lmeTin : "",
-            type: prevValues.itemType,
-          }
-        : {},
+    values: {},
   });
 
   const [CUSTOMER, setCustomer] = useState([]);
@@ -128,7 +107,6 @@ export default function CreateMake({ prevValues, type, prevType, prevId }) {
       }
     });
   }, []);
-
   React.useEffect(() => {
     CustomerService.getAllCustomers().then((res) => {
       if (res.status === 200) {
@@ -184,7 +162,7 @@ export default function CreateMake({ prevValues, type, prevType, prevId }) {
       (item) => item.title === calcRaws.values.analyze_Name
     ).id;
     const tp = TYPE.find((item) => item.title === calcRaws.values.type).value;
-    const quo = QUOTYPE.find((item) => (item.title = fields.title)).id;
+    const quo = QUOTYPE.find((item) => item.title === fields.title).id;
     const standartOptions = {
       Customer_ID: calcRaws.values.account_id,
       Analyze_ID: analyzeID,
@@ -220,7 +198,7 @@ export default function CreateMake({ prevValues, type, prevType, prevId }) {
         data = {
           options: {
             ...standartOptions,
-            dimensions: `${plate_item.width}*${plate_item["length"]}*${plate_item.thickness}`,
+            dimensions: `${plate_item.width}*${plate_item["length"]}*${plate_item.thickness}mm`,
             plate_strip: {
               ...plate_item,
             },
@@ -232,7 +210,7 @@ export default function CreateMake({ prevValues, type, prevType, prevId }) {
         data = {
           options: {
             ...standartOptions,
-            dimensions: `${str_item.large_diameter}*${str_item.inner_diameter}*${str_item.bush_length}`,
+            dimensions: `Q${str_item.large_diameter}*Q${str_item.inner_diameter}*${str_item.bush_length}mm`,
             straight_bush: {
               ...str_item,
             },
@@ -244,7 +222,7 @@ export default function CreateMake({ prevValues, type, prevType, prevId }) {
         data = {
           options: {
             ...standartOptions,
-            dimensions: `${bracket_item.bigger_diameter}*${bracket_item.inner_diameter}*${bracket_item.body_diameter}*${bracket_item.bush_length}*${bracket_item.bracket_length}`,
+            dimensions: `Q${bracket_item.bigger_diameter}*Q${bracket_item.inner_diameter}*Q${bracket_item.body_diameter}*${bracket_item.bush_length}*${bracket_item.bracket_length}mm`,
             bracket_bush: {
               ...bracket_item,
             },
@@ -256,7 +234,7 @@ export default function CreateMake({ prevValues, type, prevType, prevId }) {
         data = {
           options: {
             ...standartOptions,
-            dimensions: `${double_bracket.bigger_diameter}*${double_bracket.inner_diameter}*${double_bracket.body_diameter}*${double_bracket.bracket_l1}*${double_bracket.bracket_l2}*${double_bracket.bracket_l3}*${double_bracket.bracket_full}`,
+            dimensions: `Q${double_bracket.bigger_diameter}*Q${double_bracket.inner_diameter}*Q${double_bracket.body_diameter}*${double_bracket.bracket_l1}*${double_bracket.bracket_l2}*${double_bracket.bracket_l3}*${double_bracket.bracket_full}mm`,
             doublebracket_bush: {
               ...double_bracket,
             },
@@ -268,7 +246,7 @@ export default function CreateMake({ prevValues, type, prevType, prevId }) {
         data = {
           options: {
             ...standartOptions,
-            dimensions: `${double_bracket.bigger_diameter}*${middle_bracket.bracket_q1}*${middle_bracket.bracket_q2}*${middle_bracket.bracket_q3}*${middle_bracket.bracket_q4}*${middle_bracket.bracket_l1}*${middle_bracket.bracket_l2}*${middle_bracket.bracket_l3}*${middle_bracket.bracket_full}`,
+            dimensions: `Q${middle_bracket.bracket_q1}*Q${middle_bracket.bracket_q2}*Q${middle_bracket.bracket_q3}*Q${middle_bracket.bracket_q4}*${middle_bracket.bracket_l1}*${middle_bracket.bracket_l2}*${middle_bracket.bracket_l3}*${middle_bracket.bracket_full}mm`,
             middlebracket_bush: {
               ...middle_bracket,
             },
@@ -303,9 +281,38 @@ export default function CreateMake({ prevValues, type, prevType, prevId }) {
   };
 
   //hooks
+
   React.useEffect(() => {
-    setCanSkip1(handleValidation1());
-  }, [prevValues]);
+    if (type === "update") {
+      QuotationItemService.getByID(id).then((res) => {
+        const old_item = res.data[0];
+
+        setFields({
+          title: QUOTYPE.find((item) => item.id === old_item.type).title,
+          id: old_item.type,
+        });
+        setCalcRaws({
+          validity: false,
+          values: Object.assign(old_item, {
+            account_id:
+              "Customer_ID" in old_item ? `${old_item.Customer_ID}` : "",
+            analyze_Name: old_item.analyze.analyze_Name,
+            benefit:
+              "benefitPercent" in old_item ? old_item.benefitPercent : "",
+            alterPrice:
+              "alternativeSale_price" in old_item
+                ? old_item.alternativeSale_price
+                : "",
+            LME: "lmeCopper" in old_item ? old_item.lmeCopper : "",
+            TINP: "lmeTin" in old_item ? old_item.lmeTin : "",
+            type: TYPE.find((item) => item.value === old_item.itemType).title,
+          }),
+        });
+        setActiveStep(type === "update" ? 2 : 0);
+      });
+    }
+  }, []);
+
   return (
     <div>
       <Alert error={error} />
@@ -437,16 +444,17 @@ export default function CreateMake({ prevValues, type, prevType, prevId }) {
                       prevValues={calcRaws.values}
                       kgPrice={calcRaws.values.kgPrice}
                       name={
-                        TYPE.find((item) => item.title === calcRaws.values.type)
-                          .value
+                        TYPE.find(
+                          (item) => item.title === calcRaws?.values?.type
+                        )?.value
                       }
                     >
                       {" "}
                       {
                         TYPE_COMPS[
                           TYPE.find(
-                            (item) => item.title === calcRaws.values.type
-                          ).value
+                            (item) => item.title === calcRaws?.values?.type
+                          )?.value
                         ]
                       }{" "}
                     </QuotationItem>

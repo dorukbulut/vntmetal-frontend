@@ -13,6 +13,10 @@ class QuotationItemService {
     return axios.get("/api/quotation-items/filter", { params: { ...params } });
   }
 
+  async getByID(id) {
+    return axios.post("/api/quotation-items/get-id", { item_id: id });
+  }
+
   async createItem(data) {
     return axios.post("/api/quotation-items/create", data);
   }

@@ -89,7 +89,7 @@ export default function PlateStrip({ getMeasures, prevValues }) {
 
   useEffect(() => {
     let numbers = { ...fields.plate_strip };
-    console.log(numbers);
+
     if (true) {
       const calc = calcWeigth(
         parseFloat(numbers.width),
@@ -159,7 +159,11 @@ export default function PlateStrip({ getMeasures, prevValues }) {
             readOnly: true,
           }}
           variant="standard"
-          value={isNaN(calculated.calcRaw) ? "" : calculated.calcRaw.toFixed(3)}
+          value={
+            isNaN(calculated.calcRaw)
+              ? ""
+              : parseFloat(calculated.calcRaw).toFixed(3)
+          }
           label="Hesaplanan Ağırlık"
         />
         <br />

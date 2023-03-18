@@ -194,7 +194,11 @@ export default function BracketBush({ getMeasures, prevValues }) {
             readOnly: true,
           }}
           variant="standard"
-          value={isNaN(calculated.calcRaw) ? "" : calculated.calcRaw.toFixed(3)}
+          value={
+            isNaN(calculated.calcRaw)
+              ? ""
+              : parseFloat(calculated.calcRaw).toFixed(3)
+          }
           label="Hesaplanan Ağırlık"
         />
         <br />
