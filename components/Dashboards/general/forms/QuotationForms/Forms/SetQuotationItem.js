@@ -44,7 +44,7 @@ function SetItem({ fields, setAll, url, prevType, prevId }) {
                 ).toFixed(2)} ${item.currency}`,
                 deliveryTime: item.deliveryTime ? item.deliveryTime : "",
                 currency: item.currency,
-                checked: false,
+                checked: true,
               };
             });
 

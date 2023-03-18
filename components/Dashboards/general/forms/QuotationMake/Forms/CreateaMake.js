@@ -256,7 +256,21 @@ export default function CreateMake({ type, prevType, prevId, id }) {
     }
 
     try {
-      const res = await QuotationItemService.createItem(data);
+      let res;
+      if (type === "create") {
+        res = await QuotationItemService.createItem(data);
+      } else {
+        if (!calcRaws.values.isUsed) {
+          data = {
+            ...data,
+            item_id: calcRaws.values.item_id,
+            oldType: calcRaws.values.oldType,
+          };
+
+          res = await QuotationItemService.updateItem(data);
+        }
+      }
+
       if (res.status === 200) {
         setError({
           isOpen: true,
@@ -306,6 +320,7 @@ export default function CreateMake({ type, prevType, prevId, id }) {
             LME: "lmeCopper" in old_item ? old_item.lmeCopper : "",
             TINP: "lmeTin" in old_item ? old_item.lmeTin : "",
             type: TYPE.find((item) => item.value === old_item.itemType).title,
+            oldType: old_item.itemType,
           }),
         });
         setActiveStep(type === "update" ? 2 : 0);

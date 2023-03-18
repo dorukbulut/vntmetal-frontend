@@ -20,6 +20,9 @@ class QuotationItemService {
   async createItem(data) {
     return axios.post("/api/quotation-items/create", data);
   }
+  async updateItem(data) {
+    return axios.post("/api/quotation-items/update", data);
+  }
 
   async fetchFormItems(data, url) {
     return axios.post(`/api/quotation-items/${url}`, data);
