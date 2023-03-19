@@ -44,7 +44,7 @@ function SetItem({ fields, setAll, url, prevType, prevId }) {
                 ).toFixed(2)} ${item.currency}`,
                 deliveryTime: item.deliveryTime ? item.deliveryTime : "",
                 currency: item.currency,
-                checked: true,
+                checked: item.isUsed,
               };
             });
 
@@ -218,7 +218,7 @@ function SetItem({ fields, setAll, url, prevType, prevId }) {
     },
   ];
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto shadow-md rounded-lg border-2 w-full">
       <div className="flex justify-center mt-8">
         <Table
           columns={columns}

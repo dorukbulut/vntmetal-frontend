@@ -8,7 +8,7 @@ export const formatData = (rows) => {
         <Action
           preference={{
             name: "Düzenle",
-            action: "Müşteriyi Düzenle",
+            action: ["Müşteriyi Düzenle"],
             pathname: "/order-module/customer/form",
             query: {
               type: "update",

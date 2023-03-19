@@ -42,8 +42,8 @@ export default function ControlledOpenSpeedDial({ prevType, prevId }) {
         ariaLabel="SpeedDial controlled open example"
         sx={{
           position: "absolute",
-          bottom: 5,
-          left: 3,
+          bottom: 0,
+          left: 0,
           "& .MuiFab-primary": { backgroundColor: "#1e40af", color: "#ffffff" },
         }}
         icon={<SpeedDialIcon />}

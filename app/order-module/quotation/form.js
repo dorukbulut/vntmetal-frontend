@@ -12,19 +12,33 @@ import {
   PreparedData,
   TransPortdata,
   TransPortDataExtra,
+  INCOTERMS_EXTRA,
+  INCOTERMS_INTRA,
 } from "./form/data";
 import AutoComplete from "../../../components/base/autocomplete";
 import { useEffect, useState } from "react";
 import { isValid } from "../../valid";
+import { delay } from "../../../app/utils";
 import Link from "next/link";
+
+import Alert from "../../../components/base/alert";
 import { useSearchParams, useRouter } from "next/navigation";
+import QuotationFormService from "../../../services/QuotationService/QuotationFormService";
 export default function QuotationForm({ customers, prevValue, dispatch }) {
-  const { customer } = prevValue;
+  const { customer, prevarea } = prevValue;
+  const [error, setError] = useState({
+    isOpen: false,
+    type: "info",
+    message: "neden",
+    title: "",
+  });
+  const router = useRouter();
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
   const id = searchParams.get("id");
   const [all, setAll] = useState([]);
   const [valid, setValid] = useState(false);
+  const [area, setArea] = useState({ title: prevarea });
   const [isEmpty, setisEmpty] = useState(false);
   const [isSame, setisSame] = useState(false);
   const [isAllSame, setAllSame] = useState(false);
@@ -33,24 +47,141 @@ export default function QuotationForm({ customers, prevValue, dispatch }) {
   });
   const [isLoading, setLoading] = useState(false);
   const [fields, setFields] = useState({ ...prevValue.fields });
-  useEffect(() => {}, []);
+
   useEffect(() => {
-    dispatch(setValues(fields));
-    dispatch(setCust(Customer_ID?.title || ""));
+    const filtered = all.filter((item) => item !== undefined);
+    const written = filtered.find(
+      (item) => item.deliveryTime === "" || item.description === ""
+    );
+    const same = filtered.find(
+      (item) => item.currency !== filtered[0].currency
+    );
+    setisSame(same === undefined);
+    setisEmpty(filtered.length !== 0);
+    setAllSame(
+      filtered[0]?.currency === fields?.delivery_type?.currencyType?.title
+    );
+    //TODO FORM DİLİ, ŞİRKET, HAZIRLAYAN, ONAYLAYAN
     const check_valid = {
       a: Customer_ID?.title === undefined ? "" : Customer_ID?.title,
       b: fields?.options?.customerInquiryNum,
+      c:
+        fields?.area?.name?.title === undefined
+          ? ""
+          : fields?.area?.name?.title,
+      d:
+        fields?.delivery_type?.name?.title === undefined
+          ? ""
+          : fields?.delivery_type?.name?.title,
+      e:
+        fields?.delivery_type?.currencyType?.title === undefined
+          ? ""
+          : fields?.delivery_type?.currencyType?.title,
+      f: fields?.delivery_type?.currencyVal,
+      g: fields?.delivery_type?.package_fee,
+      h: fields?.delivery_type?.loading_fee,
+      aa: fields?.delivery_type?.transport_fee,
+      bb: fields?.delivery_type?.description,
+      cc:
+        fields?.options?.language?.title === undefined
+          ? ""
+          : fields?.options?.language?.title === undefined,
+      ff:
+        fields?.options?.company?.title === undefined
+          ? ""
+          : fields?.options?.company?.title === undefined,
+      ddd: fields?.options?.preparedBy,
+      xxx: fields?.options?.approvedBy,
     };
-    setValid(isValid(check_valid));
+    setValid(
+      isValid(check_valid) &&
+        filtered.length !== 0 &&
+        same === undefined &&
+        filtered[0]?.currency === fields?.delivery_type?.currencyType?.title &&
+        written == undefined
+    );
   }, [fields, Customer_ID?.title, all]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError({
+      isOpen: true,
+      type: "warning",
+      message: "Form Oluşturuluyor...",
+      title: "Lütfen Bekleyiniz",
+    });
     dispatch(clearResults());
-    console.log(fields);
-    console.log(Customer_ID?.title);
+    let data = {
+      options: {
+        ...fields.options,
+        Customer_ID: Customer_ID?.title,
+        language:
+          fields?.options?.language?.title === "Türkçe" ? "Turkish" : "English",
+        company: fields?.options?.company?.title,
+        grand_total: all
+          .filter((item) => item != undefined)
+          .reduce((prev, val) => {
+            console.log();
+            return prev + parseFloat(val.total_price.split(" ")[0]);
+          }, 0),
+      },
+
+      delivery_type: {
+        ...fields.delivery_type,
+        area: fields?.area?.name?.title,
+        currencyType: fields?.delivery_type?.currencyType?.title,
+        name: fields?.delivery_type?.name?.title,
+
+        total:
+          parseFloat(fields.delivery_type.package_fee) +
+          parseFloat(fields.delivery_type.loading_fee) +
+          parseFloat(fields.delivery_type.delivery_fee) +
+          parseFloat(fields.delivery_type.export_fee) +
+          parseFloat(fields.delivery_type.terminal_fee_exit) +
+          parseFloat(fields.delivery_type.vehicleLoading_fee) +
+          parseFloat(fields.delivery_type.transport_fee) +
+          parseFloat(fields.delivery_type.insurance_fee) +
+          parseFloat(fields.delivery_type.terminal_fee_entry) +
+          parseFloat(fields.delivery_type.import_fee),
+      },
+
+      all: all
+        .filter((item) => item != undefined)
+        .map((item) => {
+          return {
+            item_id: item.item_id,
+            description: item.description,
+            deliveryTime: item.deliveryTime,
+          };
+        }),
+    };
+
+    try {
+      const res = await QuotationFormService.createForm(data);
+      if (res.status === 200) {
+        setError({
+          isOpen: true,
+          type: "success",
+          message: "Form Oluşturuldu !",
+          title: "Başarılı",
+        });
+        await delay(2000);
+        router.push(`/order-module/quotation`);
+      }
+    } catch (err) {
+      setLoading(false);
+      setError({
+        isOpen: true,
+        type: "error",
+        message: "Form Oluşturulamadı !",
+        title: "Hata",
+      });
+    }
   };
   const handleChange = (area, field, e) => {
+    dispatch(setValues(fields));
+    dispatch(setCust(Customer_ID?.title || ""));
     setFields((old) => {
       return {
         ...old,
@@ -61,8 +192,22 @@ export default function QuotationForm({ customers, prevValue, dispatch }) {
       };
     });
   };
+  const handleChange2 = (area, field, value) => {
+    dispatch(setValues(fields));
+    dispatch(setCust(Customer_ID?.title || ""));
+    setFields((old) => {
+      return {
+        ...old,
+        [area]: {
+          ...old[area],
+          [field]: value,
+        },
+      };
+    });
+  };
   return (
     <div className="w-full h-full flex flex-col space-y-5">
+      <Alert error={error} />
       {!isLoading && (
         <div className="space-y-5">
           <div>
@@ -128,44 +273,93 @@ export default function QuotationForm({ customers, prevValue, dispatch }) {
               <div className="grid grid-cols-4 gap-10  p-2 rounded-lg ">
                 {TransPortdata.map((item, index) => {
                   if (item.type === "dropdown") {
+                    if (item.name === "Teslimat Tipi") {
+                      return fields?.area?.name?.title === "Yurt Dışı" ? (
+                        <AutoComplete
+                          key={index}
+                          data={INCOTERMS_EXTRA}
+                          dropDownOptions={{ label: item.name }}
+                          prevValue={
+                            fields[item.field][item.area] || { title: "" }
+                          }
+                          setData={(data) =>
+                            handleChange2(item.field, item.area, data)
+                          }
+                          valid={valid}
+                        />
+                      ) : (
+                        <AutoComplete
+                          key={index}
+                          data={INCOTERMS_INTRA}
+                          dropDownOptions={{ label: item.name }}
+                          prevValue={
+                            fields[item.field][item.area] || { title: "" }
+                          }
+                          setData={(data) =>
+                            handleChange2(item.field, item.area, data)
+                          }
+                          valid={valid}
+                        />
+                      );
+                    }
                     return (
                       <AutoComplete
                         key={index}
                         data={item.data}
                         dropDownOptions={{ label: item.name }}
+                        prevValue={
+                          fields[item.field][item.area] || { title: "" }
+                        }
+                        setData={(data) =>
+                          handleChange2(item.field, item.area, data)
+                        }
+                        valid={valid}
                       />
                     );
                   } else
                     return (
                       <TextField
                         key={index}
-                        id="standard-helperText"
+                        error={!valid}
+                        helperText="Zorunlu Alan"
                         label={item.name}
+                        value={fields[item.field][item.area] || ""}
                         variant="standard"
                         type={item.type}
+                        onChange={(e) => handleChange(item.field, item.area, e)}
                       />
                     );
                 })}
               </div>
 
-              <div className="p-2">
-                <p className="font-roboto text-indigo-700 text-sm font-ligth underline">
-                  Yurt Dışı Teslimat Detayları
-                </p>
-              </div>
-              <div className="grid grid-cols-4 gap-10  p-2 rounded-lg ">
-                {TransPortDataExtra.map((item, index) => {
-                  return (
-                    <TextField
-                      key={index}
-                      id="standard-helperText"
-                      label={item.name}
-                      variant="standard"
-                      type={item.type}
-                    />
-                  );
-                })}
-              </div>
+              {fields.area.name?.title === "Yurt Dışı" ? (
+                <div>
+                  <div className="p-2">
+                    <p className="font-roboto text-indigo-700 text-sm font-ligth underline">
+                      Yurt Dışı Teslimat Detayları
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-4 gap-10  p-2 rounded-lg ">
+                    {TransPortDataExtra.map((item, index) => {
+                      return (
+                        <TextField
+                          key={index}
+                          id="standard-helperText"
+                          value={fields[item.field][item.area] || ""}
+                          label={item.name}
+                          variant="standard"
+                          type={item.type}
+                          onChange={(e) =>
+                            handleChange(item.field, item.area, e)
+                          }
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : (
+                ""
+              )}
 
               <div className="p-2">
                 <p className="font-roboto text-indigo-700 text-sm font-ligth underline">
@@ -179,30 +373,39 @@ export default function QuotationForm({ customers, prevValue, dispatch }) {
                       key={index}
                       multiline
                       rows={3}
-                      id="standard-helperText"
+                      value={fields[item.field][item.area] || ""}
                       label={item.name}
                       variant="standard"
                       type={item.type}
+                      onChange={(e) => handleChange(item.field, item.area, e)}
                     />
                   );
                 })}
                 <AutoComplete
                   data={[{ title: "İngilizce" }, { title: "Türkçe" }]}
                   dropDownOptions={{ label: "Form Dili" }}
+                  prevValue={fields?.options?.language || { title: "" }}
+                  setData={(data) => handleChange2("options", "language", data)}
+                  valid={valid}
                 />
                 <AutoComplete
-                  data={[{ title: "VNT" }, { title: "Bilgesin" }]}
+                  data={[{ title: "VNT" }, { title: "BILGESIN" }]}
                   dropDownOptions={{ label: "Şirket" }}
+                  prevValue={fields?.options?.company || { title: "" }}
+                  setData={(data) => handleChange2("options", "company", data)}
+                  valid={valid}
                 />
                 {PreparedData.map((item, index) => {
                   return (
                     <TextField
                       key={index}
-                      id="standard-helperText"
+                      error={!valid}
                       label={item.name}
+                      value={fields[item.field][item.area] || ""}
                       variant="standard"
                       helperText="Zorunlu Alan"
-                      type={item.type}
+                      type={"text"}
+                      onChange={(e) => handleChange(item.field, item.area, e)}
                     />
                   );
                 })}
@@ -225,7 +428,12 @@ export default function QuotationForm({ customers, prevValue, dispatch }) {
                     {type === "create" ? "OLUŞTUR" : "GÜNCELLE"}
                   </button>
                   <Link href={"/order-module/quotation"} passHref>
-                    <button className="text-red-600 w-full h-full border-2 border-red-600 transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-red-700 font-roboto hover:text-white tacking-widest rounded">
+                    <button
+                      onClick={() => {
+                        dispatch(clearResults());
+                      }}
+                      className="text-red-600 w-full h-full border-2 border-red-600 transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-red-700 font-roboto hover:text-white tacking-widest rounded"
+                    >
                       IPTAL
                     </button>
                   </Link>
@@ -233,6 +441,21 @@ export default function QuotationForm({ customers, prevValue, dispatch }) {
                 {!valid && (
                   <p className="text-lg font-rotobot tracking widest text-red-600">
                     Tüm zorunlu alanlar doldurulmalıdır !
+                  </p>
+                )}
+                {!isEmpty && (
+                  <p className="text-lg font-rotobot tracking widest text-red-600">
+                    En az bir adet ürün seçilmeli !
+                  </p>
+                )}
+                {!isSame && (
+                  <p className="text-lg font-rotobot tracking widest text-red-600">
+                    Seçilen ürünlerin para birimleri aynı olmalıdır !
+                  </p>
+                )}
+                {!isAllSame && (
+                  <p className="text-lg font-rotobot tracking widest text-red-600">
+                    Teslimat ve seçilen Ürünlerin para birimi aynı olmalıdır !
                   </p>
                 )}
               </div>

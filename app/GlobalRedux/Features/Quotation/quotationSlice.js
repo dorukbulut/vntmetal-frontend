@@ -51,6 +51,7 @@ export const quotationSlice = createSlice({
     setCust: (state, action) => {
       state.customer = action.payload;
     },
+
     clearResults: (state) => {
       state.fields = initialState.fields;
       state.customer = "";

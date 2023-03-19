@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 export default function FormPage() {
   const fields = useSelector((state) => state.quotation.fields);
   const customer = useSelector((state) => state.quotation.customer);
+
   const dispatch = useDispatch();
   const [customers, setCustomers] = useState([]);
   useEffect(() => {

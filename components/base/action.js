@@ -46,12 +46,16 @@ export default function CustomizedMenus({ preference, children }) {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose} disableRipple>
-          {children}
-          <Link href={{ pathname, query }} passHref>
-            {action}
-          </Link>
-        </MenuItem>
+        {action.map((item, i) => {
+          return (
+            <MenuItem key={i} onClick={handleClose} disableRipple>
+              {children}
+              <Link href={{ pathname, query }} passHref>
+                {item}
+              </Link>
+            </MenuItem>
+          );
+        })}
       </Menu>
     </div>
   );
