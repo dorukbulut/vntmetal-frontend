@@ -201,7 +201,7 @@ function SetItem({ fields, setAll, url, prevType, prevId }) {
           <Action
             preference={{
               name: "Düzenle",
-              action: "Kalemi Düzenle",
+              action: ["Kalemi Düzenle"],
               pathname: "/order-module/quotation/form/item",
               query: {
                 type: "update",
