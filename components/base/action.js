@@ -51,8 +51,11 @@ export default function LOL({ preference, children }) {
             return (
               <MenuItem key={i} onClick={handleClose} disableRipple>
                 {children}
-                <Link href={{ pathname, query }} passHref>
-                  {item}
+                <Link
+                  href={{ pathname: item.pathname, query: { ...item.query } }}
+                  passHref
+                >
+                  {item.name}
                 </Link>
               </MenuItem>
             );

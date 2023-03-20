@@ -40,12 +40,31 @@ export default function Quotation() {
                   key={index}
                   preference={{
                     name: "Düzenle",
-                    action: ["Müşteriyi Düzenle", "Görüntüle", "İndir"],
-                    pathname: "/order-module/customer/form",
-                    query: {
-                      type: "update",
-                      id: item.account_id,
-                    },
+                    action: [
+                      {
+                        name: "Müşteriyi Düzenle",
+                        pathname: "/order-module/customer/form",
+                        query: {
+                          type: "update",
+                          id: item.account_id,
+                        },
+                      },
+                      {
+                        name: "Görüntüle",
+                        pathname: "/order-module/quotation/view",
+                        query: {
+                          id: item.quotation_ID,
+                        },
+                      },
+                      {
+                        name: "İndir",
+                        pathname: "/order-module/customer/form",
+                        query: {
+                          type: "update",
+                          id: item.account_id,
+                        },
+                      },
+                    ],
                   }}
                 >
                   <EditIcon />
@@ -104,12 +123,31 @@ export default function Quotation() {
                       key={index}
                       preference={{
                         name: "Düzenle",
-                        action: ["Müşteriyi Düzenle", "Görüntüle", "İndir"],
-                        pathname: "/order-module/customer/form",
-                        query: {
-                          type: "update",
-                          id: item.account_id,
-                        },
+                        action: [
+                          {
+                            name: "Müşteriyi Düzenle",
+                            pathname: "/order-module/customer/form",
+                            query: {
+                              type: "update",
+                              id: item.account_id,
+                            },
+                          },
+                          {
+                            name: "Görüntüle",
+                            pathname: "/order-module/quotation/view",
+                            query: {
+                              id: item.quotation_ID,
+                            },
+                          },
+                          {
+                            name: "İndir",
+                            pathname: "/order-module/customer/form",
+                            query: {
+                              type: "update",
+                              id: item.account_id,
+                            },
+                          },
+                        ],
                       }}
                     >
                       <EditIcon />
@@ -143,12 +181,31 @@ export default function Quotation() {
                     key={index}
                     preference={{
                       name: "Düzenle",
-                      action: ["Müşteriyi Düzenle", "Görüntüle", "İndir"],
-                      pathname: "/order-module/customer/form",
-                      query: {
-                        type: "update",
-                        id: item.account_id,
-                      },
+                      action: [
+                        {
+                          name: "Müşteriyi Düzenle",
+                          pathname: "/order-module/customer/form",
+                          query: {
+                            type: "update",
+                            id: item.account_id,
+                          },
+                        },
+                        {
+                          name: "Görüntüle",
+                          pathname: "/order-module/quotation/view",
+                          query: {
+                            id: item.quotation_ID,
+                          },
+                        },
+                        {
+                          name: "İndir",
+                          pathname: "/order-module/customer/form",
+                          query: {
+                            type: "update",
+                            id: item.account_id,
+                          },
+                        },
+                      ],
                     }}
                   >
                     <EditIcon />
