@@ -29,13 +29,13 @@ class QuotationFormService {
     return axios.post("/api/quotation-form/get", { Customer_ID: customerid });
   }
 
-  generateForm(e) {
+  generateForm(id) {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/quotation-form/generate`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id: e.target.id }),
+      body: JSON.stringify({ id: id }),
     }).then((response) => {
       response.blob().then((blob) => {
         let url = window.URL.createObjectURL(blob);

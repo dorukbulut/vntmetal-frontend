@@ -42,7 +42,7 @@ export default function Quotation() {
                     name: "Düzenle",
                     action: [
                       {
-                        name: "Müşteriyi Düzenle",
+                        name: "Teklifi Düzenle",
                         pathname: "/order-module/customer/form",
                         query: {
                           type: "update",
@@ -54,14 +54,6 @@ export default function Quotation() {
                         pathname: "/order-module/quotation/view",
                         query: {
                           id: item.quotation_ID,
-                        },
-                      },
-                      {
-                        name: "İndir",
-                        pathname: "/order-module/customer/form",
-                        query: {
-                          type: "update",
-                          id: item.account_id,
                         },
                       },
                     ],
@@ -125,7 +117,7 @@ export default function Quotation() {
                         name: "Düzenle",
                         action: [
                           {
-                            name: "Müşteriyi Düzenle",
+                            name: "Teklifi Düzenle",
                             pathname: "/order-module/customer/form",
                             query: {
                               type: "update",
@@ -137,14 +129,6 @@ export default function Quotation() {
                             pathname: "/order-module/quotation/view",
                             query: {
                               id: item.quotation_ID,
-                            },
-                          },
-                          {
-                            name: "İndir",
-                            pathname: "/order-module/customer/form",
-                            query: {
-                              type: "update",
-                              id: item.account_id,
                             },
                           },
                         ],
@@ -183,7 +167,7 @@ export default function Quotation() {
                       name: "Düzenle",
                       action: [
                         {
-                          name: "Müşteriyi Düzenle",
+                          name: "Teklifi Düzenle",
                           pathname: "/order-module/customer/form",
                           query: {
                             type: "update",
@@ -195,14 +179,6 @@ export default function Quotation() {
                           pathname: "/order-module/quotation/view",
                           query: {
                             id: item.quotation_ID,
-                          },
-                        },
-                        {
-                          name: "İndir",
-                          pathname: "/order-module/customer/form",
-                          query: {
-                            type: "update",
-                            id: item.account_id,
                           },
                         },
                       ],
