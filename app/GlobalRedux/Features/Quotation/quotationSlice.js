@@ -8,6 +8,7 @@ const initialState = {
       customerInquiryNum: "",
       grand_total: "",
       validityOfOffer: "",
+      reference: "",
       IncotermType: "",
       PaymentTerms: "",
       extraDetails: "",

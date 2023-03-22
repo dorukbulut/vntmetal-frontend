@@ -43,10 +43,10 @@ export default function Quotation() {
                     action: [
                       {
                         name: "Teklifi Düzenle",
-                        pathname: "/order-module/customer/form",
+                        pathname: "/order-module/quotation/form",
                         query: {
                           type: "update",
-                          id: item.account_id,
+                          id: item.quotation_ID,
                         },
                       },
                       {
@@ -118,10 +118,10 @@ export default function Quotation() {
                         action: [
                           {
                             name: "Teklifi Düzenle",
-                            pathname: "/order-module/customer/form",
+                            pathname: "/order-module/quotation/form",
                             query: {
                               type: "update",
-                              id: item.account_id,
+                              id: item.quotation_ID,
                             },
                           },
                           {
@@ -168,10 +168,10 @@ export default function Quotation() {
                       action: [
                         {
                           name: "Teklifi Düzenle",
-                          pathname: "/order-module/customer/form",
+                          pathname: "/order-module/quotation/form",
                           query: {
                             type: "update",
-                            id: item.account_id,
+                            id: item.quotation_ID,
                           },
                         },
                         {

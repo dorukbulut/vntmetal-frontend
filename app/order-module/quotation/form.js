@@ -24,7 +24,13 @@ import Link from "next/link";
 import Alert from "../../../components/base/alert";
 import { useSearchParams, useRouter } from "next/navigation";
 import QuotationFormService from "../../../services/QuotationService/QuotationFormService";
-export default function QuotationForm({ customers, prevValue, dispatch }) {
+export default function QuotationForm({
+  customers,
+  prevValue,
+  dispatch,
+  type,
+  id,
+}) {
   const { customer, prevarea } = prevValue;
   const [error, setError] = useState({
     isOpen: false,
@@ -33,9 +39,6 @@ export default function QuotationForm({ customers, prevValue, dispatch }) {
     title: "",
   });
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const type = searchParams.get("type");
-  const id = searchParams.get("id");
   const [all, setAll] = useState([]);
   const [valid, setValid] = useState(false);
   const [area, setArea] = useState({ title: prevarea });
@@ -61,7 +64,7 @@ export default function QuotationForm({ customers, prevValue, dispatch }) {
     setAllSame(
       filtered[0]?.currency === fields?.delivery_type?.currencyType?.title
     );
-    //TODO FORM DİLİ, ŞİRKET, HAZIRLAYAN, ONAYLAYAN
+
     const check_valid = {
       a: Customer_ID?.title === undefined ? "" : Customer_ID?.title,
       b: fields?.options?.customerInquiryNum,
@@ -229,13 +232,25 @@ export default function QuotationForm({ customers, prevValue, dispatch }) {
                 </p>
               </div>
               <div className="grid grid-cols-4 gap-10  p-2 rounded-lg ">
-                <AutoComplete
-                  data={customers}
-                  setData={setCustomer}
-                  prevValue={Customer_ID}
-                  valid={valid}
-                  dropDownOptions={{ label: "Cari Kod" }}
-                />
+                {type === "create" ? (
+                  <AutoComplete
+                    data={customers}
+                    setData={setCustomer}
+                    prevValue={Customer_ID}
+                    valid={valid}
+                    dropDownOptions={{ label: "Cari Kod" }}
+                  />
+                ) : (
+                  <TextField
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    variant="standard"
+                    value={Customer_ID?.title || ""}
+                    label="Cari Kod"
+                  />
+                )}
+
                 <TextField
                   id="standard-helperText"
                   label={"Müşteri Referans No."}
@@ -278,7 +293,7 @@ export default function QuotationForm({ customers, prevValue, dispatch }) {
                         <AutoComplete
                           key={index}
                           data={INCOTERMS_EXTRA}
-                          dropDownOptions={{ label: item.name }}
+                          dropDownOptions={{ labe: item.name }}
                           prevValue={
                             fields[item.field][item.area] || { title: "" }
                           }
@@ -306,7 +321,7 @@ export default function QuotationForm({ customers, prevValue, dispatch }) {
                       <AutoComplete
                         key={index}
                         data={item.data}
-                        dropDownOptions={{ label: item.name }}
+                        dropDownOptions={{ label: item["name"] }}
                         prevValue={
                           fields[item.field][item.area] || { title: "" }
                         }
