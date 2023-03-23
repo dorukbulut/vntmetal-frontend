@@ -268,6 +268,8 @@ export default function CreateMake({ type, prevType, prevId, id }) {
           };
 
           res = await QuotationItemService.updateItem(data);
+        } else {
+          res = await QuotationItemService.createItem(data);
         }
       }
 

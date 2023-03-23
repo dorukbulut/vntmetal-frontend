@@ -15,7 +15,7 @@ function SetItem({ fields, setAll, url, prevType, prevId }) {
     url === "getitems"
       ? {
           Customer_ID: fields.options.Customer_ID,
-          Quotation_ID: fields.options.Quotation_ID,
+          item_id: prevId,
         }
       : {
           Customer_ID: fields.options.Customer_ID,
@@ -44,7 +44,7 @@ function SetItem({ fields, setAll, url, prevType, prevId }) {
                 ).toFixed(2)} ${item.currency}`,
                 deliveryTime: item.deliveryTime ? item.deliveryTime : "",
                 currency: item.currency,
-                checked: item.isUsed,
+                checked: false,
               };
             });
 

@@ -161,7 +161,13 @@ export default function QuotationForm({
     };
 
     try {
-      const res = await QuotationFormService.createForm(data);
+      let res;
+      if (type === "create") {
+        res = await QuotationFormService.createForm(data);
+      } else {
+        data["options"]["reference"] = fields.options.reference;
+        res = await QuotationFormService.updateForm(data);
+      }
       if (res.status === 200) {
         setError({
           isOpen: true,
@@ -208,6 +214,60 @@ export default function QuotationForm({
       };
     });
   };
+
+  useEffect(() => {
+    if (type === "update") {
+      QuotationFormService.getForm(id).then((res) => {
+        if (res.status === 200) {
+          const form = res.data[0];
+          const formattedFields = {
+            options: {
+              customerInquiryNum: form.customerInquiryNum,
+              grand_total: "",
+              validityOfOffer: form.validityOfOffer,
+              reference: form.reference,
+              IncotermType: form.IncotermType,
+              PaymentTerms: form.PaymentTerms,
+              extraDetails: form.extraDetails,
+              preparedBy: form.preparedBy,
+              approvedBy: form.approvedBy,
+              language: {
+                title: form.language === "English" ? "İngilizce" : "Türkçe",
+              },
+              company: { title: form.company },
+            },
+            area: {
+              name: { title: form.delivery_type.area },
+            },
+            delivery_type: {
+              name: { title: form.delivery_type.name },
+              package_fee: form.delivery_type.package_fee,
+              loading_fee: form.delivery_type.loading_fee,
+              delivery_fee: form.delivery_type.delivery_fee,
+              export_fee: form.delivery_type.export_fee,
+              terminal_fee_exit: form.delivery_type.terminal_fee_exit,
+              vehicleLoading_fee: form.delivery_type.vehicleLoading_fee,
+              transport_fee: form.delivery_type.transport_fee,
+              insurance_fee: form.delivery_type.insurance_fee,
+              terminal_fee_entry: form.delivery_type.terminal_fee_entry,
+              import_fee: form.delivery_type.import_fee,
+              currencyVal: form.delivery_type.currencyVal,
+              currencyType: { title: form.delivery_type.currencyType },
+              description: form.delivery_type.description,
+            },
+
+            all: [],
+          };
+
+          dispatch(setValues(formattedFields));
+          dispatch(setCust(form.Customer_ID));
+          setFields(formattedFields);
+          setCustomer({ title: form.Customer_ID });
+          router.refresh();
+        }
+      });
+    }
+  }, []);
   return (
     <div className="w-full h-full flex flex-col space-y-5">
       <Alert error={error} />
@@ -252,7 +312,6 @@ export default function QuotationForm({
                 )}
 
                 <TextField
-                  id="standard-helperText"
                   label={"Müşteri Referans No."}
                   variant="standard"
                   helperText="Zorunlu Alan"
