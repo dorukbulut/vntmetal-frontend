@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../config/index.js";
 class WorkOrderService {
   async getPage(pageNum) {
     return axios.get(`/api/work-order/get-page/${pageNum}`);
@@ -24,15 +24,15 @@ class WorkOrderService {
     return axios.post("/api/work-order/get-work", { workorder_ID: id });
   }
 
-  generateForm(e) {
+  generateForm(id, type) {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/generate`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: e.target.id.split(",")[0],
-        type: e.target.id.split(",")[1],
+        id: id,
+        type: type,
       }),
     }).then((response) => {
       response.blob().then((blob) => {

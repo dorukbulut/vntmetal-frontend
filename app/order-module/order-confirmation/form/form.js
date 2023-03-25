@@ -100,7 +100,6 @@ export default function Form({ prevValue, id, type, dispatch, customers }) {
         router.push(`/order-module/order-confirmation`);
       }
     } catch (err) {
-      console.log(err);
       setLoading(false);
       setError({
         isOpen: true,
