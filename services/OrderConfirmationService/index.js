@@ -30,13 +30,13 @@ class OrderConfirmationService {
     return axios.post("/api/sale-confirmation/update", data);
   }
 
-  generateForm(e) {
+  generateForm(id) {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/sale-confirmation/generate`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id: e.target.id }),
+      body: JSON.stringify({ id: id }),
     }).then((response) => {
       response.blob().then((blob) => {
         console.log(blob);
