@@ -25,6 +25,9 @@ export default function AutoComplete({
       title: `${item.title}`,
     };
   });
+  React.useEffect(() => {
+    setValue(prevValue);
+  }, [prevValue]);
   return (
     <Autocomplete
       options={formattedData}

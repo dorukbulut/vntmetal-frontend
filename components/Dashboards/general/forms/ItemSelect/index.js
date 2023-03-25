@@ -29,7 +29,7 @@ export default function ControlledSelectionGrid({ items, setSelectedItem }) {
   }, [selectionModel]);
 
   return (
-    <div style={{ height: 400, width: "100%" }}>
+    <div style={{ height: 400, width: "75%" }}>
       <DataGrid
         onSelectionModelChange={(newSelectionModel) => {
           setSelectionModel(newSelectionModel);

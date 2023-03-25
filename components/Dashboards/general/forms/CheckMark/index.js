@@ -46,6 +46,9 @@ export default function MultipleSelectChip({ setCertificates, defaultValues }) {
   React.useEffect(() => {
     setCertificates(personName);
   }, [personName]);
+  React.useEffect(() => {
+    setPersonName(defaultValues);
+  }, [defaultValues]);
 
   const handleChange = (event) => {
     const {
