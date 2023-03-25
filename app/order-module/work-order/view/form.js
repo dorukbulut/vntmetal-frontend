@@ -33,7 +33,7 @@ export default function App() {
       </div>
       <div className="flex flex-row text-center w-full gap-5">
         <button
-          onClick={(e) => WorkOrderService.generateForm(id)}
+          onClick={(e) => WorkOrderService.generateForm(id, type)}
           id="viewerDownload"
           className={`text-lg p-1 mt-5 w-1/4 text-green-600 border-2 border-green-600 enabled:transition enabled:ease-in-out enabled:hover:-translate-y-1 enabled:hover:scale-110  enabled:hover:bg-green-700 font-roboto enabled:hover:text-white tacking-widest rounded disabled:opacity-50 disabled:cursor-not-allowed`}
         >

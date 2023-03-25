@@ -43,7 +43,7 @@ export default function Page() {
                     name: "Düzenle",
                     action: [
                       {
-                        name: "Siparişi Düzenle",
+                        name: "İş Emrini Düzenle",
                         pathname: "/order-module/work-order/form",
                         query: {
                           type: "update",
@@ -118,7 +118,7 @@ export default function Page() {
                         name: "Düzenle",
                         action: [
                           {
-                            name: "Siparişi Düzenle",
+                            name: "İş Emrini Düzenle",
                             pathname: "/order-module/work-order/form",
                             query: {
                               type: "update",
@@ -168,7 +168,7 @@ export default function Page() {
                       name: "Düzenle",
                       action: [
                         {
-                          name: "Siparişi Düzenle",
+                          name: "İş Emrini Düzenle",
                           pathname: "/order-module/work-order/form",
                           query: {
                             type: "update",
