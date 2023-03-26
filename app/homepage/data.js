@@ -10,7 +10,7 @@ export const modules = [
     title: "Üretim Modülü",
     color: "warning",
     body: "Stok, Ocak, Dökümhane ve Atölye bilgilerine erişin",
-    path: "/",
+    path: "/production-module",
   },
 
   {

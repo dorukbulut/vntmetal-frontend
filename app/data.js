@@ -29,5 +29,24 @@ export const navlist = [
       },
       { name: "Çıkış", logo: <ExitToAppIcon />, path: "/homepage" },
     ],
+
+    "production-module": [
+      {
+        name: "Ocak ve Dökümhane",
+        logo: <PersonIcon />,
+        path: "/production-module/production",
+      },
+      {
+        name: "Atölye",
+        logo: <NoteIcon />,
+        path: "/production-module/atelier",
+      },
+      {
+        name: "Stok",
+        logo: <ReceiptIcon />,
+        path: "/production-module/stock",
+      },
+      { name: "Çıkış", logo: <ExitToAppIcon />, path: "/homepage" },
+    ],
   },
 ];

@@ -89,7 +89,13 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer({ children, modulename, color, navdata }) {
+export default function MiniDrawer({
+  children,
+  modulename,
+  color,
+  navdata,
+  href,
+}) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -127,7 +133,7 @@ export default function MiniDrawer({ children, modulename, color, navdata }) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <Link href={"/order-module"} passHref>
+            <Link href={href} passHref>
               <p className="font-roboto tracking-widest hover:cursor-pointer">
                 {modulename}
               </p>
