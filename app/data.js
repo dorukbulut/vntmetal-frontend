@@ -3,6 +3,9 @@ import NoteIcon from "@mui/icons-material/Note";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import FactoryIcon from "@mui/icons-material/Factory";
+import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
+import InventoryIcon from "@mui/icons-material/Inventory";
 
 export const navlist = [
   {
@@ -33,17 +36,17 @@ export const navlist = [
     "production-module": [
       {
         name: "Ocak ve Dökümhane",
-        logo: <PersonIcon />,
+        logo: <FactoryIcon />,
         path: "/production-module/production",
       },
       {
         name: "Atölye",
-        logo: <NoteIcon />,
+        logo: <PrecisionManufacturingIcon />,
         path: "/production-module/atelier",
       },
       {
-        name: "Stok",
-        logo: <ReceiptIcon />,
+        name: "Stok Bilgileri",
+        logo: <InventoryIcon />,
         path: "/production-module/stock",
       },
       { name: "Çıkış", logo: <ExitToAppIcon />, path: "/homepage" },
