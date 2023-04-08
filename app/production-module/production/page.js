@@ -11,8 +11,8 @@ import { columns } from "./data.js";
 import { useState, useEffect } from "react";
 import ProductionProductService from "../../../services/ProductionProductService";
 import Action from "../../../components/base/action";
-import Stack from '@mui/material/Stack';
-import Chip from '@mui/material/Chip';
+import Stack from "@mui/material/Stack";
+import Chip from "@mui/material/Chip";
 export default function Page() {
   const [data, setData] = useState();
   const [page, setPage] = useState(0);
@@ -39,6 +39,33 @@ export default function Page() {
               month: item.month,
               year: item.year.toString().replace(/\,/g, ""),
               status: <Chip label="Bekliyor" color="error" />,
+              options: [
+                <Action
+                  key={index}
+                  preference={{
+                    name: "Düzenle",
+                    action: [
+                      {
+                        name: "Ocak ve Döküm kayıtları",
+                        pathname: "/production-module/production/products",
+                        query: {
+                          id: item.workorder_ID,
+                        },
+                      },
+                      {
+                        name: "Görüntüle",
+                        pathname: "/production-module/production/view",
+                        query: {
+                          id: item.workorder_ID,
+                          type: item.quotationItem.itemType,
+                        },
+                      },
+                    ],
+                  }}
+                >
+                  <EditIcon />
+                </Action>,
+              ],
             };
           }),
         };
@@ -66,7 +93,9 @@ export default function Page() {
 
         month:
           filters.month !== undefined && filters.month !== ""
-            ? filters?.month?.$M + 1
+            ? isNaN(filters?.month?.$M + 1)
+              ? undefined
+              : filters?.month?.$M + 1
             : undefined,
 
         year:
@@ -88,6 +117,33 @@ export default function Page() {
                   month: item.month,
                   year: item.year.toString().replace(/\,/g, ""),
                   status: <Chip label="Bekliyor" color="error" />,
+                  options: [
+                    <Action
+                      key={index}
+                      preference={{
+                        name: "Düzenle",
+                        action: [
+                          {
+                            name: "Ocak ve Döküm kayıtları",
+                            pathname: "/production-module/production/products",
+                            query: {
+                              id: item.workorder_ID,
+                            },
+                          },
+                          {
+                            name: "Görüntüle",
+                            pathname: "/production-module/production/view",
+                            query: {
+                              id: item.workorder_ID,
+                              type: item.quotationItem.itemType,
+                            },
+                          },
+                        ],
+                      }}
+                    >
+                      <EditIcon />
+                    </Action>,
+                  ],
                 };
               }),
             };
@@ -112,7 +168,33 @@ export default function Page() {
                 month: item.month,
                 year: item.year.toString().replace(/\,/g, ""),
                 status: <Chip label="Bekliyor" color="error" />,
-
+                options: [
+                  <Action
+                    key={index}
+                    preference={{
+                      name: "Düzenle",
+                      action: [
+                        {
+                          name: "Ocak ve Döküm kayıtları",
+                          pathname: "/production-module/production/products",
+                          query: {
+                            id: item.workorder_ID,
+                          },
+                        },
+                        {
+                          name: "Görüntüle",
+                          pathname: "/production-module/production/view",
+                          query: {
+                            id: item.workorder_ID,
+                            type: item.quotationItem.itemType,
+                          },
+                        },
+                      ],
+                    }}
+                  >
+                    <EditIcon />
+                  </Action>,
+                ],
               };
             }),
           };
@@ -141,6 +223,7 @@ export default function Page() {
             ),
           }}
           variant="standard"
+          onChange={(e) => handleFilters("reference", e)}
         />
         <TextField
           label="Cari Kod"
@@ -154,6 +237,7 @@ export default function Page() {
             ),
           }}
           variant="standard"
+          onChange={(e) => handleFilters("account_id", e)}
         />
 
         {[
@@ -167,7 +251,7 @@ export default function Page() {
               propLabels={item.label}
               propViews={item.views}
               propFormat={item.format}
-
+              setData={handleFilters}
             />
           );
         })}

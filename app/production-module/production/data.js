@@ -35,4 +35,10 @@ export const columns = [
     align: "right",
     format: (value) => value.toLocaleString("en-US"),
   },
+  {
+    id: "options",
+    label: "Düzenle",
+    minWidth: 170,
+    align: "right",
+  },
 ];

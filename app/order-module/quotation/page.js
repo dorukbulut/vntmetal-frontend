@@ -89,7 +89,9 @@ export default function Quotation() {
 
         month:
           filters.month !== undefined && filters.month !== ""
-            ? filters?.month?.$M + 1
+            ? isNaN(filters?.month?.$M + 1)
+              ? undefined
+              : filters?.month?.$M + 1
             : undefined,
 
         year:
