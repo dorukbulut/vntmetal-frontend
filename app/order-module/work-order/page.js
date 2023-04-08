@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import TimePicker from "../../../components/base/timepicker.js";
 import Action from "../../../components/base/action";
 import WorkOrderService from "../../../services/WorkOrderService";
+import Alert from "../../../components/base/alert";
 import { columns } from "./data";
 export default function Page() {
   const [data, setData] = useState();
@@ -24,6 +25,32 @@ export default function Page() {
       };
     });
   };
+  const [error, setError] = useState({
+    isOpen: false,
+    type: "info",
+    message: "neden",
+    title: "",
+  });
+  const handleproduct = async (workorder_id) => {
+    try {
+      const res = await WorkOrderService.settoTrue(workorder_id);
+      if (res.status === 200) {
+        setError({
+          isOpen: true,
+          type: "success",
+          message: "Dökümhaneye Gönderildi !",
+          title: "Başarılı",
+        });
+      }
+    } catch (err) {
+      setError({
+        isOpen: true,
+        type: "error",
+        message: "Gönderilemedi !",
+        title: "Hata",
+      });
+    }
+  };
   useEffect(() => {
     WorkOrderService.getDefaultData().then((res) => {
       if (res.status === 200) {
@@ -36,6 +63,15 @@ export default function Page() {
               day: item.day,
               month: item.month,
               year: item.year.toString().replace(/\,/g, ""),
+              isProduct: (
+                <Button
+                  onClick={(e, id = item.workorder_ID) => handleproduct(id)}
+                  variant="outlined"
+                  color={"warning"}
+                >
+                  Gönder
+                </Button>
+              ),
               options: [
                 <Action
                   key={index}
@@ -113,6 +149,15 @@ export default function Page() {
                   day: item.day,
                   month: item.month,
                   year: item.year.toString().replace(/\,/g, ""),
+                  isProduct: (
+                    <Button
+                      onClick={(e, id = item.workorder_ID) => handleproduct(id)}
+                      variant="outlined"
+                      color={"warning"}
+                    >
+                      Gönder
+                    </Button>
+                  ),
                   options: [
                     <Action
                       key={index}
@@ -163,6 +208,15 @@ export default function Page() {
                 day: item.day,
                 month: item.month,
                 year: item.year.toString().replace(/\,/g, ""),
+                isProduct: (
+                  <Button
+                    onClick={(e, id = item.workorder_ID) => handleproduct(id)}
+                    variant="outlined"
+                    color={"warning"}
+                  >
+                    Gönder
+                  </Button>
+                ),
                 options: [
                   <Action
                     key={index}
@@ -201,6 +255,7 @@ export default function Page() {
   }, [page]);
   return (
     <div className="w-full h-full space-y-10">
+      <Alert error={error} />
       <div>
         <p className="text-2xl flex text-center text-red-600 tracking widest font-roboto">
           İş Emirlerim
