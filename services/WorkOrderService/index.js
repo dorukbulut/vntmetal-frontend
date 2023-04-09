@@ -27,6 +27,9 @@ class WorkOrderService {
   async settoTrue(id) {
     return axios.post("/api/work-order/set-true", { id: id });
   }
+  async settoFalse(id) {
+    return axios.post("/api/work-order/set-false", { id: id });
+  }
 
   generateForm(id, type) {
     fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/work-order/generate`, {

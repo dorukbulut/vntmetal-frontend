@@ -237,6 +237,7 @@ export default function Quotation() {
         />
         <TextField
           label="Cari Kod"
+          type="number"
           id="filled-start-adornment"
           onChange={(e) => handleFilters("account_id", e)}
           sx={{ m: 1, width: "25ch" }}

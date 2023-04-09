@@ -30,7 +30,7 @@ export const columns = [
   },
   {
     id: "isProduct",
-    label: "Gönder",
+    label: "İşlem",
     minWidth: 170,
     align: "right",
   },

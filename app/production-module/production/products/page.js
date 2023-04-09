@@ -17,11 +17,7 @@ export default function Page() {
         <div className="flex items-center hover:cursor-pointer transition duration-500 hover:scale-110 ">
           <Link
             href={{
-              pathname: "/order-module/quotation/form",
-              query: {
-                type: "create",
-                id: "none",
-              },
+              pathname: "/production-module/production",
             }}
           >
             <Button variant="outlined" color={"success"}>

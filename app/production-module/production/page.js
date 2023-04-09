@@ -11,8 +11,9 @@ import { columns } from "./data.js";
 import { useState, useEffect } from "react";
 import ProductionProductService from "../../../services/ProductionProductService";
 import Action from "../../../components/base/action";
-import Stack from "@mui/material/Stack";
+import { useRouter } from "next/navigation";
 import Chip from "@mui/material/Chip";
+import useSWR from "swr";
 export default function Page() {
   const [data, setData] = useState();
   const [page, setPage] = useState(0);
@@ -25,56 +26,7 @@ export default function Page() {
       };
     });
   };
-
-  useEffect(() => {
-    ProductionProductService.getDefaultData().then((res) => {
-      if (res.status === 200) {
-        const new_data = {
-          count: res.data.count,
-          rows: res.data.rows.map((item, index) => {
-            return {
-              reference: item.reference + "-REV" + item.revision,
-              account_id: item.Customer_ID,
-              day: item.day,
-              month: item.month,
-              year: item.year.toString().replace(/\,/g, ""),
-              status: <Chip label="Bekliyor" color="error" />,
-              options: [
-                <Action
-                  key={index}
-                  preference={{
-                    name: "Düzenle",
-                    action: [
-                      {
-                        name: "Ocak ve Döküm kayıtları",
-                        pathname: "/production-module/production/products",
-                        query: {
-                          id: item.workorder_ID,
-                        },
-                      },
-                      {
-                        name: "Görüntüle",
-                        pathname: "/production-module/production/view",
-                        query: {
-                          id: item.workorder_ID,
-                          type: item.quotationItem.itemType,
-                        },
-                      },
-                    ],
-                  }}
-                >
-                  <EditIcon />
-                </Action>,
-              ],
-            };
-          }),
-        };
-        setData(new_data);
-      }
-    });
-  }, []);
-
-  useEffect(() => {
+  const { data1 } = useSWR(() => {
     if (filters) {
       const params = {
         Customer_ID:
@@ -151,12 +103,8 @@ export default function Page() {
           }
         })
         .catch((err) => {});
-    }
-  }, [filters]);
-
-  useEffect(() => {
-    ProductionProductService.getPage(parseInt(page))
-      .then((res) => {
+    } else {
+      ProductionProductService.getPage(page).then((res) => {
         if (res.status === 200) {
           const new_data = {
             count: res.data.count,
@@ -200,9 +148,10 @@ export default function Page() {
           };
           setData(new_data);
         }
-      })
-      .catch((err) => console.log(err));
-  }, [page]);
+      });
+    }
+  });
+  const router = useRouter();
   return (
     <div className="w-full h-full space-y-10">
       <div>
@@ -228,6 +177,7 @@ export default function Page() {
         <TextField
           label="Cari Kod"
           id="filled-start-adornment"
+          type="number"
           sx={{ m: 1, width: "25ch" }}
           InputProps={{
             startAdornment: (
@@ -256,7 +206,6 @@ export default function Page() {
           );
         })}
       </div>
-
       <div className="lg:flex lg:flex-col shadow-xl">
         <Table
           columns={columns}

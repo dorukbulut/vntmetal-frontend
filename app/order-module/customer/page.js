@@ -105,6 +105,7 @@ export default function Page() {
           label="Cari Kod"
           id="filled-start-adornment"
           sx={{ m: 1, width: "25ch" }}
+          type="number"
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">

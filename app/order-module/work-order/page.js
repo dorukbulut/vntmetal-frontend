@@ -4,7 +4,9 @@ import Table from "../table";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import Link from "next/link";
+import FormControl from "@mui/material/FormControl";
 import EditIcon from "@mui/icons-material/Edit";
+import InputLabel from "@mui/material/InputLabel";
 import SearchIcon from "@mui/icons-material/Search";
 import Button from "@mui/material/Button";
 import { useState, useEffect } from "react";
@@ -12,6 +14,7 @@ import TimePicker from "../../../components/base/timepicker.js";
 import Action from "../../../components/base/action";
 import WorkOrderService from "../../../services/WorkOrderService";
 import Alert from "../../../components/base/alert";
+import Select from "@mui/material/Select";
 import { columns } from "./data";
 export default function Page() {
   const [data, setData] = useState();
@@ -51,6 +54,26 @@ export default function Page() {
       });
     }
   };
+  const handleretake = async (workorder_id) => {
+    try {
+      const res = await WorkOrderService.settoFalse(workorder_id);
+      if (res.status === 200) {
+        setError({
+          isOpen: true,
+          type: "success",
+          message: "Dökümhaneden Çekildi !",
+          title: "Başarılı",
+        });
+      }
+    } catch (err) {
+      setError({
+        isOpen: true,
+        type: "error",
+        message: "Hata !",
+        title: "Hata",
+      });
+    }
+  };
   useEffect(() => {
     WorkOrderService.getDefaultData().then((res) => {
       if (res.status === 200) {
@@ -64,13 +87,35 @@ export default function Page() {
               month: item.month,
               year: item.year.toString().replace(/\,/g, ""),
               isProduct: (
-                <Button
-                  onClick={(e, id = item.workorder_ID) => handleproduct(id)}
-                  variant="outlined"
-                  color={"warning"}
-                >
-                  Gönder
-                </Button>
+                <div className="">
+                  <FormControl variant="standard" fullWidth>
+                    <InputLabel>İşlem</InputLabel>
+                    <Select sx={{ padding: "2px" }}>
+                      <div className="p-2">
+                        <Button
+                          onClick={(e, id = item.workorder_ID) =>
+                            handleproduct(id)
+                          }
+                          variant="outlined"
+                          color={"warning"}
+                        >
+                          Dökümhaneye Gönder
+                        </Button>
+                      </div>
+                      <div className="p-2">
+                        <Button
+                          onClick={(e, id = item.workorder_ID) =>
+                            handleretake(id)
+                          }
+                          variant="outlined"
+                          color={"error"}
+                        >
+                          Geri Çek
+                        </Button>
+                      </div>
+                    </Select>
+                  </FormControl>
+                </div>
               ),
               options: [
                 <Action
@@ -150,13 +195,35 @@ export default function Page() {
                   month: item.month,
                   year: item.year.toString().replace(/\,/g, ""),
                   isProduct: (
-                    <Button
-                      onClick={(e, id = item.workorder_ID) => handleproduct(id)}
-                      variant="outlined"
-                      color={"warning"}
-                    >
-                      Gönder
-                    </Button>
+                    <div className="">
+                      <FormControl variant="standard" fullWidth>
+                        <InputLabel>İşlem</InputLabel>
+                        <Select sx={{ padding: "2px" }}>
+                          <div className="p-2">
+                            <Button
+                              onClick={(e, id = item.workorder_ID) =>
+                                handleproduct(id)
+                              }
+                              variant="outlined"
+                              color={"warning"}
+                            >
+                              Dökümhaneye Gönder
+                            </Button>
+                          </div>
+                          <div className="p-2">
+                            <Button
+                              onClick={(e, id = item.workorder_ID) =>
+                                handleretake(id)
+                              }
+                              variant="outlined"
+                              color={"error"}
+                            >
+                              Geri Çek
+                            </Button>
+                          </div>
+                        </Select>
+                      </FormControl>
+                    </div>
                   ),
                   options: [
                     <Action
@@ -209,13 +276,35 @@ export default function Page() {
                 month: item.month,
                 year: item.year.toString().replace(/\,/g, ""),
                 isProduct: (
-                  <Button
-                    onClick={(e, id = item.workorder_ID) => handleproduct(id)}
-                    variant="outlined"
-                    color={"warning"}
-                  >
-                    Gönder
-                  </Button>
+                  <div className="">
+                    <FormControl variant="standard" fullWidth>
+                      <InputLabel>İşlem</InputLabel>
+                      <Select sx={{ padding: "2px" }}>
+                        <div className="p-2">
+                          <Button
+                            onClick={(e, id = item.workorder_ID) =>
+                              handleproduct(id)
+                            }
+                            variant="outlined"
+                            color={"warning"}
+                          >
+                            Dökümhaneye Gönder
+                          </Button>
+                        </div>
+                        <div className="p-2">
+                          <Button
+                            onClick={(e, id = item.workorder_ID) =>
+                              handleretake(id)
+                            }
+                            variant="outlined"
+                            color={"error"}
+                          >
+                            Geri Çek
+                          </Button>
+                        </div>
+                      </Select>
+                    </FormControl>
+                  </div>
                 ),
                 options: [
                   <Action
@@ -294,6 +383,7 @@ export default function Page() {
         />
         <TextField
           label="Cari Kod"
+          type="number"
           id="filled-start-adornment"
           onChange={(e) => handleFilters("account_id", e)}
           sx={{ m: 1, width: "25ch" }}

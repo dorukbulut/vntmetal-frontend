@@ -1,5 +1,4 @@
 export const columns = [
-  { id: "reference", label: "Kayıt No.", minWidth: 170 },
   { id: "step", label: "Sıra No.", minWidth: 170 },
   {
     id: "charge",
@@ -10,7 +9,7 @@ export const columns = [
   },
   {
     id: "piece",
-    label: "Adet",
+    label: "Dök. Adet",
     minWidth: 170,
     align: "right",
     format: (value) => value.toLocaleString("en-US"),
@@ -25,6 +24,13 @@ export const columns = [
   {
     id: "total_kg",
     label: "Toplam Kg.",
+    minWidth: 170,
+    align: "right",
+    format: (value) => value.toLocaleString("en-US"),
+  },
+  {
+    id: "qc",
+    label: "Kalite Kontrol",
     minWidth: 170,
     align: "right",
     format: (value) => value.toLocaleString("en-US"),
