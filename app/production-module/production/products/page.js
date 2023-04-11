@@ -3,9 +3,23 @@ import TextField from "@mui/material/TextField";
 import { useEffect, useState } from "react";
 import Table from "../../../order-module/table";
 import { columns } from "./data";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import ProductionProductService from "../../../../services/ProductionProductService";
 import { Button } from "@mui/material";
 export default function Page() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+  const reference = searchParams.get("reference");
+
+  const [data, setData] = useState();
+  useEffect(() => {
+    ProductionProductService.getProduct(id)
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((err) => console.log);
+  }, []);
   return (
     <div className="w-full h-full space-y-10">
       <div>
@@ -50,7 +64,7 @@ export default function Page() {
           </p>
         </div>
 
-        {true ? (
+        {data?.length !== 0 ? (
           <div className="p-3 flex gap-7">
             <div>
               <TextField
@@ -68,7 +82,7 @@ export default function Page() {
                   readOnly: true,
                 }}
                 variant="standard"
-                value={""}
+                value={reference}
                 label="İş Emri No."
               />
             </div>
@@ -126,13 +140,14 @@ export default function Page() {
           </div>
         ) : (
           <p className="font-roboto">
-            X İş emri için döküm kaydı oluşturulmadı. Genel Bilgiler ilk döküm
-            kaydınızı oluşturduktan sonra görünecektir.
+            <span className="text-red-600">{reference}</span> numaralı iş emri
+            için döküm kaydı oluşturulmadı. Genel Bilgiler ilk döküm kaydınızı
+            oluşturduktan sonra görünecektir.
           </p>
         )}
       </div>
 
-      {true ? (
+      {data?.length ? (
         <div className="lg:flex lg:flex-col shadow-xl">
           <Table columns={columns} rowdata={[]} count={1} setNPage={() => {}} />
         </div>

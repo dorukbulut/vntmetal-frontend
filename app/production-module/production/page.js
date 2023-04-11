@@ -80,6 +80,7 @@ export default function Page() {
                             pathname: "/production-module/production/products",
                             query: {
                               id: item.workorder_ID,
+                              reference: item.reference + "REV" + item.revision,
                             },
                           },
                           {
@@ -127,6 +128,7 @@ export default function Page() {
                           pathname: "/production-module/production/products",
                           query: {
                             id: item.workorder_ID,
+                            reference: item.reference + "REV" + item.revision,
                           },
                         },
                         {

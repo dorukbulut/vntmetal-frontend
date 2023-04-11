@@ -14,6 +14,10 @@ class ProductionProductService {
       params: { ...filters },
     });
   }
+
+  async getProduct(workorder) {
+    return axios.post("/api/production-product/get", { workorder: workorder });
+  }
 }
 
 export default new ProductionProductService();
