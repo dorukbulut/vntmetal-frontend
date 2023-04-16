@@ -31,7 +31,11 @@ export default function Page() {
         <div className="flex items-center hover:cursor-pointer transition duration-500 hover:scale-110 ">
           <Link
             href={{
-              pathname: "/production-module/production",
+              pathname: "/production-module/production/products/form",
+              query: {
+                id: id,
+                type: "create",
+              },
             }}
           >
             <Button variant="outlined" color={"success"}>
@@ -141,8 +145,8 @@ export default function Page() {
         ) : (
           <p className="font-roboto">
             <span className="text-red-600">{reference}</span> numaralı iş emri
-            için döküm kaydı oluşturulmadı. Genel Bilgiler ilk döküm kaydınızı
-            oluşturduktan sonra görünecektir.
+            için döküm kaydı henüz oluşturulmadı. Genel Bilgiler ilk döküm
+            kaydınızı oluşturduktan sonra görünecektir.
           </p>
         )}
       </div>
