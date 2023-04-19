@@ -44,7 +44,11 @@ export default function Page() {
           </Link>
         </div>
         <div className="flex items-center hover:cursor-pointer transition duration-500 hover:scale-110 ">
-          <Button variant="outlined" color={"warning"}>
+          <Button
+            disabled={data?.length === 0 ? true : false}
+            variant="outlined"
+            color={"warning"}
+          >
             Dökümü Tamamla
           </Button>
         </div>

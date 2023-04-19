@@ -18,6 +18,12 @@ class ProductionProductService {
   async getProduct(workorder) {
     return axios.post("/api/production-product/get", { workorder: workorder });
   }
+  async createProduct(data) {
+    return axios.post("/api/production-product/create", data);
+  }
+  async updateProduct(data) {
+    return axios.post("/api/production-product/update", data);
+  }
 }
 
 export default new ProductionProductService();
