@@ -1,14 +1,14 @@
 export const columns = [
   { id: "step", label: "Sıra No.", minWidth: 170 },
   {
-    id: "charge",
+    id: "charge_number",
     label: "Şarj No.",
     minWidth: 170,
     align: "right",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "piece",
+    id: "n_piece",
     label: "Dök. Adet",
     minWidth: 170,
     align: "right",
@@ -29,14 +29,13 @@ export const columns = [
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "qc",
+    id: "isQC",
     label: "Kalite Kontrol",
     minWidth: 170,
     align: "right",
-    format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "prepared",
+    id: "preparedBy",
     label: "Dolduran",
     minWidth: 170,
     align: "right",

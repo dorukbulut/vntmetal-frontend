@@ -1,5 +1,6 @@
 "use client";
 import TextField from "@mui/material/TextField";
+import Chip from "@mui/material/Chip";
 import { useEffect, useState } from "react";
 import Table from "../../../order-module/table";
 import { columns } from "./data";
@@ -7,6 +8,8 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import ProductionProductService from "../../../../services/ProductionProductService";
 import { Button } from "@mui/material";
+import Action from "../../../../components/base/action";
+import EditIcon from "@mui/icons-material/Edit";
 export default function Page() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
@@ -16,7 +19,55 @@ export default function Page() {
   useEffect(() => {
     ProductionProductService.getProduct(id)
       .then((res) => {
-        setData(res.data);
+        if (res.data.length === 0) {
+          setData(res.data);
+        } else {
+          const new_data = {
+            ...res.data,
+            productHeader: {
+              ...res.data.productHeader,
+              products: res.data.productHeader.products.map((product) => {
+                return {
+                  ...product,
+                  isQC: (
+                    <Chip
+                      label={product.isQC ? "Tamamlandı" : "Bekliyor"}
+                      color={product.isQC ? "success" : "error"}
+                    />
+                  ),
+                  options: (
+                    <Action
+                      preference={{
+                        name: "Düzenle",
+                        action: [
+                          {
+                            name: "Güncelle",
+                            pathname: "/production-module/production/products",
+                            query: {
+                              id: "",
+                              reference: "",
+                            },
+                          },
+                          {
+                            name: "Sil",
+                            pathname: "/production-module/production/view",
+                            query: {
+                              id: " ",
+                              type: "item.quotationItem.itemType",
+                            },
+                          },
+                        ],
+                      }}
+                    >
+                      <EditIcon />
+                    </Action>
+                  ),
+                };
+              }),
+            },
+          };
+          setData(new_data);
+        }
       })
       .catch((err) => console.log);
   }, []);
@@ -29,19 +80,25 @@ export default function Page() {
       </div>
       <div className="lg:flex lg:gap-10 lg:items-center p-2 shadow-xl rounded-lg">
         <div className="flex items-center hover:cursor-pointer transition duration-500 hover:scale-110 ">
-          <Link
-            href={{
-              pathname: "/production-module/production/products/form",
-              query: {
-                id: id,
-                type: "create",
-              },
-            }}
-          >
-            <Button variant="outlined" color={"success"}>
+          {data?.productHeader?.n_remaining > 0 || data?.length === 0 ? (
+            <Link
+              href={{
+                pathname: "/production-module/production/products/form",
+                query: {
+                  id: id,
+                  type: "create",
+                },
+              }}
+            >
+              <Button variant="outlined" color="success">
+                Yeni Kayıt
+              </Button>
+            </Link>
+          ) : (
+            <Button variant="outlined" color="success" disabled>
               Yeni Kayıt
             </Button>
-          </Link>
+          )}
         </div>
         <div className="flex items-center hover:cursor-pointer transition duration-500 hover:scale-110 ">
           <Button
@@ -80,7 +137,7 @@ export default function Page() {
                   readOnly: true,
                 }}
                 variant="standard"
-                value={""}
+                value={data?.productHeader?.reference || ""}
                 label="Referans No."
               />
             </div>
@@ -90,7 +147,7 @@ export default function Page() {
                   readOnly: true,
                 }}
                 variant="standard"
-                value={reference}
+                value={reference || ""}
                 label="İş Emri No."
               />
             </div>
@@ -100,7 +157,7 @@ export default function Page() {
                   readOnly: true,
                 }}
                 variant="standard"
-                value={""}
+                value={data?.customer || ""}
                 label="Cari Kod"
               />
             </div>
@@ -111,7 +168,7 @@ export default function Page() {
                   readOnly: true,
                 }}
                 variant="standard"
-                value={""}
+                value={data?.analyze || ""}
                 label="Analiz"
               />
             </div>
@@ -121,7 +178,7 @@ export default function Page() {
                   readOnly: true,
                 }}
                 variant="standard"
-                value={""}
+                value={data?.productHeader?.n_piece || ""}
                 label="Adet"
               />
             </div>
@@ -131,7 +188,7 @@ export default function Page() {
                   readOnly: true,
                 }}
                 variant="standard"
-                value={""}
+                value={data?.productHeader?.n_remaining || ""}
                 label="Kalan Adet"
               />
             </div>
@@ -141,7 +198,7 @@ export default function Page() {
                   readOnly: true,
                 }}
                 variant="standard"
-                value={""}
+                value={data?.productHeader?.total_kg + " kg" || ""}
                 label="Toplam Kg."
               />
             </div>
@@ -155,9 +212,14 @@ export default function Page() {
         )}
       </div>
 
-      {data?.length ? (
+      {data?.length !== 0 ? (
         <div className="lg:flex lg:flex-col shadow-xl">
-          <Table columns={columns} rowdata={[]} count={1} setNPage={() => {}} />
+          <Table
+            columns={columns}
+            rowdata={data?.productHeader?.products}
+            count={1}
+            setNPage={() => {}}
+          />
         </div>
       ) : (
         ""
