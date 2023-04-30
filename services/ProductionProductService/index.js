@@ -26,6 +26,18 @@ class ProductionProductService {
   async updateProduct(data) {
     return axios.post("/api/production-product/update", data);
   }
+
+  async deleteProduct(product_id) {
+    return axios.post("/api/production-product/delete", { product_id });
+  }
+
+  async getByID(product_id) {
+    return axios.post("/api/production-product/getid", { product_id });
+  }
+
+  async finishProduct(workorder_ID) {
+    return axios.post("/api/production-product/finish", { workorder_ID });
+  }
 }
 
 export default new ProductionProductService();

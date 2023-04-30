@@ -15,6 +15,7 @@ import { delay } from "../../../../../app/utils";
 export default function Page() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
+  const product_id = searchParams.get("product_id");
   const [error, setError] = useState({
     isOpen: false,
     type: "info",
@@ -54,7 +55,6 @@ export default function Page() {
     setFields((old) => {
       return { ...old, [name]: e.target.value };
     });
-    console.log(fields);
   };
   const handleChange2 = (e, name) => {
     setFields((old) => {
@@ -82,6 +82,7 @@ export default function Page() {
       if (type === "create") {
         res = await ProductionProductService.createProduct(data);
       } else {
+        data["product_id"] = product_id;
         res = await ProductionProductService.updateProduct(data);
       }
       if (res.status === 200) {
@@ -113,6 +114,27 @@ export default function Page() {
 
     setValid(isValid(check_fields));
   }, [atelier?.title, fields, productType?.title]);
+  useEffect(() => {
+    if (type === "update") {
+      ProductionProductService.getByID(product_id)
+        .then((res) => {
+          const data = res.data;
+          setAtelierType({ title: data.atelier });
+          setProductType({ title: data.type });
+
+          delete data.product_id;
+          delete data.ProductHeader_ID;
+          delete data.type;
+          delete data.atelier;
+          setFields((old) => {
+            return {
+              ...data,
+            };
+          });
+        })
+        .catch((err) => console.log);
+    }
+  }, []);
   return (
     <div className="w-full h-full flex flex-col space-y-5">
       <Alert error={error} />
@@ -223,7 +245,7 @@ export default function Page() {
                   <TextField
                     label="Sıcaklık"
                     onChange={(e) => handleChange(e, "temperature")}
-                    value={fields?.temperature | handleChange | ""}
+                    value={fields?.temperature || ""}
                     type="number"
                     variant="standard"
                     helperText="Zorunlu Alan"
