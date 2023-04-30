@@ -15,6 +15,7 @@ import { delay } from "../../../../app/utils";
 import Loading from "../../../../components/base/Loading";
 import Alert from "../../../../components/base/alert";
 import { useRouter } from "next/navigation";
+import useSWR from "swr";
 export default function Page() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -107,7 +108,8 @@ export default function Page() {
         setLoading(false);
       });
   };
-  useEffect(() => {
+
+  const { data1 } = useSWR(() => {
     ProductionProductService.getProduct(id, page)
       .then((res) => {
         if (res.data.length === 0) {
@@ -179,7 +181,7 @@ export default function Page() {
         }
       })
       .catch((err) => console.log);
-  }, [page]);
+  });
 
   return (
     <div>
