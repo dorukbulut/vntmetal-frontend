@@ -15,8 +15,10 @@ class ProductionProductService {
     });
   }
 
-  async getProduct(workorder) {
-    return axios.post("/api/production-product/get", { workorder: workorder });
+  async getProduct(workorder, page) {
+    return axios.post(`/api/production-product/get/${page}`, {
+      workorder: workorder,
+    });
   }
   async createProduct(data) {
     return axios.post("/api/production-product/create", data);

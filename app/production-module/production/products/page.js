@@ -14,19 +14,19 @@ export default function Page() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const reference = searchParams.get("reference");
-
+  const [page, setPage] = useState(0);
   const [data, setData] = useState();
   useEffect(() => {
-    ProductionProductService.getProduct(id)
+    ProductionProductService.getProduct(id, page)
       .then((res) => {
         if (res.data.length === 0) {
           setData(res.data);
         } else {
           const new_data = {
             ...res.data,
-            productHeader: {
-              ...res.data.productHeader,
-              products: res.data.productHeader.products.map((product) => {
+            products: {
+              ...res.data.products,
+              rows: res.data.products.rows.map((product) => {
                 return {
                   ...product,
                   isQC: (
@@ -70,7 +70,8 @@ export default function Page() {
         }
       })
       .catch((err) => console.log);
-  }, []);
+  }, [page]);
+
   return (
     <div className="w-full h-full space-y-10">
       <div>
@@ -216,9 +217,9 @@ export default function Page() {
         <div className="lg:flex lg:flex-col shadow-xl">
           <Table
             columns={columns}
-            rowdata={data?.productHeader?.products}
-            count={1}
-            setNPage={() => {}}
+            rowdata={data?.products?.rows}
+            count={data?.products?.count}
+            setNPage={setPage}
           />
         </div>
       ) : (
