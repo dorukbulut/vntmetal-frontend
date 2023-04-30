@@ -123,8 +123,20 @@ export default function Page() {
                   isLabel: product.isQC,
                   isQC: (
                     <Chip
-                      label={product.isQC ? "Tamamlandı" : "Bekliyor"}
-                      color={product.isQC ? "success" : "warning"}
+                      label={
+                        product.isQC === "pending"
+                          ? "Bekliyor"
+                          : product.isQC === "accepted"
+                          ? "Onaylandı"
+                          : "Red"
+                      }
+                      color={
+                        product.isQC === "pending"
+                          ? "warning"
+                          : product.isQC === "accepted"
+                          ? "success"
+                          : "error"
+                      }
                     />
                   ),
                   options: (
@@ -207,7 +219,7 @@ export default function Page() {
                 disabled={
                   data?.productHeader?.n_remaining === "0" &&
                   data?.products?.rows.filter(
-                    (product) => product.isLabel === false
+                    (product) => product.isLabel !== "accepted"
                   ).length === 0
                     ? false
                     : true
