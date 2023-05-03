@@ -14,6 +14,7 @@ import Action from "../../../components/base/action";
 import { useRouter } from "next/navigation";
 import Chip from "@mui/material/Chip";
 import useSWR from "swr";
+import { ITEM_TYPES } from "../../../utils/mappers";
 export default function Page() {
   const [data, setData] = useState();
   const [page, setPage] = useState(0);
@@ -64,6 +65,7 @@ export default function Page() {
               rows: res.data.rows.map((item, index) => {
                 return {
                   reference: item.reference + "-REV" + item.revision,
+                  itemType: ITEM_TYPES[item.quotationItem.itemType],
                   account_id: item.Customer_ID,
                   day: item.day,
                   month: item.month,
@@ -112,6 +114,7 @@ export default function Page() {
             rows: res.data.rows.map((item, index) => {
               return {
                 reference: item.reference + "-REV" + item.revision,
+                itemType: ITEM_TYPES[item.quotationItem.itemType],
                 account_id: item.Customer_ID,
                 day: item.day,
                 month: item.month,

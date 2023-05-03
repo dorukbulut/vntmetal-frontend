@@ -1,5 +1,6 @@
 export const columns = [
   { id: "reference", label: "İş Emri No.", minWidth: 170 },
+  { id: "itemType", label: "Ürün", minWidth: 170 },
   {
     id: "account_id",
     label: "Cari Kod",
