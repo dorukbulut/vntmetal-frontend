@@ -11,7 +11,7 @@ import { Button } from "@mui/material";
 import Action from "../../../../components/base/action";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { delay } from "../../../../app/utils";
+import { delay } from "../../../utils";
 import Loading from "../../../../components/base/Loading";
 import Alert from "../../../../components/base/alert";
 import { useRouter } from "next/navigation";
@@ -219,12 +219,10 @@ export default function Page() {
               <Button
                 onClick={finishProduction}
                 disabled={
-                  data?.productHeader?.n_remaining === "0" &&
-                  data?.products?.rows.filter(
-                    (product) => product.isLabel !== "accepted"
-                  ).length === 0
-                    ? false
-                    : true
+                  !(data?.productHeader?.n_remaining === "0" &&
+                      data?.products?.rows.filter(
+                          (product) => product.isLabel !== "accepted"
+                      ).length === 0)
                 }
                 variant="outlined"
                 color={"warning"}
@@ -337,6 +335,11 @@ export default function Page() {
 
           {data?.length !== 0 ? (
             <div className="lg:flex lg:flex-col shadow-xl">
+              <div>
+                <p className="font-roboto text-indigo-600 text-sm font-ligth underline">
+                  Dökümhane
+                </p>
+              </div>
               <Table
                 columns={columns}
                 rowdata={data?.products?.rows}
@@ -348,7 +351,12 @@ export default function Page() {
             ""
           )}
           {data?.length !== 0 ? (
-            <div className="lg:flex lg:flex-col shadow-xl">
+            <div className="lg:flex lg:flex-col shadow-xl lg:gap-10">
+              <div>
+                <p className="font-roboto text-indigo-600 text-sm font-ligth underline">
+                  Atölye
+                </p>
+              </div>
               <Table
                 columns={columns}
                 rowdata={data?.products?.rows}
