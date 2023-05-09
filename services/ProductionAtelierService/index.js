@@ -14,6 +14,11 @@ class ProductionAtelierService {
       params: { ...filters },
     });
   }
+  async getProduct(workorder, page) {
+    return axios.post(`/api/production-atelier/get/${page}`, {
+      workorder: workorder,
+    });
+  }
 }
 
 export default new ProductionAtelierService();

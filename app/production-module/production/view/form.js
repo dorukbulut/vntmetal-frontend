@@ -1,11 +1,12 @@
 "use client";
 import { renderAsync } from "docx-preview";
 import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import WorkOrderService from "../../../../services/WorkOrderService";
 import Link from "next/link";
 export default function App() {
   const sp = useSearchParams();
+  const router = useRouter();
   const id = sp.get("id");
   const type = sp.get("type");
   useEffect(() => {
@@ -39,11 +40,12 @@ export default function App() {
         >
           INDIR
         </button>
-        <Link href={"/production-module/production"} passHref>
-          <button className="text-lg p-2 mt-5  text-red-600 border-2 border-red-600 enabled:transition enabled:ease-in-out enabled:hover:-translate-y-1 enabled:hover:scale-110  enabled:hover:bg-red-700 font-roboto enabled:hover:text-white tacking-widest rounded disabled:opacity-50 disabled:cursor-not-allowed">
-            GERI
-          </button>
-        </Link>
+        <button
+          onClick={() => router.back()}
+          className="text-lg p-2 mt-5  text-red-600 border-2 border-red-600 enabled:transition enabled:ease-in-out enabled:hover:-translate-y-1 enabled:hover:scale-110  enabled:hover:bg-red-700 font-roboto enabled:hover:text-white tacking-widest rounded disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          GERI
+        </button>
       </div>
     </div>
   );

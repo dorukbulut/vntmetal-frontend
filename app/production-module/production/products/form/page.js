@@ -232,7 +232,7 @@ export default function Page() {
                   <AutoComplete
                     data={[
                       { title: "İç Atölye" },
-                      { title: "Dış atölye" },
+                      { title: "Dış Atölye" },
                       { title: "Yok" },
                     ]}
                     setData={setAtelierType}

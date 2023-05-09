@@ -39,6 +39,7 @@ export default function Page() {
             const new_data = {
               count: res.data.count,
               rows: res.data.rows.map((item, index) => {
+                const date = new Date(item.createdAt);
                 return {
                   reference: item.reference,
                   product_status: !item.isFinished ? (
@@ -46,7 +47,6 @@ export default function Page() {
                   ) : (
                     <Chip label="Bitti" color="success" />
                   ),
-                  date: item.createdAt,
                   remaining: item.n_remaining,
                   status: <Chip label="Bekliyor" color="error" />,
                   options: [
@@ -57,9 +57,9 @@ export default function Page() {
                         action: [
                           {
                             name: "Atölye kayıtları",
-                            pathname: "/production-module/production/products",
+                            pathname: "/production-module/atelier/items",
                             query: {
-                              id: item.header_id,
+                              id: item.WorkOrder_ID,
                               reference: item.reference,
                             },
                           },
@@ -67,8 +67,8 @@ export default function Page() {
                             name: "Görüntüle",
                             pathname: "/production-module/production/view",
                             query: {
-                              id: item.header_id,
-                              reference: item.reference,
+                              id: item.WorkOrder_ID,
+                              type: item.work_order.quotationItem.itemType,
                             },
                           },
                         ],
@@ -110,16 +110,16 @@ export default function Page() {
                           name: "Atölye kayıtları",
                           pathname: "/production-module/atelier/items",
                           query: {
-                            id: item.header_id,
+                            id: item.WorkOrder_ID,
                             reference: item.reference,
                           },
                         },
                         {
                           name: "Görüntüle",
-                          pathname: "/production-module/atelier/view",
+                          pathname: "/production-module/production/view",
                           query: {
-                            id: item.header_id,
-                            reference: item.reference,
+                            id: item.WorkOrder_ID,
+                            type: item.work_order.quotationItem.itemType,
                           },
                         },
                       ],
