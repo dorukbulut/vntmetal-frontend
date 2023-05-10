@@ -3,7 +3,7 @@ import TextField from "@mui/material/TextField";
 import Chip from "@mui/material/Chip";
 import { useEffect, useState } from "react";
 import Table from "../../../order-module/table";
-import { columns } from "./data";
+import { columns, columnsAtelier } from "./data";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import ProductionAtelierService from "../../../../services/ProductionAtelierService";
@@ -147,12 +147,13 @@ export default function Page() {
                         name: "Düzenle",
                         action: [
                           {
-                            name: "Güncelle",
+                            name: "İşle",
                             pathname:
-                              "/production-module/production/products/form",
+                              "/production-module/atelier/items/form",
                             query: {
                               product_id: product.product_id,
-                              type: "update",
+                              id : res.data.productHeader.header_id,
+                              type: "create",
                             },
                           },
                         ],
@@ -173,6 +174,54 @@ export default function Page() {
                       Sil
                     </Button>
                   ),
+                };
+              }),
+            },
+            ateliers: {
+              ...res.data.ateliers,
+              rows: res.data.ateliers.rows.map((product) => {
+                return {
+                  ...product,
+                  isQC: (
+                      <Chip
+                          label={
+                            product.isQC === "pending"
+                                ? "Bekliyor"
+                                : product.isQC === "accepted"
+                                    ? "Onaylandı"
+                                    : "Red"
+                          }
+                          color={
+                            product.isQC === "pending"
+                                ? "warning"
+                                : product.isQC === "accepted"
+                                    ? "success"
+                                    : "error"
+                          }
+                      />
+                  ),
+                  options: (
+                      <Action
+                          preference={{
+                            name: "Düzenle",
+                            action: [
+                              {
+                                name: "İşlemeyi Güncelle",
+                                pathname:
+                                    "/production-module/atelier/items/form",
+                                query: {
+                                  product_id: product.product_id,
+                                  id : res.data.productHeader.header_id,
+                                  type: "update",
+                                },
+                              },
+                            ],
+                          }}
+                      >
+                        <EditIcon />
+                      </Action>
+                  ),
+
                 };
               }),
             },
@@ -299,7 +348,7 @@ export default function Page() {
                       readOnly: true,
                     }}
                     variant="standard"
-                    value={data?.productHeader?.n_piece || ""}
+                    value={""}
                     label="Adet"
                   />
                 </div>
@@ -309,7 +358,7 @@ export default function Page() {
                       readOnly: true,
                     }}
                     variant="standard"
-                    value={data?.productHeader?.n_remaining || ""}
+                    value={""}
                     label="Kalan Adet"
                   />
                 </div>
@@ -319,7 +368,7 @@ export default function Page() {
                       readOnly: true,
                     }}
                     variant="standard"
-                    value={data?.productHeader?.total_kg + " kg" || ""}
+                    value={""}
                     label="Toplam Kg."
                   />
                 </div>
@@ -358,10 +407,10 @@ export default function Page() {
                 </p>
               </div>
               <Table
-                columns={columns}
-                rowdata={data?.products?.rows}
-                count={data?.products?.count}
-                setNPage={setPage}
+                columns={columnsAtelier}
+                rowdata={data?.ateliers?.rows}
+                count={data?.ateliers?.count}
+                setNPage={() => {}}
               />
             </div>
           ) : (

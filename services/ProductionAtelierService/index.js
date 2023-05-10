@@ -9,6 +9,13 @@ class ProductionAtelierService {
     return this.getPage(0);
   }
 
+  async createProduct(data) {
+    return axios.post("/api/production-atelier/create", data);
+  }
+  async updateProduct(data) {
+    return axios.post("/api/production-atelier/update", data);
+  }
+
   async getFilteredData(filters) {
     return axios.get("/api/production-atelier/filter", {
       params: { ...filters },
