@@ -112,137 +112,152 @@ export default function Page() {
   };
 
   const { data1 } = useSWR(() => {
-    ProductionAtelierService.getProduct(id, page)
-      .then((res) => {
-        if (res.data.length === 0) {
-          setData(res.data);
-        } else {
-          const new_data = {
-            ...res.data,
-            products: {
-              ...res.data.products,
-              rows: res.data.products.rows.map((product) => {
-                return {
-                  ...product,
-                  isLabel: product.isQC,
-                  isQC: (
-                    <Chip
-                      label={
-                        product.isQC === "pending"
-                          ? "Bekliyor"
-                          : product.isQC === "accepted"
-                          ? "Onaylandı"
-                          : "Red"
-                      }
-                      color={
-                        product.isQC === "pending"
-                          ? "warning"
-                          : product.isQC === "accepted"
-                          ? "success"
-                          : "error"
-                      }
-                    />
-                  ),
-                  options: (
-                    <Action
-                      preference={{
-                        name: "Düzenle",
-                        action: [
-                          {
-                            name: "İşle",
-                            pathname:
-                              "/production-module/atelier/items/form",
-                            query: {
-                              product_id: product.product_id,
-                              id : res.data.productHeader.header_id,
-                              type: "create",
-                            },
-                          },
-                        ],
-                      }}
-                    >
-                      <EditIcon />
-                    </Action>
-                  ),
-                  delete: (
-                    <Button
-                      variant="contained"
-                      color="error"
-                      startIcon={<DeleteIcon />}
-                      onClick={(e) => {
-                        deleteProduct(e, product.product_id);
-                      }}
-                    >
-                      Sil
-                    </Button>
-                  ),
-                };
-              }),
-            },
-          };
-          setData(new_data);
-        }
-      })
-      .catch((err) => console.log);
+
     ProductionAtelierService.getAtelier(id, atelierPage)
         .then((res) => {
+          let atelier_data;
+          let product_data;
           if(res.status === 200){
-            const new_data = {
-              ...res.data,
-              ateliers : {
-                ...res.data.ateliers,
-                rows : res.data.ateliers.rows.map(item => {
-                  return {
-                    ...item,
-                    step : reference + "-" + item.product.step + "-" + item.step,
-                    isQC: (
-                        <Chip
-                            label={
-                              item.isQC === "pending"
-                                  ? "Bekliyor"
-                                  : item.isQC === "accepted"
-                                      ? "Onaylandı"
-                                      : "Red"
-                            }
-                            color={
-                              item.isQC === "pending"
-                                  ? "warning"
-                                  : item.isQC === "accepted"
-                                      ? "success"
-                                      : "error"
-                            }
-                        />
-                    ),
-                    options: (
-                        <Action
-                            preference={{
-                              name: "Düzenle",
-                              action: [
-                                {
-                                  name: "İşle",
-                                  pathname:
-                                      "/production-module/atelier/items/form",
-                                  query: {
-                                    product_id:"none",
-                                    id : item.atelier_id,
-                                    type: "update",
-                                  },
-                                },
-                              ],
-                            }}
-                        >
-                          <EditIcon />
-                        </Action>
-                    ),
-
-                  }
-                })
-              }
+            if(res.data.length === 0) {
+                setAtelierData(res.data)
             }
-            setAtelierData(new_data);
+            else {atelier_data = {
+                ...res.data,
+                ateliers : {
+                    ...res.data.ateliers,
+                    rows : res.data.ateliers.rows.map(item => {
+                        return {
+                            ...item,
+                            step : reference + "-" + item.product.step + "-" + item.step,
+                            isQC: (
+                                <Chip
+                                    label={
+                                        item.isQC === "pending"
+                                            ? "Bekliyor"
+                                            : item.isQC === "accepted"
+                                                ? "Onaylandı"
+                                                : "Red"
+                                    }
+                                    color={
+                                        item.isQC === "pending"
+                                            ? "warning"
+                                            : item.isQC === "accepted"
+                                                ? "success"
+                                                : "error"
+                                    }
+                                />
+                            ),
+                            options: (
+                                <Action
+                                    preference={{
+                                        name: "Düzenle",
+                                        action: [
+                                            {
+                                                name: "İşle",
+                                                pathname:
+                                                    "/production-module/atelier/items/form",
+                                                query: {
+                                                    product_id:"none",
+                                                    id : item.atelier_id,
+                                                    type: "update",
+                                                },
+                                            },
+                                        ],
+                                    }}
+                                >
+                                    <EditIcon />
+                                </Action>
+                            ),
+
+                        }
+                    })
+                }
+            }
+                setAtelierData(atelier_data);}
+
 
           }
+          ProductionAtelierService.getProduct(id, page)
+              .then((res) => {
+                if (res.data.length === 0) {
+                  setData(res.data);
+                } else {
+                  product_data = {
+                    ...res.data,
+                    products: {
+                      ...res.data.products,
+                      rows: res.data.products.rows
+                          .map((product) => {
+                          let sum = atelier_data.ateliers.rows
+                              .filter((atelier) => atelier.Product_ID === product.product_id)
+                              .reduce((prev, curr) => prev + parseInt(curr.n_piece),0);
+                          console.log(sum);
+                          if((parseInt(product.n_piece) - sum > 0)) {
+                              return {
+                                  ...product,
+                                  isLabel: product.isQC,
+                                  isQC: (
+                                      <Chip
+                                          label={
+                                              product.isQC === "pending"
+                                                  ? "Bekliyor"
+                                                  : product.isQC === "accepted"
+                                                      ? "Onaylandı"
+                                                      : "Red"
+                                          }
+                                          color={
+                                              product.isQC === "pending"
+                                                  ? "warning"
+                                                  : product.isQC === "accepted"
+                                                      ? "success"
+                                                      : "error"
+                                          }
+                                      />
+                                  ),
+                                  options: (
+                                      <Action
+                                          preference={{
+                                              name: "Düzenle",
+                                              action: [
+                                                  {
+                                                      name: "İşle",
+                                                      pathname:
+                                                          "/production-module/atelier/items/form",
+                                                      query: {
+                                                          product_id: product.product_id,
+                                                          id : res.data.productHeader.header_id,
+                                                          type: "create",
+                                                      },
+                                                  },
+                                              ],
+                                          }}
+                                      >
+                                          <EditIcon />
+                                      </Action>
+                                  ),
+                                  delete: (
+                                      <Button
+                                          variant="contained"
+                                          color="error"
+                                          startIcon={<DeleteIcon />}
+                                          onClick={(e) => {
+                                              deleteProduct(e, product.product_id);
+                                          }}
+                                      >
+                                          Sil
+                                      </Button>
+                                  ),
+                              };
+                          }
 
+                      })
+                          .filter((item) => item !== undefined),
+                    },
+                  };
+                  setData(product_data);
+                }
+              })
+              .catch((err) => console.log);
 
         })
         .catch((err) => console.log);
@@ -260,27 +275,6 @@ export default function Page() {
             </p>
           </div>
           <div className="lg:flex lg:gap-10 lg:items-center p-2 shadow-xl rounded-lg">
-            <div className="flex items-center hover:cursor-pointer transition duration-500 hover:scale-110 ">
-              {data?.productHeader?.n_remaining > 0 || data?.length === 0 ? (
-                <Link
-                  href={{
-                    pathname: "/production-module/production/products/form",
-                    query: {
-                      id: id,
-                      type: "create",
-                    },
-                  }}
-                >
-                  <Button variant="outlined" color="success">
-                    Dış Atölye Kaydı
-                  </Button>
-                </Link>
-              ) : (
-                <Button variant="outlined" color="success" disabled>
-                  Dış Atölye Kaydı
-                </Button>
-              )}
-            </div>
             <div className="flex items-center hover:cursor-pointer transition duration-500 hover:scale-110 ">
               <Button
                 onClick={finishProduction}
