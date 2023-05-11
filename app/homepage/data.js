@@ -17,21 +17,21 @@ export const modules = [
     title: "Kalite Kontrol Modülü",
     color: "secondary",
     body: "Üretim ve Malzeme kalitenizi kontrol edin",
-    path: "/",
+    path: "/qc-module",
   },
 
   {
     title: "Sevkiyat Modülü",
     color: "info",
     body: "Sevkiyat bilgilerinizi kontrol edin",
-    path: "/",
+    path: "/shipment-module",
   },
 
   {
     title: "Raporlama Modülü",
     color: "success",
     body: "Dilediğiniz şekilde raporlar alın",
-    path: "/",
+    path: "/report-module",
   },
 
   {

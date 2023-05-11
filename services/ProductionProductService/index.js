@@ -38,6 +38,10 @@ class ProductionProductService {
   async finishProduct(workorder_ID) {
     return axios.post("/api/production-product/finish", { workorder_ID });
   }
+
+  async getMaxItem(workorder) {
+    return axios.post("/api/production-product/max-item", { workorder });
+}
 }
 
 export default new ProductionProductService();

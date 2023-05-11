@@ -51,5 +51,54 @@ export const navlist = [
       },
       { name: "Çıkış", logo: <ExitToAppIcon />, path: "/homepage" },
     ],
+    "qc-module": [
+      {
+        name: "Ocak ve Dökümhane",
+        logo: <FactoryIcon />,
+        path: "/qc-module/production",
+      },
+      {
+        name: "Atölye",
+        logo: <PrecisionManufacturingIcon />,
+        path: "/qc-module/atelier",
+      },
+      { name: "Çıkış", logo: <ExitToAppIcon />, path: "/homepage" },
+    ],
+    "shipment-module": [
+      {
+        name: "Müşteri Sevkiyat",
+        logo: <FactoryIcon />,
+        path: "/shipment-module/customer-shipment",
+      },
+      {
+        name: "Paketleme",
+        logo: <PrecisionManufacturingIcon />,
+        path: "/shipment-module/packaging",
+      },
+      { name: "Çıkış", logo: <ExitToAppIcon />, path: "/homepage" },
+    ],
+    "report-module": [
+      {
+        name: "Teklif Raporları",
+        logo: <FactoryIcon />,
+        path: "/report-module/quotations",
+      },
+      {
+        name: "Sipariş Raporları",
+        logo: <PrecisionManufacturingIcon />,
+        path: "/report-module/orders",
+      },
+      {
+        name: "İş Emri Raporları",
+        logo: <PrecisionManufacturingIcon />,
+        path: "/report-module/work-orders",
+      },
+      {
+        name: "Sevkiyat Raporları",
+        logo: <PrecisionManufacturingIcon />,
+        path: "/report-module/shipment",
+      },
+      { name: "Çıkış", logo: <ExitToAppIcon />, path: "/homepage" },
+    ],
   },
 ];

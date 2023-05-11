@@ -191,7 +191,7 @@ export default function Page() {
                           let sum = atelier_data.ateliers.rows
                               .filter((atelier) => atelier.Product_ID === product.product_id)
                               .reduce((prev, curr) => prev + parseInt(curr.n_piece),0);
-                          console.log(sum);
+
                           if((parseInt(product.n_piece) - sum > 0)) {
                               return {
                                   ...product,
@@ -359,7 +359,7 @@ export default function Page() {
                       readOnly: true,
                     }}
                     variant="standard"
-                    value={""}
+                    value={data?.ateliers?.rows.reduce((prev, curr) => prev + curr.n_piece,0) || "0"}
                     label="Adet"
                   />
                 </div>
@@ -369,7 +369,7 @@ export default function Page() {
                       readOnly: true,
                     }}
                     variant="standard"
-                    value={""}
+                    value={data?.ateliers?.rows.reduce((prev, curr) => prev + parseInt(curr.n_piece),0) - parseInt(data?.sum) || parseInt(data?.sum)}
                     label="Kalan Adet"
                   />
                 </div>
@@ -379,7 +379,7 @@ export default function Page() {
                       readOnly: true,
                     }}
                     variant="standard"
-                    value={""}
+                    value={data?.ateliers?.rows?.reduce((prev, curr) => prev + parseInt(curr.total_kg), 0) || "0"}
                     label="Toplam Kg."
                   />
                 </div>

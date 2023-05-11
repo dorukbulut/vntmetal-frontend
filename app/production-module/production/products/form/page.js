@@ -12,10 +12,12 @@ import { useRouter } from "next/navigation";
 import { isValid } from "../../../../valid";
 import ProductionProductService from "../../../../../services/ProductionProductService";
 import { delay } from "../../../../../app/utils";
+import useSWR from "swr";
 export default function Page() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const product_id = searchParams.get("product_id");
+  const max_from_product = searchParams.get("max_from_product");
   const [error, setError] = useState({
     isOpen: false,
     type: "info",
@@ -51,6 +53,20 @@ export default function Page() {
   });
   const [productType, setProductType] = useState({ title: "" });
   const [atelier, setAtelierType] = useState({ title: "" });
+  const [max_item, setMaxItem] = useState(0);
+
+  const { data12 } = useSWR(() => {
+    ProductionProductService.getMaxItem(id)
+        .then(res => {
+          if(res.status === 200) {
+            if(type === "create") {
+              setMaxItem(parseInt(res.data.max_item));
+            } else {
+              setMaxItem(parseInt(max_from_product) + parseInt(res.data.max_item))
+            }
+          }
+        })
+  });
   const handleChange = (e, name) => {
     setFields((old) => {
       return { ...old, [name]: e.target.value };
@@ -112,7 +128,7 @@ export default function Page() {
       b: productType?.title === undefined ? "" : productType?.title,
     };
 
-    setValid(isValid(check_fields));
+    setValid(isValid(check_fields) && (parseInt(fields?.n_piece) > 0 && parseInt(fields?.n_piece) <= max_item));
   }, [atelier?.title, fields, productType?.title]);
   useEffect(() => {
     if (type === "update") {
@@ -172,8 +188,9 @@ export default function Page() {
                   <TextField
                     label="Dökülen Adet"
                     onChange={(e) => handleChange(e, "n_piece")}
-                    value={fields?.n_piece || ""}
+                    value={(parseInt(fields?.n_piece) > 0 && parseInt(fields?.n_piece) <= max_item) ? fields?.n_piece || "" : ""}
                     type="number"
+                    InputProps={{ inputProps: { min: 1, max: max_item } }}
                     helperText="Zorunlu Alan"
                     error={!valid}
                     fullWidth

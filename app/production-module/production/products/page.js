@@ -152,7 +152,9 @@ export default function Page() {
                               "/production-module/production/products/form",
                             query: {
                               product_id: product.product_id,
-                              type: "update",
+                              id : res.data.productHeader.WorkOrder_ID,
+                              max_from_product : product.n_piece,
+                              type : "update",
                             },
                           },
                         ],
