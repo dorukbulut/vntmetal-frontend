@@ -26,6 +26,14 @@ class ProductionAtelierService {
       workorder: workorder,
     });
   }
+  async getAtelier(workorder, page) {
+    return axios.post(`/api/production-atelier/get-atelier/${page}`, {
+      workorder: workorder,
+    });
+  }
+  async getByID(atelier_id) {
+    return axios.post("/api/production-atelier/getid", { atelier_id });
+  }
 }
 
 export default new ProductionAtelierService();

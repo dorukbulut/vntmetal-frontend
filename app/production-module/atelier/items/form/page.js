@@ -47,17 +47,21 @@ export default function Page() {
       message: "Kayıt Oluşturuluyor...",
       title: "Lütfen Bekleyiniz",
     });
-    let data = {
-      ...fields,
-      ProductHeader_ID: header_id,
-      Product_ID : product_id,
-    };
+    let data;
     try {
       let res;
       if (type === "create") {
+        data = {
+          ...fields,
+          ProductHeader_ID: header_id,
+          Product_ID : product_id,
+        }
         res = await ProductionAtelierService.createProduct(data);
       } else {
-        data["product_id"] = product_id;
+        data = {
+          values : {...fields},
+          atelier_id : header_id,
+        }
         res = await ProductionAtelierService.updateProduct(data);
       }
       if (res.status === 200) {
@@ -88,24 +92,19 @@ export default function Page() {
     setValid(isValid(check_fields));
   }, [fields]);
   useEffect(() => {
-    if (type === "update") {
-      ProductionProductService.getByID(product_id)
-        .then((res) => {
-          const data = res.data;
-          setAtelierType({ title: data.atelier });
-          setProductType({ title: data.type });
-
-          delete data.product_id;
-          delete data.ProductHeader_ID;
-          delete data.type;
-          delete data.atelier;
-          setFields((old) => {
-            return {
-              ...data,
-            };
-          });
-        })
-        .catch((err) => console.log);
+    if(type === "update"){
+      ProductionAtelierService.getByID(header_id)
+          .then(res => {
+            if(res.status === 200) {
+              setFields({
+                atelier_dims: res.data.atelier_dims,
+                n_piece : res.data.n_piece,
+                total_kg : res.data.total_kg,
+                preparedBy : res.data.preparedBy,
+              })
+            }
+          })
+          .catch(e => console.log)
     }
   }, []);
   return (

@@ -29,7 +29,9 @@ export default function Page() {
   });
   const [isLoading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
+  const [atelierPage, setAtelierPage] = useState(0);
   const [data, setData] = useState();
+  const [atelierData, setAtelierData] = useState();
   const deleteProduct = (e, product_id) => {
     e.preventDefault();
     setLoading(true);
@@ -177,60 +179,75 @@ export default function Page() {
                 };
               }),
             },
-            ateliers: {
-              ...res.data.ateliers,
-              rows: res.data.ateliers.rows.map((product) => {
-                return {
-                  ...product,
-                  isQC: (
-                      <Chip
-                          label={
-                            product.isQC === "pending"
-                                ? "Bekliyor"
-                                : product.isQC === "accepted"
-                                    ? "Onaylandı"
-                                    : "Red"
-                          }
-                          color={
-                            product.isQC === "pending"
-                                ? "warning"
-                                : product.isQC === "accepted"
-                                    ? "success"
-                                    : "error"
-                          }
-                      />
-                  ),
-                  options: (
-                      <Action
-                          preference={{
-                            name: "Düzenle",
-                            action: [
-                              {
-                                name: "İşlemeyi Güncelle",
-                                pathname:
-                                    "/production-module/atelier/items/form",
-                                query: {
-                                  product_id: product.product_id,
-                                  id : res.data.productHeader.header_id,
-                                  type: "update",
-                                },
-                              },
-                            ],
-                          }}
-                      >
-                        <EditIcon />
-                      </Action>
-                  ),
-
-                };
-              }),
-            },
           };
           setData(new_data);
         }
       })
       .catch((err) => console.log);
+    ProductionAtelierService.getAtelier(id, atelierPage)
+        .then((res) => {
+          if(res.status === 200){
+            const new_data = {
+              ...res.data,
+              ateliers : {
+                ...res.data.ateliers,
+                rows : res.data.ateliers.rows.map(item => {
+                  return {
+                    ...item,
+                    step : reference + "-" + item.product.step + "-" + item.step,
+                    isQC: (
+                        <Chip
+                            label={
+                              item.isQC === "pending"
+                                  ? "Bekliyor"
+                                  : item.isQC === "accepted"
+                                      ? "Onaylandı"
+                                      : "Red"
+                            }
+                            color={
+                              item.isQC === "pending"
+                                  ? "warning"
+                                  : item.isQC === "accepted"
+                                      ? "success"
+                                      : "error"
+                            }
+                        />
+                    ),
+                    options: (
+                        <Action
+                            preference={{
+                              name: "Düzenle",
+                              action: [
+                                {
+                                  name: "İşle",
+                                  pathname:
+                                      "/production-module/atelier/items/form",
+                                  query: {
+                                    product_id:"none",
+                                    id : item.atelier_id,
+                                    type: "update",
+                                  },
+                                },
+                              ],
+                            }}
+                        >
+                          <EditIcon />
+                        </Action>
+                    ),
+
+                  }
+                })
+              }
+            }
+            setAtelierData(new_data);
+
+          }
+
+
+        })
+        .catch((err) => console.log);
   });
+
 
   return (
     <div>
@@ -408,9 +425,9 @@ export default function Page() {
               </div>
               <Table
                 columns={columnsAtelier}
-                rowdata={data?.ateliers?.rows}
-                count={data?.ateliers?.count}
-                setNPage={() => {}}
+                rowdata={atelierData?.ateliers?.rows}
+                count={atelierData?.ateliers?.count}
+                setNPage={setAtelierPage}
               />
             </div>
           ) : (
