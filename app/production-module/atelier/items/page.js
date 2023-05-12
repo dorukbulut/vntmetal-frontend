@@ -32,50 +32,7 @@ export default function Page() {
   const [atelierPage, setAtelierPage] = useState(0);
   const [data, setData] = useState();
   const [atelierData, setAtelierData] = useState();
-  const deleteProduct = (e, product_id) => {
-    e.preventDefault();
-    setLoading(true);
-    setError({
-      isOpen: true,
-      type: "warning",
-      message: "Kayıt Oluşturuluyor...",
-      title: "Lütfen Bekleyiniz",
-    });
-    ProductionProductService.deleteProduct(product_id)
-      .then(async (res) => {
-        if (res.status === 200) {
-          setError({
-            isOpen: true,
-            type: "success",
-            message: "Kayıt Silindi !",
-            title: "Başarılı",
-          });
-          setData((old) => {
-            return {
-              ...old,
-              products: {
-                ...old.products,
-                rows: old.products.rows.filter(
-                  (product) => product.product_id !== product_id
-                ),
-              },
-            };
-          });
-          await delay(2000);
-          setLoading(false);
-        }
-      })
-      .catch(async (err) => {
-        setError({
-          isOpen: true,
-          type: "error",
-          message: "Kayıt Silinemedi !",
-          title: "Hata",
-        });
-        await delay(2000);
-        setLoading(false);
-      });
-  };
+
   const finishProduction = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -85,7 +42,7 @@ export default function Page() {
       message: "Döküm Tamamlanıyor...",
       title: "Lütfen Bekleyiniz",
     });
-    ProductionProductService.finishProduct(id)
+    ProductionAtelierService.finishAtelier(id)
       .then(async (res) => {
         if (res.status === 200) {
           setError({
@@ -95,8 +52,7 @@ export default function Page() {
             title: "Başarılı",
           });
           await delay(2000);
-          setLoading(false);
-          router.push("/production-module/production");
+          router.push("/production-module/atelier");
         }
       })
       .catch(async (err) => {
@@ -110,10 +66,8 @@ export default function Page() {
         setLoading(false);
       });
   };
-
   const { data1 } = useSWR(() => {
-
-    ProductionAtelierService.getAtelier(id, atelierPage)
+      ProductionAtelierService.getAtelier(id, atelierPage)
         .then((res) => {
           let atelier_data;
           let product_data;
@@ -129,6 +83,7 @@ export default function Page() {
                         return {
                             ...item,
                             step : reference + "-" + item.product.step + "-" + item.step,
+                            isLabel : item.isQC,
                             isQC: (
                                 <Chip
                                     label={
@@ -236,18 +191,6 @@ export default function Page() {
                                           <EditIcon />
                                       </Action>
                                   ),
-                                  delete: (
-                                      <Button
-                                          variant="contained"
-                                          color="error"
-                                          startIcon={<DeleteIcon />}
-                                          onClick={(e) => {
-                                              deleteProduct(e, product.product_id);
-                                          }}
-                                      >
-                                          Sil
-                                      </Button>
-                                  ),
                               };
                           }
 
@@ -280,10 +223,10 @@ export default function Page() {
               <Button
                 onClick={finishProduction}
                 disabled={
-                  !(parseInt(data?.sum) - (atelierData?.ateliers?.rows.reduce((prev, curr) => prev + parseInt(curr.n_piece),0)) === 0 &&
-                      atelierData?.ateliers?.rows.filter(
-                          (product) => product.isLabel !== "accepted"
-                      ).length === 0)
+                    !((parseInt(data?.sum) - (atelierData?.ateliers?.rows.reduce((prev, curr) => prev + parseInt(curr.n_piece),0)) === 0) &&
+                    (atelierData?.ateliers?.rows.filter(
+                        (product) => product.isLabel !== "accepted"
+                    ).length === 0))
                 }
                 variant="outlined"
                 color={"warning"}
@@ -370,7 +313,7 @@ export default function Page() {
                       readOnly: true,
                     }}
                     variant="standard"
-                    value={parseInt(data?.sum) - (atelierData?.ateliers?.rows.reduce((prev, curr) => prev + parseInt(curr.n_piece),0))|| ""}
+                    value={parseInt(data?.sum) - (atelierData?.ateliers?.rows.reduce((prev, curr) => prev + parseInt(curr.n_piece),0)) || 0}
                     label="Kalan Adet"
                   />
                 </div>

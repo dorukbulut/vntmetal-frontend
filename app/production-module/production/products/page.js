@@ -93,7 +93,6 @@ export default function Page() {
             title: "Başarılı",
           });
           await delay(2000);
-          setLoading(false);
           router.push("/production-module/production");
         }
       })

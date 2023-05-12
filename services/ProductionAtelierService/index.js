@@ -37,6 +37,10 @@ class ProductionAtelierService {
   async getMaxItem(product_id) {
     return axios.post("/api/production-atelier/max-item", { product_id });
   }
+
+  async finishAtelier(workorder_ID) {
+    return axios.post("/api/production-atelier/finish", { workorder_ID });
+  }
 }
 
 export default new ProductionAtelierService();
