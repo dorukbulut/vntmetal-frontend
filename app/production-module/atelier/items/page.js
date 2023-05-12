@@ -153,11 +153,12 @@ export default function Page() {
                                         name: "Düzenle",
                                         action: [
                                             {
-                                                name: "İşle",
+                                                name: "İşlemeyi Güncelle",
                                                 pathname:
                                                     "/production-module/atelier/items/form",
                                                 query: {
-                                                    product_id:"none",
+                                                    product_id: item.Product_ID,
+                                                    max_from_atelier: item.n_piece,
                                                     id : item.atelier_id,
                                                     type: "update",
                                                 },
@@ -279,8 +280,8 @@ export default function Page() {
               <Button
                 onClick={finishProduction}
                 disabled={
-                  !(data?.productHeader?.n_remaining === "0" &&
-                      data?.products?.rows.filter(
+                  !(parseInt(data?.sum) - (atelierData?.ateliers?.rows.reduce((prev, curr) => prev + parseInt(curr.n_piece),0)) === 0 &&
+                      atelierData?.ateliers?.rows.filter(
                           (product) => product.isLabel !== "accepted"
                       ).length === 0)
                 }
@@ -359,7 +360,7 @@ export default function Page() {
                       readOnly: true,
                     }}
                     variant="standard"
-                    value={data?.ateliers?.rows.reduce((prev, curr) => prev + curr.n_piece,0) || "0"}
+                    value={atelierData?.ateliers?.rows.reduce((prev, curr) => prev + parseInt(curr.n_piece),0) || ""}
                     label="Adet"
                   />
                 </div>
@@ -369,7 +370,7 @@ export default function Page() {
                       readOnly: true,
                     }}
                     variant="standard"
-                    value={data?.ateliers?.rows.reduce((prev, curr) => prev + parseInt(curr.n_piece),0) - parseInt(data?.sum) || parseInt(data?.sum)}
+                    value={parseInt(data?.sum) - (atelierData?.ateliers?.rows.reduce((prev, curr) => prev + parseInt(curr.n_piece),0))|| ""}
                     label="Kalan Adet"
                   />
                 </div>
@@ -379,7 +380,7 @@ export default function Page() {
                       readOnly: true,
                     }}
                     variant="standard"
-                    value={data?.ateliers?.rows?.reduce((prev, curr) => prev + parseInt(curr.total_kg), 0) || "0"}
+                    value={atelierData?.ateliers?.rows.reduce((prev, curr) => prev + parseInt(curr.total_kg),0) || ""}
                     label="Toplam Kg."
                   />
                 </div>

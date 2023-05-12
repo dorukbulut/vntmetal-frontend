@@ -11,10 +11,12 @@ import { useRouter } from "next/navigation";
 import { isValid } from "../../../../valid";
 import ProductionAtelierService from "../../../../../services/ProductionAtelierService";
 import { delay } from "../../../../../app/utils";
+import useSWR from "swr";
 export default function Page() {
   const searchParams = useSearchParams();
   const header_id = searchParams.get("id");
   const product_id = searchParams.get("product_id");
+  const max_from_atelier = searchParams.get("max_from_atelier");
   const [error, setError] = useState({
     isOpen: false,
     type: "info",
@@ -31,7 +33,20 @@ export default function Page() {
     total_kg : "",
     preparedBy : "",
   });
-
+  const [max_item, setMaxItem] = useState(0);
+  const {dat11} = useSWR(() => {
+    ProductionAtelierService.getMaxItem(product_id)
+        .then(res => {
+          if (res.status === 200){
+            if (type === "create"){
+              setMaxItem(parseInt(res.data.max_item))
+            } else {
+              console.log(max_from_atelier, res.data.max_item)
+              setMaxItem(parseInt(max_from_atelier) + parseInt(res.data.max_item))
+            }
+          }
+        })
+  });
   const handleChange = (e, name) => {
     setFields((old) => {
       return { ...old, [name]: e.target.value };
@@ -89,7 +104,7 @@ export default function Page() {
       ...fields,
     };
 
-    setValid(isValid(check_fields));
+    setValid(isValid(check_fields) && (parseInt(fields?.n_piece) > 0 && parseInt(fields?.n_piece) <= max_item));
   }, [fields]);
   useEffect(() => {
     if(type === "update"){
@@ -144,8 +159,9 @@ export default function Page() {
                   <TextField
                     label="İşlenen Adet"
                     onChange={(e) => handleChange(e, "n_piece")}
-                    value={fields?.n_piece || ""}
+                    value={(parseInt(fields?.n_piece) > 0 && parseInt(fields?.n_piece) <= max_item) ? fields?.n_piece || "" : ""}
                     type="number"
+                    InputProps={{ inputProps: { min: 1, max: max_item } }}
                     helperText="Zorunlu Alan"
                     error={!valid}
                     fullWidth
