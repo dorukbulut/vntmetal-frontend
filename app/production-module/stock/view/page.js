@@ -34,7 +34,6 @@ export default function Page() {
                     {ITEM_TYPES[name]} Stok Bilgileri
                 </p>
             </div>
-
             <div className="lg:flex lg:gap-10 lg:items-center p-2 shadow-xl rounded-lg">
                 <div className="flex items-center hover:cursor-pointer transition duration-500 hover:scale-110 ">
                     <Link
@@ -47,7 +46,13 @@ export default function Page() {
                         </Button>
                     </Link>
                 </div>
-                <div className="flex items-center hover:cursor-pointer transition duration-500 hover:scale-110 ">
+
+
+
+            </div>
+
+            {/*
+            <div className="flex items-center hover:cursor-pointer transition duration-500 hover:scale-110 ">
 
                     <Link
                         href={{
@@ -63,8 +68,7 @@ export default function Page() {
                         </Button>
                     </Link>
                 </div>
-
-                <TextField
+            <TextField
                     label="İş Emri No."
                     id="filled-start-adornment"
                     sx={{ m: 1, width: "25ch" }}
@@ -109,7 +113,6 @@ export default function Page() {
                         />
                     );
                 })}
-            </div>
 
             <div className="lg:flex lg:flex-col shadow-xl">
                 <Table
@@ -119,6 +122,8 @@ export default function Page() {
                     setNPage={() => {}}
                 />
             </div>
+            */}
+
         </div>
     );
 }
