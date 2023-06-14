@@ -1,5 +1,4 @@
 "use client";
-"use client";
 import Table from "../table";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
