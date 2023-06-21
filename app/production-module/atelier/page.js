@@ -25,6 +25,9 @@ export default function Page() {
     });
   };
   const { data1 } = useSWR(() => {
+    if(filters?.reference === '') {
+      setFilters(undefined)
+    }
     if (filters) {
       const params = {
         reference:

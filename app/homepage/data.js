@@ -38,6 +38,6 @@ export const modules = [
     title: "Kontrol Paneli",
     color: "error",
     body: "Kullanıcıları ve yetkileri yönetin",
-    path: "/",
+    path: "/admin-module",
   },
 ];

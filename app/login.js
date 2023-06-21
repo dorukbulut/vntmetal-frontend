@@ -19,7 +19,7 @@ export default function LoginForm() {
     setAge(event.target.value);
   };
   return (
-    <div className="flex flex-col gap-10 lg:gap-12 md:gap-12">
+    <div className="flex flex-col  gap-10 lg:gap-12 md:gap-12">
       <TextField
         id="input-with-icon-textfield"
         label="Kullanıcı Adı"
@@ -46,22 +46,6 @@ export default function LoginForm() {
         }}
         variant="standard"
       />
-
-      <FormControl variant="standard" sx={{ minWidth: 120, width: "75%" }}>
-        <InputLabel id="demo-simple-select-standard-label">Personel</InputLabel>
-        <Select
-          labelId="demo-simple-select-standard-label"
-          id="demo-simple-select-standard"
-          value={age}
-          onChange={handleChange}
-          label="Personel"
-        >
-          <MenuItem value={10}>Yönetim</MenuItem>
-          <MenuItem value={20}>Satış</MenuItem>
-          <MenuItem value={30}>Muhasebe</MenuItem>
-          <MenuItem value={30}>Çalışan</MenuItem>
-        </Select>
-      </FormControl>
       <Link href={"/homepage"} passHref>
         <button
           type="button"

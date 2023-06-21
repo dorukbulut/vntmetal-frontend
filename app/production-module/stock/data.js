@@ -11,3 +11,10 @@ export const columns = [
         align: "right",
     },
 ];
+
+
+export const nameMapper = {
+    "atelier" : "Atölye",
+    "shipment" : "Sevk",
+    "production" : "Ocak ve Dökümhane"
+}

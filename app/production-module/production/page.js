@@ -28,6 +28,9 @@ export default function Page() {
     });
   };
   const { data1 } = useSWR(() => {
+    if(filters?.account_id === '' && filters?.reference === '' && filters?.day === '' && filters?.month === '' && filters?.year === ''){
+      setFilters(undefined)
+    }
     if (filters) {
       const params = {
         Customer_ID:

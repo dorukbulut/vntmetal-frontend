@@ -5,7 +5,7 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import Table from "../../order-module/table";
-import {columns} from "./data";
+import {columns, nameMapper} from "./data";
 import {useState} from "react";
 import useSWR from "swr";
 import ProductionInventoryService from "../../../services/ProductionInventoryService";
@@ -13,6 +13,7 @@ import {ITEM_TYPES} from "../../../utils/mappers";
 import Chip from "@mui/material/Chip";
 import Action from "../../../components/base/action";
 import EditIcon from "@mui/icons-material/Edit";
+
 
 export default function Page() {
     const [data, setData] = useState();
@@ -27,6 +28,9 @@ export default function Page() {
         });
     };
     const { data1 } = useSWR(() => {
+        if (filters?.reference === '') {
+            setFilters(undefined)
+        }
         if (filters) {
             const params = {
 
@@ -44,7 +48,7 @@ export default function Page() {
                             rows: res.data.rows.map((item, index) => {
                                 return {
                                     reference: item.reference,
-                                    inventoryType: item.inventoryType === "atelier" ? "Atölye" : "Ocak ve Dökümhane",
+                                    inventoryType: nameMapper[item.inventoryType],
                                     inventoryName : ITEM_TYPES[item.inventoryName],
                                     n_remaining : item.n_remaining,
                                     updatedAt : new Date(item.updatedAt).toISOString().slice(0, 10),
@@ -73,6 +77,7 @@ export default function Page() {
                             }),
                         };
                         setData(new_data);
+
                     }
                 })
                 .catch((err) => {});
@@ -84,7 +89,7 @@ export default function Page() {
                         rows: res.data.rows.map((item, index) => {
                             return {
                                 reference: item.reference,
-                                inventoryType: item.inventoryType === "atelier" ? "Atölye" : "Ocak ve Dökümhane",
+                                inventoryType: nameMapper[item.inventoryType],
                                 inventoryName : ITEM_TYPES[item.inventoryName],
                                 n_remaining : item.n_remaining,
                                 updatedAt : new Date(item.updatedAt).toISOString().slice(0, 10),
