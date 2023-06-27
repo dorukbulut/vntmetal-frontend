@@ -59,12 +59,11 @@ export default function Page() {
                                                 name: "Düzenle",
                                                 action: [
                                                     {
-                                                        name: "Görüntüle",
-                                                        pathname: "/production-module/stock/view",
+                                                        name: "Kayıt Stil",
+                                                        pathname: "/production-module/stock/form",
                                                         query: {
-                                                            id : item.header_id,
-                                                            type: item.inventoryType,
-                                                            name: item.inventoryName,
+                                                            id : "",
+                                                            type: "update",
                                                         },
                                                     },
                                                 ],
@@ -100,12 +99,11 @@ export default function Page() {
                                             name: "Düzenle",
                                             action: [
                                                 {
-                                                    name: "Görüntüle",
-                                                    pathname: "/production-module/stock/view",
+                                                    name: "Kayıt Stil",
+                                                    pathname: "/production-module/stock/form",
                                                     query: {
-                                                        id : item.header_id,
-                                                        type: item.inventoryType,
-                                                        name: item.inventoryName,
+                                                        id : item.reference,
+                                                        type: "update",
                                                     },
                                                 },
                                             ],
@@ -130,6 +128,21 @@ export default function Page() {
                 </p>
             </div>
             <div className="lg:flex lg:gap-10 lg:items-center p-2 shadow-xl rounded-lg">
+                <div className="flex items-center hover:cursor-pointer transition duration-500 hover:scale-110 ">
+                    <Link
+                        href={{
+                            pathname: "/production-module/stock/form",
+                            query: {
+                                type: "create",
+                                id: "none",
+                            },
+                        }}
+                    >
+                        <Button variant="outlined" color={"success"}>
+                            Yeni  Kayıt
+                        </Button>
+                    </Link>
+                </div>
                 <TextField
                     label="Stok Numarası"
                     id="filled-start-adornment"

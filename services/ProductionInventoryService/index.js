@@ -17,6 +17,13 @@ class ProductionInventoryService {
         });
     }
 
+    async updateInventory(data){
+        return axios.post("/api/production-inventory/update", {...data});
+    }
+    async getStockInfo(data){
+        return axios.post("/api/production-inventory/get-info", {...data});
+    }
+
 
 }
 
