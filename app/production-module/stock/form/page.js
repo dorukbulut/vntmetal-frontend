@@ -1,8 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Loading from "../../../../components/base/Loading";
 import Alert from "../../../../components/base/alert";
 import { useSearchParams } from "next/navigation";
