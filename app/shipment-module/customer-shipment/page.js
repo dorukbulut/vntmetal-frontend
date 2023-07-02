@@ -1,10 +1,10 @@
 "use client";
 import SearchIcon from "@mui/icons-material/Search";
-import TimePicker from "../../../components/base/timepicker.js";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import Table from "../../order-module/table";
 import { columns } from "./data.js";
+import ShipmentCustomerService from "../../../services/ShipmentCustomerService"
 import ProductionAtelierService from "../../../services/ProductionAtelierService";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
@@ -36,7 +36,7 @@ export default function Page() {
                         : undefined,
             };
 
-            ProductionAtelierService.getFilteredData(params)
+            ShipmentCustomerService.getFilteredData(params)
                 .then((res) => {
                     if (res.status === 200) {
                         const new_data = {
@@ -50,8 +50,7 @@ export default function Page() {
                                     ) : (
                                         <Chip label="Bitti" color="success" />
                                     ),
-                                    remaining: item.n_remaining,
-                                    status: <Chip label="Bekliyor" color="error" />,
+                                    status: <Chip label="Bitti" color="success" />,
                                     options: [
                                         <Action
                                             key={index}
@@ -59,7 +58,7 @@ export default function Page() {
                                                 name: "Düzenle",
                                                 action: [
                                                     {
-                                                        name: "Atölye kayıtları",
+                                                        name: "Sevkiyat Kayıtları",
                                                         pathname: "/production-module/atelier/items",
                                                         query: {
                                                             id: item.WorkOrder_ID,
@@ -88,7 +87,7 @@ export default function Page() {
                 })
                 .catch((err) => {});
         } else {
-            ProductionAtelierService.getPage(page).then((res) => {
+            ShipmentCustomerService.getPage(page).then((res) => {
                 if (res.status === 200) {
                     const new_data = {
                         count: res.data.count,
@@ -101,8 +100,7 @@ export default function Page() {
                                 ) : (
                                     <Chip label="Bitti" color="success" />
                                 ),
-                                remaining: item.n_remaining,
-                                status: <Chip label="Bekliyor" color="error" />,
+                                status: <Chip label="Bitti" color="success" />,
                                 options: [
                                     <Action
                                         key={index}
@@ -110,7 +108,7 @@ export default function Page() {
                                             name: "Düzenle",
                                             action: [
                                                 {
-                                                    name: "Atölye kayıtları",
+                                                    name: "Sevkiyat Kayıtları",
                                                     pathname: "/production-module/atelier/items",
                                                     query: {
                                                         id: item.WorkOrder_ID,
