@@ -59,20 +59,13 @@ export default function Page() {
                                                 action: [
                                                     {
                                                         name: "Sevkiyat Kayıtları",
-                                                        pathname: "/production-module/atelier/items",
+                                                        pathname: "/shipment-module/customer-shipment/items",
                                                         query: {
                                                             id: item.WorkOrder_ID,
                                                             reference: item.reference,
                                                         },
                                                     },
-                                                    {
-                                                        name: "Görüntüle",
-                                                        pathname: "/production-module/production/view",
-                                                        query: {
-                                                            id: item.WorkOrder_ID,
-                                                            type: item.work_order.quotationItem.itemType,
-                                                        },
-                                                    },
+
                                                 ],
                                             }}
                                         >
@@ -109,18 +102,10 @@ export default function Page() {
                                             action: [
                                                 {
                                                     name: "Sevkiyat Kayıtları",
-                                                    pathname: "/production-module/atelier/items",
+                                                    pathname: "/shipment-module/customer-shipment/items",
                                                     query: {
                                                         id: item.WorkOrder_ID,
                                                         reference: item.reference,
-                                                    },
-                                                },
-                                                {
-                                                    name: "Görüntüle",
-                                                    pathname: "/production-module/production/view",
-                                                    query: {
-                                                        id: item.WorkOrder_ID,
-                                                        type: item.work_order.quotationItem.itemType,
                                                     },
                                                 },
                                             ],
