@@ -139,7 +139,7 @@ export default function Page() {
                   </Action>
               ),
           }))
-            setData(all_data)
+            setData({all_data, productHeader : res.data.productHeader})
 
         })
         .catch((err) => console.log);
@@ -210,7 +210,7 @@ export default function Page() {
                       readOnly: true,
                     }}
                     variant="standard"
-                    value={data?.WorkOrderReference || ""}
+                    value={data?.productHeader?.work_order?.reference + "-REV-" + data?.productHeader?.work_order?.revision || ""}
                     label="İş Emri No."
                   />
                 </div>
@@ -220,7 +220,7 @@ export default function Page() {
                       readOnly: true,
                     }}
                     variant="standard"
-                    value={data?.customer || ""}
+                    value={data?.productHeader?.work_order?.Customer_ID || ""}
                     label="Cari Kod"
                   />
                 </div>
@@ -231,18 +231,8 @@ export default function Page() {
                       readOnly: true,
                     }}
                     variant="standard"
-                    value={data?.analyze || ""}
-                    label="Analiz"
-                  />
-                </div>
-                <div>
-                  <TextField
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    variant="standard"
-                    value={atelierData?.ateliers?.rows.reduce((prev, curr) => prev + parseInt(curr.n_piece),0) || ""}
-                    label="Adet"
+                    value={data?.productHeader?.n_piece || ""}
+                    label="Sipariş Edilen Adet"
                   />
                 </div>
                 <div>
@@ -253,16 +243,6 @@ export default function Page() {
                     variant="standard"
                     value={parseInt(data?.sum) - (atelierData?.ateliers?.rows.reduce((prev, curr) => prev + parseInt(curr.n_piece),0)) || 0}
                     label="Kalan Adet"
-                  />
-                </div>
-                <div>
-                  <TextField
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    variant="standard"
-                    value={atelierData?.ateliers?.rows.reduce((prev, curr) => prev + parseInt(curr.total_kg),0) || ""}
-                    label="Toplam Kg."
                   />
                 </div>
               </div>
@@ -284,8 +264,8 @@ export default function Page() {
               </div>
               <Table
                 columns={columns}
-                rowdata={data}
-                count={data?.length}
+                rowdata={data?.all_data}
+                count={data?.all_data?.length}
                 setNPage={() => {}}
               />
             </div>
