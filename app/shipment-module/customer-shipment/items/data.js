@@ -1,12 +1,6 @@
 export const columns = [
   { id: "step", label: "Sıra No.", minWidth: 170 },
-  {
-    id: "charge_number",
-    label: "Şarj No.",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-  },
+
   {
     id: "n_piece",
     label: "Dök. Adet",
@@ -14,33 +8,20 @@ export const columns = [
     align: "right",
     format: (value) => value.toLocaleString("en-US"),
   },
-  {
-    id: "piece_kg",
-    label: "Adet Kg.",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "total_kg",
-    label: "Toplam Kg.",
-    minWidth: 170,
-    align: "right",
-    format: (value) => value.toLocaleString("en-US"),
-  },
+
+
   {
     id: "isQC",
     label: "Kalite Kontrol",
     minWidth: 170,
     align: "right",
-  },
-  {
-    id: "preparedBy",
-    label: "Dolduran",
+  },{
+    id: "type",
+    label: "Tip",
     minWidth: 170,
     align: "right",
-    format: (value) => value.toLocaleString("en-US"),
   },
+
   {
     id: "options",
     label: "Düzenle",

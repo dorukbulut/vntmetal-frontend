@@ -16,6 +16,7 @@ import Loading from "../../../../components/base/Loading";
 import Alert from "../../../../components/base/alert";
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
+import ShipmentCustomerService from "../../../../services/ShipmentCustomerService";
 export default function Page() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -67,141 +68,78 @@ export default function Page() {
       });
   };
   const { data1 } = useSWR(() => {
-      ProductionAtelierService.getAtelier(id, atelierPage)
+      ShipmentCustomerService.getAllItems({ workorder: id })
         .then((res) => {
-          let atelier_data;
-          let product_data;
-          if(res.status === 200){
-            if(res.data.length === 0) {
-                setAtelierData(res.data)
-            }
-            else {atelier_data = {
-                ...res.data,
-                ateliers : {
-                    ...res.data.ateliers,
-                    rows : res.data.ateliers.rows.map(item => {
-                        return {
-                            ...item,
-                            step : reference + "-" + item.product.step + "-" + item.step,
-                            isLabel : item.isQC,
-                            isQC: (
-                                <Chip
-                                    label={
-                                        item.isQC === "pending"
-                                            ? "Bekliyor"
-                                            : item.isQC === "accepted"
-                                                ? "Onaylandı"
-                                                : "Red"
-                                    }
-                                    color={
-                                        item.isQC === "pending"
-                                            ? "warning"
-                                            : item.isQC === "accepted"
-                                                ? "success"
-                                                : "error"
-                                    }
-                                />
-                            ),
-                            options: (
-                                <Action
-                                    preference={{
-                                        name: "Düzenle",
-                                        action: [
-                                            {
-                                                name: "İşlemeyi Güncelle",
-                                                pathname:
-                                                    "/production-module/atelier/items/form",
-                                                query: {
-                                                    product_id: item.Product_ID,
-                                                    max_from_atelier: item.n_piece,
-                                                    id : item.atelier_id,
-                                                    type: "update",
-                                                },
-                                            },
-                                        ],
-                                    }}
-                                >
-                                    <EditIcon />
-                                </Action>
-                            ),
+          let atelier_data = res.data["ateliers"];
+          let product_data = res.data["onlyProducts"]
+          let all_data = [];
 
-                        }
-                    })
-                }
-            }
-                setAtelierData(atelier_data);}
+          atelier_data.rows.map(item => {
 
-
-          }
-          ProductionAtelierService.getProduct(id, page)
-              .then((res) => {
-                if (res.data.length === 0) {
-                  setData(res.data);
-                } else {
-                  product_data = {
-                    ...res.data,
-                    products: {
-                      ...res.data.products,
-                      rows: res.data.products.rows
-                          .map((product) => {
-                          let sum = atelier_data.ateliers.rows
-                              .filter((atelier) => atelier.Product_ID === product.product_id)
-                              .reduce((prev, curr) => prev + parseInt(curr.n_piece),0);
-
-                          if((parseInt(product.n_piece) - sum > 0)) {
-                              return {
-                                  ...product,
-                                  isLabel: product.isQC,
-                                  isQC: (
-                                      <Chip
-                                          label={
-                                              product.isQC === "pending"
-                                                  ? "Bekliyor"
-                                                  : product.isQC === "accepted"
-                                                      ? "Onaylandı"
-                                                      : "Red"
-                                          }
-                                          color={
-                                              product.isQC === "pending"
-                                                  ? "warning"
-                                                  : product.isQC === "accepted"
-                                                      ? "success"
-                                                      : "error"
-                                          }
-                                      />
-                                  ),
-                                  options: (
-                                      <Action
-                                          preference={{
-                                              name: "Düzenle",
-                                              action: [
-                                                  {
-                                                      name: "İşle",
-                                                      pathname:
-                                                          "/production-module/atelier/items/form",
-                                                      query: {
-                                                          product_id: product.product_id,
-                                                          id : res.data.productHeader.header_id,
-                                                          type: "create",
-                                                      },
-                                                  },
-                                              ],
-                                          }}
-                                      >
-                                          <EditIcon />
-                                      </Action>
-                                  ),
-                              };
+              all_data.push(
+                  {
+                      step : item.product.step + "-" + item.step,
+                      n_piece : item.n_piece,
+                      type : "Atölye",
+                      isQC : <Chip
+                          label={
+                              "Onaylandı"
                           }
+                          color={
+                              "success"
+                          }
+                      />,
+                      options: (
+                          <Action
+                              preference={{
+                                  name: "Düzenle",
+                                  action: [
+                                      {
+                                          name: "İşle",
+                                          pathname:
+                                              "/production-module/atelier/items/form",
 
-                      })
-                          .filter((item) => item !== undefined),
-                    },
-                  };
-                  setData(product_data);
-                }
-              })
-              .catch((err) => console.log);
+                                      },
+                                  ],
+                              }}
+                          >
+                              <EditIcon />
+                          </Action>
+                      ),
+                  }
+              )
+
+          })
+          product_data.rows.map(item => all_data.push({
+              step : item.step,
+              n_piece : item.n_piece,
+              type : "Ocak ve Dökümhane",
+              isQC : <Chip
+                  label={
+                      "Onaylandı"
+                  }
+                  color={
+                      "success"
+                  }
+              />,
+              options: (
+                  <Action
+                      preference={{
+                          name: "Düzenle",
+                          action: [
+                              {
+                                  name: "İşle",
+                                  pathname:
+                                      "/production-module/atelier/items/form",
+                              },
+                          ],
+                      }}
+                  >
+                      <EditIcon />
+                  </Action>
+              ),
+          }))
+            setData(all_data)
 
         })
         .catch((err) => console.log);
@@ -341,14 +279,14 @@ export default function Page() {
             <div className="lg:flex lg:flex-col shadow-xl">
               <div>
                 <p className="font-roboto text-indigo-600 text-sm font-ligth underline">
-                  Dökümhane
+                  Üretimi Tamamlanan
                 </p>
               </div>
               <Table
                 columns={columns}
-                rowdata={data?.products?.rows}
-                count={data?.products?.count}
-                setNPage={setPage}
+                rowdata={data}
+                count={data?.length}
+                setNPage={() => {}}
               />
             </div>
           ) : (
@@ -358,7 +296,7 @@ export default function Page() {
             <div className="lg:flex lg:flex-col shadow-xl lg:gap-10">
               <div>
                 <p className="font-roboto text-indigo-600 text-sm font-ligth underline">
-                  Atölye
+                  Sevk Edilen
                 </p>
               </div>
               <Table

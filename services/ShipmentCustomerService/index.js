@@ -15,6 +15,10 @@ class ShipmentCustomerService {
         });
     }
 
+    async getAllItems(data){
+        return axios.post("/api/shipment-customer/get-all", data)
+    }
+
 }
 
 export default new ShipmentCustomerService();
