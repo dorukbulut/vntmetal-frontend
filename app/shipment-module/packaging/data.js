@@ -1,9 +1,9 @@
 export const columns = [
-    { id: "workorder", label: "İş Emri No.", minWidth: 170 },
-
+    { id: "reference", label: "Paket No.", minWidth: 170 },
+    { id: "description", label: "Açıklama", minWidth: 170 },
     {
-        id: "remaining",
-        label: "Döküm bekleyen (adet)",
+        id: "workorder",
+        label: "İş Emri",
         minWidth: 170,
         align: "right",
         format: (value) => value.toLocaleString("en-US"),

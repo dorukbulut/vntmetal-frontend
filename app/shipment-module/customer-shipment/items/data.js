@@ -3,7 +3,7 @@ export const columns = [
 
   {
     id: "n_piece",
-    label: "Dök. Adet",
+    label: "Hazır Adet",
     minWidth: 170,
     align: "right",
     format: (value) => value.toLocaleString("en-US"),

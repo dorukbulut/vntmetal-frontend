@@ -1,6 +1,5 @@
 "use client";
 import SearchIcon from "@mui/icons-material/Search";
-import TimePicker from "../../../components/base/timepicker.js";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import Table from "../../order-module/table";
@@ -12,6 +11,9 @@ import Action from "../../../components/base/action";
 import { useRouter } from "next/navigation.js";
 import Chip from "@mui/material/Chip";
 import EditIcon from "@mui/icons-material/Edit";
+import ShipmentPackagingService from "../../../services/ShipmentPackagingService";
+import Link from "next/link";
+import Button from "@mui/material/Button";
 export default function Page() {
     const [data, setData] = useState();
     const [page, setPage] = useState(0);
@@ -36,7 +38,7 @@ export default function Page() {
                         : undefined,
             };
 
-            ProductionAtelierService.getFilteredData(params)
+            ShipmentPackagingService.getFilteredData(params)
                 .then((res) => {
                     if (res.status === 200) {
                         const new_data = {
@@ -45,13 +47,7 @@ export default function Page() {
                                 const date = new Date(item.createdAt);
                                 return {
                                     reference: item.reference,
-                                    product_status: !item.isFinished ? (
-                                        <Chip label="Devam ediyor" color="warning" />
-                                    ) : (
-                                        <Chip label="Bitti" color="success" />
-                                    ),
-                                    remaining: item.n_remaining,
-                                    status: <Chip label="Bekliyor" color="error" />,
+                                    workorder : "test",
                                     options: [
                                         <Action
                                             key={index}
@@ -88,7 +84,7 @@ export default function Page() {
                 })
                 .catch((err) => {});
         } else {
-            ProductionAtelierService.getPage(page).then((res) => {
+            ShipmentPackagingService.getPage(page).then((res) => {
                 if (res.status === 200) {
                     const new_data = {
                         count: res.data.count,
@@ -96,13 +92,7 @@ export default function Page() {
                             const date = new Date(item.createdAt);
                             return {
                                 reference: item.reference,
-                                product_status: !item.isFinished ? (
-                                    <Chip label="Devam ediyor" color="warning" />
-                                ) : (
-                                    <Chip label="Bitti" color="success" />
-                                ),
-                                remaining: item.n_remaining,
-                                status: <Chip label="Bekliyor" color="error" />,
+                                workorder : "test",
                                 options: [
                                     <Action
                                         key={index}
@@ -148,8 +138,23 @@ export default function Page() {
                 </p>
             </div>
             <div className="lg:flex lg:gap-10 lg:items-center p-2 shadow-xl rounded-lg">
+                <div className="flex items-center hover:cursor-pointer transition duration-500 hover:scale-110 ">
+                    <Link
+                        href={{
+                            pathname: "/shipment-module/packaging/form",
+                            query: {
+                                type: "create",
+                                id: "none",
+                            },
+                        }}
+                    >
+                        <Button variant="outlined" color={"success"}>
+                            Yeni Paket
+                        </Button>
+                    </Link>
+                </div>
                 <TextField
-                    label="Döküm No."
+                    label="Paket No."
                     id="filled-start-adornment"
                     sx={{ m: 1, width: "25ch" }}
                     InputProps={{
