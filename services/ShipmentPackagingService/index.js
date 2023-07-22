@@ -30,6 +30,22 @@ class ShipmentPackagingService {
     }
 
 
+    async createPackage(data) {
+        return axios.post("/api/shipment-packaging/create", data)
+    }
+    async updatePackage(data) {
+        return axios.post("/api/shipment-packaging/update", data)
+    }
+    async deletePackage(data) {
+        return axios.post("/api/shipment-packaging/delete", data)
+    }
+
+    async getPackage(data) {
+        return axios.post("/api/shipment-packaging/get", data)
+    }
+
+
+
 
 }
 

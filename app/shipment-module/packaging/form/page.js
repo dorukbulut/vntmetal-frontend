@@ -1,5 +1,5 @@
 "use client";
-import { useSearchParams } from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import { useState, useEffect } from "react";
 import Alert from "../../../../components/base/alert";
 import SearchableSelect from "../../../../components/base/SearchableSelect";
@@ -7,17 +7,17 @@ import TextField from "@mui/material/TextField";
 import Link from "next/link";
 import Loading from "../../../../components/base/Loading";
 import ShipmentPackagingService from "../../../../services/ShipmentPackagingService";
+import {isValid} from "../../../valid";
+import WorkOrderService from "../../../../services/WorkOrderService";
+import {delay} from "../../../utils";
 export default function Page() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const type = searchParams.get("type");
+  const isDelete = searchParams.get("isDelete");
     const [fields, setFields] = useState({
         options: {
-            Item_ID: "",
-            type: "",
-            plate_model_size: "",
-            treatment_size: "",
-            reference: "",
-            company: "",
+            description : "",
         },
     });
   const id = searchParams.get("id");
@@ -30,8 +30,121 @@ export default function Page() {
     const [isLoading, setLoading] = useState(false);
     const [valid, setValid] = useState(false);
 
+    const handleChange = (area, field, e) => {
+        setFields((old) => {
+            return {
+                ...old,
+                [area]: {
+                    ...old[area],
+                    [field]: e.target.value,
+                },
+            };
+        });
+    };
 
-    const [customers, setCustomers] = useState([]);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError({
+            isOpen: true,
+            type: "warning",
+            message: "Paket Oluşturuluyor...",
+            title: "Lütfen Bekleyiniz",
+        });
+        let data = {
+            description : fields.options.description
+        };
+
+        try {
+            let res;
+            if (type === "create") {
+                res = await ShipmentPackagingService.createPackage(data);
+            } else {
+                data["package_id"] = id
+                res = await ShipmentPackagingService.updatePackage(data)
+            }
+            console.log(res)
+            if (res.status === 200) {
+                setError({
+                    isOpen: true,
+                    type: "success",
+                    message: "Form Oluşturuldu !",
+                    title: "Başarılı",
+                });
+                await delay(2000);
+                router.push(`/shipment-module/packaging`);
+            }
+        } catch (err) {
+            setLoading(false);
+            setError({
+                isOpen: true,
+                type: "error",
+                message: "Kayıt Oluşturulamadı !",
+                title: "Hata",
+            });
+        }
+    };
+
+    const deleteItem = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError({
+            isOpen: true,
+            type: "warning",
+            message: "Paket Siliniyor...",
+            title: "Lütfen Bekleyiniz",
+        });
+        let data = {
+            package_id : id
+        };
+
+        try {
+            let res = await ShipmentPackagingService.deletePackage(data)
+            if (res.status === 200) {
+                setError({
+                    isOpen: true,
+                    type: "success",
+                    message: "Paket Silindi !",
+                    title: "Başarılı",
+                });
+                await delay(2000);
+                router.push(`/shipment-module/packaging`);
+            }
+        } catch (err) {
+            setLoading(false);
+            setError({
+                isOpen: true,
+                type: "error",
+                message: "Bir hata ile karşılaşıldı !",
+                title: "Hata",
+            });
+        }
+    };
+
+    useEffect(() => {
+        setValid(isValid(fields.options));
+    }, [fields])
+
+    useEffect(() => {
+        if(type === "update") {
+            ShipmentPackagingService.getPackage({
+                package_id : id,
+            })
+                .then(res => {
+                    if (res.status === 200) {
+                        console.log(res.data)
+                        setFields({
+                            options: {
+                                description: res.data.description
+                            }
+                        })
+                    }
+                })
+                .catch(e => console.log)
+
+        }
+    }, [])
+
 
     return (
         <div className="w-full h-full flex flex-col space-y-5">
@@ -59,25 +172,12 @@ export default function Page() {
                                 <TextField
                                     error={!valid}
                                     label={"Paket Açıklaması"}
-                                    value={""}
+                                    value={fields.options.description || ""}
                                     variant="standard"
                                     helperText="Zorunlu Alan"
                                     type={"text"}
-                                    onChange={(e) => {}}
+                                    onChange={(e) => handleChange("options", "description",e)}
                                 />
-
-                                {type === "create" ? (
-                                    <SearchableSelect name={"reference"} Service={ShipmentPackagingService} ac={"reference"} val={"workorder_ID"}/>
-                                ) : (
-                                    <TextField
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
-                                        variant="standard"
-                                        value={""}
-                                        label="Cari Kod"
-                                    />
-                                )}
 
                             </div>
 
@@ -86,7 +186,7 @@ export default function Page() {
                             <div className="grid grid-cols-1 gap-10  p-2 rounded-lg ">
                                 <div className="grid grid-cols-4 space-x-10 col-span-2">
                                     <button
-                                        onClick={() => {}}
+                                        onClick={handleSubmit}
                                         disabled={!valid}
                                         className={`text-sm ${
                                             type === "create" ? "text-green-600" : "text-yellow-600"
@@ -102,11 +202,19 @@ export default function Page() {
                                     >
                                         {type === "create" ? "OLUŞTUR" : "GÜNCELLE"}
                                     </button>
-                                    <Link href={"/order-module/work-order"} passHref>
+                                    <Link href={"/shipment-module/packaging"} passHref>
                                         <button className="text-red-600 w-full h-full border-2 border-red-600 transition ease-in-out hover:-translate-y-1 hover:scale-110 hover:bg-red-700 font-roboto hover:text-white tacking-widest rounded">
                                             IPTAL
                                         </button>
                                     </Link>
+                                    {
+                                        isDelete === "yes" && <button
+                                            onClick={deleteItem}
+                                            className={"text-sm text-red-600 border-2 border-red-600 enabled:transition enabled:ease-in-out enabled:hover:-translate-y-1 enabled:hover:scale-110 enabled:hover:bg-red-700 font-roboto enabled:hover:text-white tacking-widest rounded disabled:opacity-50 disabled:cursor-not-allowed"}
+                                        >
+                                            Sil
+                                        </button>
+                                    }
                                 </div>
                                 {!valid && (
                                     <p className="text-lg font-rotobot tracking widest text-red-600">

@@ -3,7 +3,7 @@ export const columns = [
     { id: "description", label: "Açıklama", minWidth: 170 },
     {
         id: "workorder",
-        label: "İş Emri",
+        label: "Kullanım Durumu",
         minWidth: 170,
         align: "right",
         format: (value) => value.toLocaleString("en-US"),

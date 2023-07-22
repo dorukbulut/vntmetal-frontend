@@ -27,6 +27,7 @@ export default function Page() {
         });
     };
     const { data1 } = useSWR(() => {
+
         if(filters?.reference === '') {
             setFilters(undefined)
         }
@@ -47,7 +48,8 @@ export default function Page() {
                                 const date = new Date(item.createdAt);
                                 return {
                                     reference: item.reference,
-                                    workorder : "test",
+                                    workorder : item.WorkOrder_ID === null ? <Chip label="Bekliyor" color="warning" /> : <Chip label="Gönderildi" color="success" />,
+                                    description : item.description,
                                     options: [
                                         <Action
                                             key={index}
@@ -56,20 +58,15 @@ export default function Page() {
                                                 action: [
                                                     {
                                                         name: "Atölye kayıtları",
-                                                        pathname: "/production-module/atelier/items",
+                                                        pathname: "/shipment-module/packaging/form",
+
                                                         query: {
-                                                            id: item.WorkOrder_ID,
-                                                            reference: item.reference,
+                                                            id: item.package_id,
+                                                            type: "update",
+                                                            isDelete : item.WorkOrder_ID === null ? "yes" : "no"
                                                         },
                                                     },
-                                                    {
-                                                        name: "Görüntüle",
-                                                        pathname: "/production-module/production/view",
-                                                        query: {
-                                                            id: item.WorkOrder_ID,
-                                                            type: item.work_order.quotationItem.itemType,
-                                                        },
-                                                    },
+
                                                 ],
                                             }}
                                         >
@@ -92,7 +89,8 @@ export default function Page() {
                             const date = new Date(item.createdAt);
                             return {
                                 reference: item.reference,
-                                workorder : "test",
+                                description : item.description,
+                                workorder : item.WorkOrder_ID === null ? <Chip label="Bekliyor" color="warning" /> : <Chip label="Gönderildi" color="success" /> ,
                                 options: [
                                     <Action
                                         key={index}
@@ -100,19 +98,12 @@ export default function Page() {
                                             name: "Düzenle",
                                             action: [
                                                 {
-                                                    name: "Atölye kayıtları",
-                                                    pathname: "/production-module/atelier/items",
+                                                    name: "Açıklama Düzenle",
+                                                    pathname: "/shipment-module/packaging/form",
                                                     query: {
-                                                        id: item.WorkOrder_ID,
-                                                        reference: item.reference,
-                                                    },
-                                                },
-                                                {
-                                                    name: "Görüntüle",
-                                                    pathname: "/production-module/production/view",
-                                                    query: {
-                                                        id: item.WorkOrder_ID,
-                                                        type: item.work_order.quotationItem.itemType,
+                                                        id: item.package_id,
+                                                        type: "update",
+                                                        isDelete : item.WorkOrder_ID === null ? "yes" : "no",
                                                     },
                                                 },
                                             ],
