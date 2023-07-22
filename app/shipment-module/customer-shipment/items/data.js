@@ -33,15 +33,16 @@ export const columns = [
 export const columnsAtelier = [
   { id: "step", label: "Sıra No.", minWidth: 170 },
   {
-    id: "atelier_dims",
-    label: "İşleme Ölçüsü",
+    id: "package",
+    label: "Paket No.",
     minWidth: 170,
     align: "right",
     format: (value) => value.toLocaleString("en-US"),
   },
+
   {
     id: "n_piece",
-    label: "İşlenen Adet",
+    label: "Sevk Edilen Ad.",
     minWidth: 170,
     align: "right",
     format: (value) => value.toLocaleString("en-US"),
@@ -54,21 +55,15 @@ export const columnsAtelier = [
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "isQC",
-    label: "Kalite Kontrol",
-    minWidth: 170,
-    align: "right",
-  },
-  {
-    id: "preparedBy",
-    label: "Dolduran",
+    id: "date",
+    label: "Sevk Tarihi",
     minWidth: 170,
     align: "right",
     format: (value) => value.toLocaleString("en-US"),
   },
   {
-    id: "options",
-    label: "Düzenle",
+    id: "delete",
+    label: "Sil",
     minWidth: 170,
     align: "right",
   },

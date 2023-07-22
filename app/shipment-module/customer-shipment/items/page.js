@@ -40,10 +40,10 @@ export default function Page() {
     setError({
       isOpen: true,
       type: "warning",
-      message: "Döküm Tamamlanıyor...",
+      message: "Sevkiyat Tamamlanıyor...",
       title: "Lütfen Bekleyiniz",
     });
-    ProductionAtelierService.finishAtelier(id)
+    ShipmentCustomerService.finishAtelier(id)
       .then(async (res) => {
         if (res.status === 200) {
           setError({
@@ -53,7 +53,7 @@ export default function Page() {
             title: "Başarılı",
           });
           await delay(2000);
-          router.push("/production-module/atelier");
+          router.push("/shipment-module/customer-shipment");
         }
       })
       .catch(async (err) => {
@@ -68,13 +68,79 @@ export default function Page() {
       });
   };
   const { data1 } = useSWR(() => {
+      ShipmentCustomerService.getAllShipments({ workorder: id })
+          .then(res => {
+              const new_data = {
+                  count : res.data.shipments.count,
+                  rows  : res.data.shipments.rows.map(item => {
+                      const dateObj = new Date(item.createdAt);
+
+// Extract the year, month, and day components from the Date object
+                      const year = dateObj.getFullYear();
+                      const month = String(dateObj.getMonth() + 1).padStart(2, "0"); // Months are zero-based, so we add 1
+                      const day = String(dateObj.getDate()).padStart(2, "0");
+                      return {
+                          step : item.step,
+                          id : item.Product_ID,
+                          package : item.package.reference,
+                          n_piece : item.n_piece,
+                          total_kg : item.total_kg,
+                          date  : `${year}-${month}-${day}`,
+                          delete : <Button
+                              variant="contained"
+                              color="error"
+                              startIcon={<DeleteIcon />}
+                              onClick={async (e, id=item.shipment_id) =>{
+                                  e.preventDefault();
+                                  setLoading(true);
+                                  setError({
+                                      isOpen: true,
+                                      type: "warning",
+                                      message: "Kayıt Siliniyor Oluşturuluyor...",
+                                      title: "Lütfen Bekleyiniz",
+                                  });
+                                  let res = await ShipmentCustomerService.delete({shipment_id: id})
+
+                                  if (res.status === 200) {
+                                      setError({
+                                          isOpen: true,
+                                          type: "success",
+                                          message: "Sevkiyat Silindi !",
+                                          title: "Başarılı",
+                                      });
+                                      await delay(2000);
+                                      router.refresh();
+                                  } else {
+                                      setLoading(false);
+                                      setError({
+                                          isOpen: true,
+                                          type: "error",
+                                          message: "Kayıt Oluşturulamadı !",
+                                          title: "Hata",
+                                      });
+                                  }
+
+                              }}
+
+                          >
+                              Kaydı Sil
+                          </Button>
+                      }
+                  })
+              }
+
+              setAtelierData(new_data)
+          })
       ShipmentCustomerService.getAllItems({ workorder: id })
         .then((res) => {
           let atelier_data = res.data["ateliers"];
           let product_data = res.data["onlyProducts"]
           let all_data = [];
 
-          atelier_data.rows.map(item => {
+          atelier_data.rows.filter(ateliers => {
+              const retval = atelierData?.rows?.find(item => item.id === ateliers.product.product_id)
+              return !retval;
+          }).map(item => {
 
               all_data.push(
                   {
@@ -95,10 +161,14 @@ export default function Page() {
                                   name: "Düzenle",
                                   action: [
                                       {
-                                          name: "İşle",
-                                          pathname:
-                                              "/production-module/atelier/items/form",
-
+                                          name: "Sevk Et",
+                                          pathname: "/shipment-module/customer-shipment/items/form",
+                                          query: {
+                                              id: id,
+                                              type : "create",
+                                              productId : item.product.product_id,
+                                              n_piece : item.n_piece
+                                          },
                                       },
                                   ],
                               }}
@@ -110,36 +180,9 @@ export default function Page() {
               )
 
           })
-          product_data.rows.map(item => all_data.push({
-              step : item.step,
-              n_piece : item.n_piece,
-              type : "Ocak ve Dökümhane",
-              isQC : <Chip
-                  label={
-                      "Onaylandı"
-                  }
-                  color={
-                      "success"
-                  }
-              />,
-              options: (
-                  <Action
-                      preference={{
-                          name: "Düzenle",
-                          action: [
-                              {
-                                  name: "İşle",
-                                  pathname:
-                                      "/production-module/atelier/items/form",
-                              },
-                          ],
-                      }}
-                  >
-                      <EditIcon />
-                  </Action>
-              ),
-          }))
             setData({all_data, productHeader : res.data.productHeader})
+
+
 
         })
         .catch((err) => console.log);
@@ -157,21 +200,16 @@ export default function Page() {
             </p>
           </div>
           <div className="lg:flex lg:gap-10 lg:items-center p-2 shadow-xl rounded-lg">
-            <div className="flex items-center hover:cursor-pointer transition duration-500 hover:scale-110 ">
-              <Button
-                onClick={finishProduction}
-                disabled={
-                    !((parseInt(data?.sum) - (atelierData?.ateliers?.rows.reduce((prev, curr) => prev + parseInt(curr.n_piece),0)) === 0) &&
-                    (atelierData?.ateliers?.rows.filter(
-                        (product) => product.isLabel !== "accepted"
-                    ).length === 0))
-                }
-                variant="outlined"
-                color={"warning"}
-              >
-                Tamamla
-              </Button>
-            </div>
+              <div className="flex items-center hover:cursor-pointer transition duration-500 hover:scale-110 ">
+                  <Button
+                      onClick={finishProduction}
+                      variant="outlined"
+                      disabled={data?.all_data?.length !== 0}
+                      color={"warning"}
+                  >
+                      Tamamla
+                  </Button>
+              </div>
             <div className="flex items-center hover:cursor-pointer transition duration-500 hover:scale-110 ">
               <Link
                 href={{
@@ -225,26 +263,6 @@ export default function Page() {
                   />
                 </div>
 
-                <div>
-                  <TextField
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    variant="standard"
-                    value={data?.productHeader?.n_piece || ""}
-                    label="Sipariş Edilen Adet"
-                  />
-                </div>
-                <div>
-                  <TextField
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    variant="standard"
-                    value={parseInt(data?.sum) - (atelierData?.ateliers?.rows.reduce((prev, curr) => prev + parseInt(curr.n_piece),0)) || 0}
-                    label="Kalan Adet"
-                  />
-                </div>
               </div>
             ) : (
               <p className="font-roboto">
@@ -281,9 +299,9 @@ export default function Page() {
               </div>
               <Table
                 columns={columnsAtelier}
-                rowdata={atelierData?.ateliers?.rows}
-                count={atelierData?.ateliers?.count}
-                setNPage={setAtelierPage}
+                rowdata={atelierData?.rows}
+                count={atelierData?.count}
+                setNPage={() => {}}
               />
             </div>
           ) : (
