@@ -79,24 +79,14 @@ export const navlist = [
     ],
     "report-module": [
       {
-        name: "Teklif Raporları",
+        name: "Satış Raporları",
         logo: <FactoryIcon />,
-        path: "/report-module/quotations",
-      },
-      {
-        name: "Sipariş Raporları",
-        logo: <PrecisionManufacturingIcon />,
         path: "/report-module/orders",
       },
       {
-        name: "İş Emri Raporları",
+        name: "Üretim Raporları",
         logo: <PrecisionManufacturingIcon />,
-        path: "/report-module/work-orders",
-      },
-      {
-        name: "Sevkiyat Raporları",
-        logo: <PrecisionManufacturingIcon />,
-        path: "/report-module/shipment",
+        path: "/report-module/production",
       },
       { name: "Çıkış", logo: <ExitToAppIcon />, path: "/homepage" },
     ],
