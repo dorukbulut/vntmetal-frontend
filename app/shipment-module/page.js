@@ -7,7 +7,7 @@ export default function Page() {
   return (
     <div className="w-full h-full space-y-5">
       <div>
-        <p className="text-2xl flex text-center text-yellow-600 tracking widest font-roboto">
+        <p className="text-2xl flex text-center text-blue-600 tracking widest font-roboto">
           Özet
         </p>
       </div>
