@@ -88,6 +88,11 @@ export const navlist = [
         logo: <PrecisionManufacturingIcon />,
         path: "/report-module/production",
       },
+      {
+        name: "Genel Rapor",
+        logo: <PrecisionManufacturingIcon />,
+        path: "/report-module/general",
+      },
       { name: "Çıkış", logo: <ExitToAppIcon />, path: "/homepage" },
     ],
   },
